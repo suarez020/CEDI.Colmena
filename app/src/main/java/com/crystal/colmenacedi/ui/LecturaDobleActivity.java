@@ -62,7 +62,7 @@ public class LecturaDobleActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_lectura);
         Utilidades.ocultarBarraEstado(getWindow());
 
-        this.setTitle(R.string.menu_lectura);
+        this.setTitle("naranja");
         Objects.requireNonNull(getSupportActionBar()).setSubtitle(SPM.getString(Constantes.NOMBRE_USUARIO));
 
         //Iniciar el cliente REST
@@ -116,7 +116,7 @@ public class LecturaDobleActivity extends AppCompatActivity implements View.OnCl
         etFaltantesLectura.setTextColor(R.color.opaco);
         etFaltantesLectura.setText(faltantes);
 
-        btnTerminarCajaLectura = findViewById(R.id.btnTerminarCajaLectura);
+        btnTerminarCajaLectura = findViewById(R.id.btnTerminarEmpacar);
 
         etEanLectura.requestFocus(0);
     }
@@ -262,7 +262,7 @@ public class LecturaDobleActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.btnTerminarCajaLectura){
+        if(v.getId() == R.id.btnTerminarEmpacar){
             cerrarCarton();
         }
     }

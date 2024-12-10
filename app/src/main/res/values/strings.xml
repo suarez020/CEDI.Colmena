@@ -8,7 +8,7 @@
     <string name="menu_recibirCajas">Recibir caja</string>
     <string name="menu_cerrarPosicion">Cerrar posición</string>
     <string name="menu_empaqueRFID">Empaque RFID</string>
-    <string name="menu_lectura">Lectura</string>
+    <string name="menu_lectura">RFID naranja</string>
     <string name="menu_cierreCarton">Cierre cartón</string>
     <string name="menu_confirmarCerrarPosicion">Confirmar cerrar posición</string>
     <string name="menu_auditoria">Separar UND</string>

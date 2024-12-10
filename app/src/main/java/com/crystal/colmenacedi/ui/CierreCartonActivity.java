@@ -29,17 +29,12 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class CierreCartonActivity extends AppCompatActivity implements View.OnClickListener {
-    //Declaración del cliente REST
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
-
-    //Declaración de los objetos de la interfaz del activity
     EditText etPosicionCC, etGenericoCC, etActualesCC, etFaltantesCC;
     Button btnConfirmarCC;
     TextToSpeech speech;
     Context contexto;
-
-    //Variables
     String cedula, equipo, ubicacion, cartonG, actuales, faltantes;
     boolean qr;
     boolean  continuarirSplashScreen;
@@ -54,12 +49,8 @@ public class CierreCartonActivity extends AppCompatActivity implements View.OnCl
 
             this.setTitle(R.string.menu_cierreCarton);
             Objects.requireNonNull(getSupportActionBar()).setSubtitle(SPM.getString(Constantes.NOMBRE_USUARIO));
-
-            //Iniciar el cliente REST
             inicioRetrofit();
-            //Asignar referencias
             findViews();
-            //Eventos
             eventos();
         }catch (Exception e){
             LogFile.adjuntarLog("ErrorCierreCartonActivity", e);
@@ -157,7 +148,7 @@ public class CierreCartonActivity extends AppCompatActivity implements View.OnCl
 
     private void irTamanoActivity(){
         //todo: si se lee bien vamos a pasar a la pantalla de tamano
-        Intent i = new Intent(CierreCartonActivity.this, TamanoEmpaqueActivity.class);
+/*        Intent i = new Intent(CierreCartonActivity.this, TamanoEmpaqueActivity.class);
         i.putExtra("leidos", (Serializable) actuales);
         i.putExtra("faltantes", (Serializable) faltantes);
         i.putExtra("ubicacion",ubicacion);
@@ -165,7 +156,7 @@ public class CierreCartonActivity extends AppCompatActivity implements View.OnCl
         i.putExtra("QR", (Serializable) qr);
         i.putExtra("activityRFID",false);
         startActivity(i);
-        finish();
+        finish();*/
     }
 
     @Override
@@ -179,19 +170,19 @@ public class CierreCartonActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void irSplashScreen() {
-        Intent i = new Intent(CierreCartonActivity.this, SplashScreenActivity.class);
-        i.putExtra("leidos", (Serializable) actuales);
-        i.putExtra("faltantes", (Serializable) faltantes);
-        i.putExtra("ubicacion", (Serializable) ubicacion);
-        i.putExtra("cartonG", (Serializable) cartonG);
-        i.putExtra("QR", (Serializable) qr);
-        startActivity(i);
-        finish();
+        //Intent i = new Intent(CierreCartonActivity.this, SplashScreenActivity.class);
+        //i.putExtra("leidos", (Serializable) actuales);
+        //i.putExtra("faltantes", (Serializable) faltantes);
+        //i.putExtra("ubicacion", (Serializable) ubicacion);
+        //i.putExtra("cartonG", (Serializable) cartonG);
+        //i.putExtra("QR", (Serializable) qr);
+        //startActivity(i);
+        //finish();
     }
 
     private void irLectura() {
         Intent i;
-        if(qr){
+        if(!qr){
             i = new Intent(this, LecturaDobleActivity.class);
         }else{
             i = new Intent(this, LecturaActivity.class);

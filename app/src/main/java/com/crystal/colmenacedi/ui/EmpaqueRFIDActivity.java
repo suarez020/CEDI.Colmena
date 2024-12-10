@@ -35,18 +35,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class EmpaqueRFIDActivity extends AppCompatActivity implements View.OnClickListener{
-    //Declaración del cliente REST
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
-
-    //Declaración de los objetos de la interfaz del activity
     EditText etUbicacionEmpaqueRFID, etGenericoEmpaqueRFID;
     TextView tvTituloEanERFID,tvTituloTamano;
     RecyclerView rvEmpaqueRFID;
     Button btnTerminarEmpaqueRFID;
     GenericosCerradoRFID genericosCerradoRFID;
-
-    //Variables
     String cedula, estacion, ubicacion, generico;
     boolean  consumirServicioapiCerradoRFID;
     String tamanoElegido;
@@ -146,13 +141,13 @@ public class EmpaqueRFIDActivity extends AppCompatActivity implements View.OnCli
 
     private void irTamanoActivity(){
         //todo: si se lee bien vamos a pasar a la pantalla de tamano
-        Intent i = new Intent(EmpaqueRFIDActivity.this, TamanoEmpaqueActivity.class);
+/*        Intent i = new Intent(EmpaqueRFIDActivity.this, TamanoEmpaqueActivity.class);
         i.putExtra("cartonG",generico);
         i.putExtra("ubicacion",ubicacion);
         i.putExtra("activityRFID",true);
         //i.putExtra("genericosRFID", genericosCerradoRFID);
         startActivity(i);
-        finish();
+        finish();*/
     }
 
     private void apiCerradoRFID() {

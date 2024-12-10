@@ -80,45 +80,18 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <Button
-                        android:id="@+id/btnEmpezarCerradoCP"
+                        android:id="@+id/btnEmpacar"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:layout_marginStart="4sp"
                         android:layout_marginEnd="4sp"
                         android:layout_marginTop="2sp"
-                        android:text="@string/txt_btnEmpezarCerrado"
+                        android:text="Empacar"
                         android:textSize="20sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tilPosicionCP" />
 
-                    <Button
-                        android:id="@+id/btnEmpezarEmpaqueRFID"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_marginStart="4sp"
-                        android:layout_marginEnd="4sp"
-                        android:layout_marginTop="2sp"
-                        android:text="@string/txt_btnEmpezarEmpaqueRFID"
-                        android:textSize="20sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/btnEmpezarCerradoCP" />
-
-                    <Button
-                        android:id="@+id/btnFinalizarPosicionCP"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:textSize="20sp"
-                        android:layout_marginStart="4sp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginEnd="4sp"
-                        android:layout_marginBottom="10sp"
-                        android:text="@string/txt_btnFinalizarPosicion"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/btnEmpezarEmpaqueRFID" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

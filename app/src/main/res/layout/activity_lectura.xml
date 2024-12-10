@@ -14,7 +14,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
-        android:text="@string/txt_RFID"
         android:textAlignment="center"
         android:textColor="@color/rojo"
         android:textSize="32sp"
@@ -218,19 +217,21 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <Button
-                        android:id="@+id/btnTerminarCajaLectura"
+                        android:id="@+id/btnTerminarEmpacar"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:layout_marginStart="4sp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="4sp"
                         android:layout_marginBottom="10dp"
-                        android:text="@string/txt_btnTerminarCajaLectura"
+                        android:text="terminar"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tilFaltantesLectura" />
+                        app:layout_constraintTop_toBottomOf="@+id/tilFaltantesLectura"
+                        app:layout_constraintVertical_bias="0.0" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

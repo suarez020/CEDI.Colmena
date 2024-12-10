@@ -107,7 +107,7 @@ public class LecturaActivity extends AppCompatActivity implements View.OnClickLi
         etFaltantesLectura.setTextColor(R.color.opaco);
         etFaltantesLectura.setText(faltantes);
 
-        btnTerminarCajaLectura = findViewById(R.id.btnTerminarCajaLectura);
+        btnTerminarCajaLectura = findViewById(R.id.btnTerminarEmpacar);
 
         etEanLectura.requestFocus(0);
     }
@@ -204,7 +204,7 @@ public class LecturaActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.btnTerminarCajaLectura){
+        if(v.getId() == R.id.btnTerminarEmpacar){
             cerrarCarton();
         }
     }

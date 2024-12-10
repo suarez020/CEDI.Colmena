@@ -62,7 +62,7 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_recibir_cajas);
         Utilidades.ocultarBarraEstado(getWindow());
 
-        this.setTitle(R.string.menu_recibirCajas);
+        this.setTitle("Ubicar UND");
         Objects.requireNonNull(getSupportActionBar()).setSubtitle(SPM.getString(Constantes.NOMBRE_USUARIO));
 
         //Iniciar el cliente REST

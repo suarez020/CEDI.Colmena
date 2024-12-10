@@ -41,14 +41,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class EmpacarActivity extends AppCompatActivity implements View.OnClickListener {
-
-    //Declaración del cliente REST
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
-
-    //Declaración de los objetos de la interfaz del activity
     EditText etPosicionCP;
-    Button btnEmpezarCerradoCP, btnFinalizarPosicionCP, btnEmpezarEmpaqueRFID;
+    Button btnEmpacar;
     TextToSpeech speech;
 
     //Variables
@@ -63,14 +59,10 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_cerrar_posicion);
         Utilidades.ocultarBarraEstado(getWindow());
 
-        this.setTitle(R.string.menu_cerrarPosicion);
+        this.setTitle("Empacar Bol");
         Objects.requireNonNull(getSupportActionBar()).setSubtitle(SPM.getString(Constantes.NOMBRE_USUARIO));
-
-        //Iniciar el cliente REST
         inicioRetrofit();
-        //Asignar referencias
         findViews();
-        //Eventos
         eventos();
     }
 
@@ -96,18 +88,12 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
         etPosicionCP = findViewById(R.id.etPosicionCP);
         etPosicionCP.requestFocus();
 
-        btnEmpezarCerradoCP = findViewById(R.id.btnEmpezarCerradoCP);
-        btnEmpezarCerradoCP.setEnabled(false);
-        btnFinalizarPosicionCP = findViewById(R.id.btnFinalizarPosicionCP);
-        btnFinalizarPosicionCP.setEnabled(false);
-        btnEmpezarEmpaqueRFID = findViewById(R.id.btnEmpezarEmpaqueRFID);
-        btnEmpezarEmpaqueRFID.setEnabled(false);
+        btnEmpacar = findViewById(R.id.btnEmpacar);
+        btnEmpacar.setEnabled(false);
     }
 
     private void eventos() {
-        btnEmpezarCerradoCP.setOnClickListener(this);
-        btnFinalizarPosicionCP.setOnClickListener(this);
-        btnEmpezarEmpaqueRFID.setOnClickListener(this);
+        btnEmpacar.setOnClickListener(this);
 
         //Eventos sobre el EditText posición
         etPosicionCP.setImeActionLabel("IR", KeyEvent.KEYCODE_ENTER);
@@ -147,31 +133,20 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void habilitarBotones() {
-        btnEmpezarCerradoCP.setEnabled(true);
-        btnFinalizarPosicionCP.setEnabled(true);
-        btnEmpezarEmpaqueRFID.setEnabled(true);
+        btnEmpacar.setEnabled(true);
     }
 
     private void desabilitarBotones() {
-        btnEmpezarCerradoCP.setEnabled(false);
-        btnFinalizarPosicionCP.setEnabled(false);
-        btnEmpezarEmpaqueRFID.setEnabled(false);
+        btnEmpacar.setEnabled(false);
     }
 
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.btnEmpezarCerradoCP:
+            case R.id.btnEmpacar:
                 isConfirmacion = false;
                 empezarCerrado();
-                break;
-            case R.id.btnFinalizarPosicionCP:
-                isConfirmacion = true;
-                empezarCerrado();
-                break;
-            case R.id.btnEmpezarEmpaqueRFID:
-                apiEmpezarCerradoRFID();
                 break;
         }
     }
@@ -338,10 +313,10 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-   //@Override
-   // public void onBackPressed(){
-    //    regresarPrincipal();
-   // }
+   @Override
+    public void onBackPressed(){
+       regresarPrincipal();
+    }
 
     private void regresarPrincipal() {
         Intent i = new Intent(this, PrincipalActivity.class);

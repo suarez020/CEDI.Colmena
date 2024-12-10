@@ -41,12 +41,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SepararActivity extends AppCompatActivity implements View.OnClickListener{
-
-    //Declaración del cliente REST
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
-
-    EditText etPosicionAuditoria, etEanAuditoria, etFaltantesAuditoria, etSobrantesAuditoria;
+    EditText etPosicionAuditoria, etEanAuditoria, etSobrantesAuditoria;
     TextView tvTituloSinRegistros;
     String cedula, equipo, ubicacion, faltantes, ean, sobrantes;
     TextToSpeech speech;
@@ -54,7 +51,6 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
     RespuestaEmpezarAuditoria respuestaEmpezarAuditoria;
     RespuestaAuditoria respuestaAuditoria;
     FloatingActionButton fabFinUbicacion;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
