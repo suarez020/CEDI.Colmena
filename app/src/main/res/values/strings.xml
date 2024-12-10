@@ -1,0 +1,120 @@
+<resources>
+    <string name="app_name">Colmena CEDI</string>
+    <string name="app_version">V.1.0.0.0</string>
+
+    <!-- TODO: Menu-->
+    <string name="menu_configuracion">Configuración</string>
+    <string name="menu_principal">Principal</string>
+    <string name="menu_recibirCajas">Recibir caja</string>
+    <string name="menu_cerrarPosicion">Cerrar posición</string>
+    <string name="menu_empaqueRFID">Empaque RFID</string>
+    <string name="menu_lectura">Lectura</string>
+    <string name="menu_cierreCarton">Cierre cartón</string>
+    <string name="menu_confirmarCerrarPosicion">Confirmar cerrar posición</string>
+    <string name="menu_auditoria">Separar UND</string>
+    <string name="cerrar_sesion">Cerrar sesión</string>
+    <string name="title_MenuPrincipal">Más</string>
+
+    <string name="cerrar_configuracion">Salir de configuración</string>
+    <string name="cerrar_configuracion_confirmar">¿Estas seguro de cerrar la configuración?</string>
+
+    <string name="cerrar_generico">Salir</string>
+    <string name="cerrar_generico_confirmacion">¿Estas seguro de cerrar esta pantalla?</string>
+
+    <!-- TODO: CerrarSescion -->
+    <string name="confirmar">Confirmar</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="cerrar_sesion_confirmar">¿Estas seguro de cerrar la sesión?</string>
+
+    <!-- TODO: ConfiguracionActivity-->
+    <string name="hint_etServidorConf">Servidor</string>
+    <string name="hint_etPuertoConf">Puerto</string>
+    <string name="hint_etEquipoConf">Equipo</string>
+    <string name="txt_btnGuardarConf">Guardar</string>
+
+    <!-- TODO: SplashScreen-->
+    <string name="titulo_estadoSplash">Legalizando Cartón…</string>
+    <string name="titulo_esperaSplash">Legalizando Cartón, espere por favor…</string>
+    <string name="titulo_cerradoSplash">Cartón Legalizando</string>
+    <string name="titulo_errorSplash">Error Legalizando Cartón</string>
+
+    <!-- TODO: DataWebge-->
+    <string name="error_DataWebge">(DataWedge): error al activar el parámetro, por favor comuníquese con el administrador</string>
+    <string name="error_IntentDataWebge">(DataWedge): error en el intent, por favor comuníquese con el administrador</string>
+
+    <!-- TODO: LoginActivity-->
+    <string name="txt_tvTituloLogin">Login</string>
+    <string name="hint_etCedulaLogin">Cédula</string>
+    <string name="txt_btnIngresarLogin">Ingresar</string>
+    <string name="error">Error</string>
+    <string name="exito">Éxito</string>
+    <string name="alerta">Alerta</string>
+    <string name="mensaje">Mensaje</string>
+    <string name="cedulaInvalida">Ingrese una cedula valida</string>
+
+    <!-- TODO: PrincipalActivity-->
+    <string name="txt_btnRecibirCaja">Recibir cajas</string>
+    <string name="txt_btnCerrarPosicion">Cerrar posición</string>
+
+    <!-- TODO: RecibirCajasActivity-->
+    <string name="txt_btnTerminarCarton">Terminar pinado</string>
+    <string name="hint_etCartonGenerico">Cartón genérico</string>
+    <string name="hint_etUbicacion">Ubicación</string>
+    <string name="txt_TituloPedidoRC">Pedido:</string>
+    <string name="txt_PedidoRC">Pedido</string>
+    <string name="txt_TituloTiendaRC">Tienda:</string>
+    <string name="txt_TiendaRC">Tienda</string>
+    <string name="txt_TituloUbicacionRC">Ubicación:</string>
+    <string name="txt_UbicacionRC">Ubicación</string>
+    <string name="txt_TituloTotalesRC">UDS Totales:</string>
+    <string name="txt_TotalesRC">Totales</string>
+
+    <!-- TODO: CerrarPosicionActivity-->
+    <string name="txt_btnEmpezarCerrado">Empezar cerrado</string>
+    <string name="txt_btnEmpezarEmpaqueRFID">Empezar empaque RFID</string>
+    <string name="txt_btnFinalizarPosicion">Finalizar posición</string>
+
+    <!-- TODO: LecturaActivity-->
+    <string name="txt_btnTerminarCajaLectura">Cerrar caja</string>
+    <string name="hint_etEanLectura">Ean</string>
+    <string name="hint_etActualesLectura">Actuales</string>
+    <string name="hint_etFaltantesLectura">Faltantes</string>
+
+    <!-- TODO: CierreCartonActivity-->
+    <string name="txt_btnConfirmarCC">Confirmar</string>
+    <string name="hint_etPosicionCC">Posición</string>
+    <string name="hint_etGenericoCC">Genérico</string>
+    <string name="hint_etActualesCC">Actuales</string>
+    <string name="hint_etFaltantesCC">Faltantes</string>
+
+    <!-- TODO: ConfirmarCerrarPosicionActivity-->
+    <string name="txt_btnConfirmarCerrarPosicion">Confirmar</string>
+    <string name="txt_tvNumeroConfirmarCerrarP">Numero</string>
+    <string name="txt_tvEanConfirmarCerrarP">Genérico</string>
+    <string name="txt_tvCantidadConfirmarCerrarP">UDS</string>
+
+    <!-- TODO: EmpaqueRFIDActivity-->
+    <string name="txt_tvGenericos">Genéricos</string>
+    <string name="btn_terminarEmpaqueRFID">Terminar Empaque</string>
+
+    <!-- TODO: DialogFragmentIntroducirClave-->
+    <string name="txt_tituloIntroducirClave">Confirmación</string>
+    <string name="txt_mensajeIntroducirClave">Introducir clave</string>
+    <string name="hint_etIntroducirClave">Clave</string>
+    <string name="txt_btnConfirmarClave">Confirmar</string>
+    <string name="txt_btnCancelarClave">Cancelar</string>
+
+    <!-- TODO: AuditoriaActivity-->
+    <string name="txt_tituloEanAudtioria">EAN</string>
+    <string name="txt_tituloUnidadesAuditoria">UNIDADES</string>
+    <string name="hint_etSobrantesAuditoria">Sobrantes</string>
+    <string name="txt_btnAuditoria">AUDITORÍA</string>
+    <string name="txt_SinRegistros">Sin registro, ingrese la ubicación</string>
+    <string name="txt_RFID">RFID</string>
+    <string name="txt_btnFinalizarAuditoria">Finalizar Auditoria</string>
+
+    <!-- TODO: Retrofit services-->
+    <string name="error_conexion">Error de conexión, </string>
+    <string name="error_conexion_sb">Error de conexión con el servicio web base.</string>
+
+</resources>

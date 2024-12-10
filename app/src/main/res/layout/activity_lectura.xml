@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/cvPantallaLectura"
+    android:layout_height="match_parent"
+    android:background="@color/colorSecondary"
+    tools:context=".ui.LecturaActivity">
+
+    <TextView
+        android:id="@+id/tvTituloRFIDLectura"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center_horizontal"
+        android:text="@string/txt_RFID"
+        android:textAlignment="center"
+        android:textColor="@color/rojo"
+        android:textSize="32sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4sp"
+        android:layout_marginEnd="4sp"
+        android:animateLayoutChanges="true"
+        android:background="@color/colorPrimary"
+        app:cardCornerRadius="10sp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTituloRFIDLectura"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rlFondo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="6dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/guidelineLA"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.5" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilUbicacionLectura"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="4sp"
+                        android:hint="@string/txt_UbicacionRC"
+                        android:textColorHint="@color/opaco"
+                        app:boxStrokeColor="@color/colorPrimary"
+                        app:counterTextColor="@color/white"
+                        app:hintTextColor="@color/black"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:startIconDrawable="@drawable/vector_posicion">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etUbicacionLectura"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:backgroundTint="@color/white"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:inputType="text"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/white"
+                            android:textSize="20sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/tilUbicacionLectura"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/tilUbicacionLectura" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilEanLectura"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4sp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="4sp"
+                        android:hint="@string/hint_etEanLectura"
+                        android:textColorHint="@color/black"
+                        app:boxStrokeColor="@color/colorPrimary"
+                        app:counterTextColor="@color/white"
+                        app:hintTextColor="@color/black"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tilUbicacionLectura"
+                        app:startIconDrawable="@drawable/vector_camara">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etEanLectura"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:backgroundTint="@color/white"
+                            android:ems="10"
+                            android:focusable="true"
+                            android:imeOptions="actionSearch"
+                            android:inputType="text"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/white"
+                            android:textSize="20sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/tilEanLectura"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/tilEanLectura" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilActualesLectura"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginRight="4dp"
+                        android:hint="@string/hint_etActualesLectura"
+                        android:textColorHint="@color/opaco"
+                        app:boxStrokeColor="@color/colorPrimary"
+                        app:counterTextColor="@color/white"
+                        app:hintTextColor="@color/black"
+                        app:layout_constraintEnd_toStartOf="@+id/guidelineLA"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tilEanLectura">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etActualesLectura"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:backgroundTint="@color/white"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:inputType="number"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/white"
+                            android:textSize="30sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/tilActualesLectura"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/tilActualesLectura" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilFaltantesLectura"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginRight="4dp"
+                        android:hint="@string/hint_etFaltantesLectura"
+                        android:textColorHint="@color/opaco"
+                        app:boxStrokeColor="@color/colorPrimary"
+                        app:counterTextColor="@color/white"
+                        app:hintTextColor="@color/black"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/guidelineLA"
+                        app:layout_constraintTop_toBottomOf="@+id/tilEanLectura">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etFaltantesLectura"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:backgroundTint="@color/white"
+                            android:ems="10"
+                            android:enabled="false"
+                            android:inputType="number"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/white"
+                            android:textSize="30sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/tilFaltantesLectura"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/tilFaltantesLectura" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/btnTerminarCajaLectura"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_marginStart="4sp"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginEnd="4sp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/txt_btnTerminarCajaLectura"
+                        android:textSize="20sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tilFaltantesLectura" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

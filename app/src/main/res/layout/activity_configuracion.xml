@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorSecondary"
+    tools:context=".ui.ConfiguracionActivity">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:background="@color/colorPrimary"
+        android:layout_marginStart="4sp"
+        android:layout_marginEnd="4sp"
+        app:cardCornerRadius="10sp"
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/rlFondo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="6dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilServidorConf"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="4sp"
+                        android:hint="@string/hint_etServidorConf"
+                        android:textColorHint="@color/black"
+                        app:boxStrokeColor="@color/colorPrimary"
+                        app:counterTextColor="@color/white"
+                        app:hintTextColor="@color/black"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:startIconDrawable="@drawable/vector_servidor">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etServidorConf"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:backgroundTint="@color/white"
+                            android:ems="10"
+                            android:imeOptions="actionGo"
+                            android:imeActionLabel="Enviar"
+                            android:textSize="18sp"
+                            android:inputType="text"
+                            android:focusable="true"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/white"
+                            app:layout_constraintBottom_toBottomOf="@+id/tilServidorConf"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/tilServidorConf" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilPuertoConf"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4sp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="4sp"
+                        android:hint="@string/hint_etPuertoConf"
+                        android:textColorHint="@color/black"
+                        app:boxStrokeColor="@color/colorPrimary"
+                        app:counterTextColor="@color/white"
+                        app:hintTextColor="@color/black"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tilServidorConf"
+                        app:startIconDrawable="@drawable/vector_puerto">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etPuertoConf"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:backgroundTint="@color/white"
+                            android:ems="10"
+                            android:imeOptions="actionGo"
+                            android:imeActionLabel="Enviar"
+                            android:textSize="18sp"
+                            android:inputType="number"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/white"
+                            app:layout_constraintBottom_toBottomOf="@+id/tilPuertoConf"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/tilPuertoConf" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilEquipoConf"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4sp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="4sp"
+                        android:hint="Estacion"
+                        android:textColorHint="@color/black"
+                        app:boxStrokeColor="@color/colorPrimary"
+                        app:counterTextColor="@color/white"
+                        app:hintTextColor="@color/black"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tilPuertoConf"
+                        app:startIconDrawable="@drawable/vector_equipo">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etEstacionConf"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:backgroundTint="@color/white"
+                            android:ems="10"
+                            android:imeOptions="actionSearch"
+                            android:inputType="number"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/white"
+                            android:textSize="18sp"
+                            app:layout_constraintBottom_toBottomOf="@+id/tilEquipoConf"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="@+id/tilEquipoConf" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/btnGuardarConf"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginStart="4sp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="4sp"
+                        android:textSize="18sp"
+                        android:layout_marginBottom="10dp"
+                        android:text="@string/txt_btnGuardarConf"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tilEquipoConf" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <ProgressBar
+        android:id="@+id/pbConfiguracion"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:indeterminateDrawable="@drawable/progressbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cv" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:icon="@drawable/vector_trespuntos"
+        android:id="@+id/MenuOpciones"
+        android:title="@string/title_MenuPrincipal"
+        app:showAsAction="always">
+        <menu>
+            <item android:id="@+id/mItemCerrarSesion"
+                android:title="@string/cerrar_sesion"
+                android:icon="@drawable/vector_cerrar_sesion"/>
+        </menu>
+    </item>
+</menu>
