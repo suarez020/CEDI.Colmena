@@ -31,12 +31,9 @@ import com.crystal.colmenacedi.retrofit.response.auditoria.ResponseAuditoria;
 import com.crystal.colmenacedi.retrofit.response.auditoria.RespuestaAuditoria;
 import com.crystal.colmenacedi.retrofit.response.empezarAuditoria.ResponseEmpezarAuditoria;
 import com.crystal.colmenacedi.retrofit.response.empezarAuditoria.RespuestaEmpezarAuditoria;
-import com.crystal.colmenacedi.ui.adapter.ConfirmarCerrarPosicionRecyclerViewAdapter;
-import com.crystal.colmenacedi.ui.dialogFragment.IntroducirClaveDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
-import java.util.Locale;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -54,7 +51,6 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
     String cedula, equipo, ubicacion, faltantes, ean, sobrantes;
     TextToSpeech speech;
     RecyclerView rvAuditoria;
-    ConfirmarCerrarPosicionRecyclerViewAdapter adapter;
     RespuestaEmpezarAuditoria respuestaEmpezarAuditoria;
     RespuestaAuditoria respuestaAuditoria;
     FloatingActionButton fabFinUbicacion;
@@ -71,9 +67,9 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
         //Iniciar el cliente REST
         inicioRetrofit();
         //Asignar referencias
-        findViews();
+        //findViews();
         //Eventos
-        eventos();
+        //eventos();
     }
 
     private void inicioRetrofit() {
@@ -82,19 +78,10 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void findViews() {
-        speech =  new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR){
-                    speech.setLanguage(new Locale("spa", "ESP"));
-                }
-            }
-        });
 
         etPosicionAuditoria = findViewById(R.id.etUbicacion);
 
         etEanAuditoria = findViewById(R.id.etEanAuditoria);
-        etFaltantesAuditoria = findViewById(R.id.etFaltantesAuditoria);
         etSobrantesAuditoria = findViewById(R.id.etSobrantesAuditoria);
         tvTituloSinRegistros = findViewById(R.id.tvTituloSinRegistros);
 
@@ -108,7 +95,7 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
         //Ocultar el teclado de pantalla
         ocultarTeclado();
         //fabFinUbicacion = findViewById(R.id.fabFinUbicacion);
-        fabFinUbicacion.setEnabled(false);
+        //fabFinUbicacion.setEnabled(false);
     }
 
     private void eventos() {
@@ -205,14 +192,6 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
                             sobrantes = respuestaEmpezarAuditoria.getSobrantes();
                             if(faltantes.equals("0")){
                                 regresarPrincipal();
-                            }else{
-                                tvTituloSinRegistros.setVisibility(View.GONE);
-                                adapter = new ConfirmarCerrarPosicionRecyclerViewAdapter(respuestaEmpezarAuditoria.getEmpezarAuditoria().gettFaltantes(), null, Constantes.CODE_AUDITORIA);
-                                rvAuditoria.setAdapter(adapter);
-
-                                etFaltantesAuditoria.setText(faltantes);
-                                etSobrantesAuditoria.setText(sobrantes);
-                                etEanAuditoria.requestFocus();
                             }
                         }
                     }
@@ -257,13 +236,6 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
 
                         if(faltantes.equals("0")){
                             regresarPrincipal();
-                        }else{
-                            etEanAuditoria.setText("");
-                            etEanAuditoria.requestFocus();
-                            adapter = new ConfirmarCerrarPosicionRecyclerViewAdapter(respuestaAuditoria.getEmpezarauditoria().gettFaltantes(), null, Constantes.CODE_AUDITORIA);
-                            rvAuditoria.setAdapter(adapter);
-                            etFaltantesAuditoria.setText(faltantes);
-                            etSobrantesAuditoria.setText(sobrantes);
                         }
                     }
                 }else{
@@ -345,11 +317,6 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
        // if(v.getId() == R.id.fabFinUbicacion){introducirClave();}
-    }
-
-    private void introducirClave() {
-        IntroducirClaveDialogFragment introducirClaveDialogFragment = new IntroducirClaveDialogFragment(ubicacion, Constantes.ACTIVITY_AUDITORIA);
-        introducirClaveDialogFragment.show(getSupportFragmentManager(), null);
     }
 
     private void ocultarTeclado(){

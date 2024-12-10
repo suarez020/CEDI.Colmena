@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+
 import com.crystal.colmenacedi.R;
 import com.crystal.colmenacedi.common.Constantes;
 import com.crystal.colmenacedi.common.LogFile;
@@ -27,6 +28,7 @@ import com.crystal.colmenacedi.retrofit.request.RequestPinado;
 import com.crystal.colmenacedi.retrofit.response.cerradoRFID.GenericosCerradoRFID;
 import com.crystal.colmenacedi.retrofit.response.cerradoRFID.ResponseCerradoRFID;
 import com.crystal.colmenacedi.retrofit.response.empezarCerrado.ResponseEmpezarCerrado;
+
 
 import java.io.Serializable;
 import java.util.ArrayList;

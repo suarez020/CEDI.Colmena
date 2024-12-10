@@ -16,7 +16,6 @@ import com.crystal.colmenacedi.retrofit.request.RequestPinado;
 import com.crystal.colmenacedi.retrofit.response.ResponseFinAuditoria;
 import com.crystal.colmenacedi.retrofit.response.cerradoRFID.GenericosCerradoRFID;
 import com.crystal.colmenacedi.retrofit.response.cerradoRFID.ResponseCerradoRFID;
-import com.crystal.colmenacedi.ui.adapter.ConfirmarCerrarPosicionRecyclerViewAdapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -44,7 +43,6 @@ public class EmpaqueRFIDActivity extends AppCompatActivity implements View.OnCli
     EditText etUbicacionEmpaqueRFID, etGenericoEmpaqueRFID;
     TextView tvTituloEanERFID,tvTituloTamano;
     RecyclerView rvEmpaqueRFID;
-    ConfirmarCerrarPosicionRecyclerViewAdapter adapter;
     Button btnTerminarEmpaqueRFID;
     GenericosCerradoRFID genericosCerradoRFID;
 
@@ -73,9 +71,7 @@ public class EmpaqueRFIDActivity extends AppCompatActivity implements View.OnCli
 
         if(genericosCerradoRFID != null){
             mostrarConsulta();
-            btnTerminarEmpaqueRFID.setEnabled(true);
-            adapter = new ConfirmarCerrarPosicionRecyclerViewAdapter(null, genericosCerradoRFID.getArray(), Constantes.CODE_EMPAQUE_RFID);
-            rvEmpaqueRFID.setAdapter(adapter);
+
         }
         if(consumirServicioapiCerradoRFID){
             generico = getIntent().getExtras().getString("cartonG");
@@ -173,9 +169,7 @@ public class EmpaqueRFIDActivity extends AppCompatActivity implements View.OnCli
                         Utilidades.mensajeDialog("Error", response.body().getRespuesta().getMensaje(), contexto);
                     }else{
                         mostrarConsulta();
-                        btnTerminarEmpaqueRFID.setEnabled(true);
-                        adapter = new ConfirmarCerrarPosicionRecyclerViewAdapter(null, response.body().getRespuesta().getGenericos().getArray(), Constantes.CODE_EMPAQUE_RFID);
-                        rvEmpaqueRFID.setAdapter(adapter);
+
                     }
                     etGenericoEmpaqueRFID.setText("");
                     etGenericoEmpaqueRFID.requestFocus();

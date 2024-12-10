@@ -24,8 +24,6 @@ import com.crystal.colmenacedi.retrofit.ClienteRetrofit;
 import com.crystal.colmenacedi.retrofit.ServiceRetrofit;
 import com.crystal.colmenacedi.retrofit.request.RequestPinado;
 import com.crystal.colmenacedi.retrofit.response.finalizarUbicacionInfo.ResponseFinalizarUbicacionInfo;
-import com.crystal.colmenacedi.ui.adapter.ConfirmarCerrarPosicionRecyclerViewAdapter;
-import com.crystal.colmenacedi.ui.dialogFragment.IntroducirClaveDialogFragment;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -89,8 +87,8 @@ public class ConfirmarCerrarPosicionActivity extends AppCompatActivity implement
         activity = SPM.getString(Constantes.ACTIVITY_NAVEGAR);
         cedula = SPM.getString(Constantes.CEDULA_USUARIO);
         estacion = SPM.getString(Constantes.EQUIPO_API);
-        ubicacion = getIntent().getExtras().getString("ubicacion");
-        faltantes = getIntent().getExtras().getString("faltantes");
+        //ubicacion = getIntent().getExtras().getString("ubicacion");
+        //faltantes = getIntent().getExtras().getString("faltantes");
 
         recyclerViewConfirmarCerrado = findViewById(R.id.rvConfirmarCerradoPosicion);
         recyclerViewConfirmarCerrado.setLayoutManager(new LinearLayoutManager(this));
@@ -113,14 +111,10 @@ public class ConfirmarCerrarPosicionActivity extends AppCompatActivity implement
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btnConfirmarCerradoPosicion) {
-            introducirClave();
         }
     }
 
-    private void introducirClave() {
-        IntroducirClaveDialogFragment introducirClaveDialogFragment = new IntroducirClaveDialogFragment(ubicacion, Constantes.ACTIVITY_CONFIRMAR_CP);
-        introducirClaveDialogFragment.show(getSupportFragmentManager(), null);
-    }
+
 
     private void toSpeech(final String msj) {
         final Handler handler = new Handler();
@@ -147,9 +141,6 @@ public class ConfirmarCerrarPosicionActivity extends AppCompatActivity implement
                     LogFile.adjuntarLog(response.body().getRespuesta().toString());
                     if(response.body().getRespuesta().getError().getStatus()){
                         mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
-                    }else{
-                        ConfirmarCerrarPosicionRecyclerViewAdapter adapter = new ConfirmarCerrarPosicionRecyclerViewAdapter(response.body().getRespuesta().getFinalizarUbicacionInfo().getArray(), null, Constantes.CODE_CON_CERRAR_P);
-                        recyclerViewConfirmarCerrado.setAdapter(adapter);
                     }
                 }else{
                     mensajeSimpleDialog("Error", "Error de conexión con el servicio web base.");

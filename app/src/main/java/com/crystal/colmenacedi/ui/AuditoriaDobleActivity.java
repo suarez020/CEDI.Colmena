@@ -31,8 +31,6 @@ import com.crystal.colmenacedi.retrofit.response.auditoria.ResponseAuditoria;
 import com.crystal.colmenacedi.retrofit.response.auditoria.RespuestaAuditoria;
 import com.crystal.colmenacedi.retrofit.response.empezarAuditoria.ResponseEmpezarAuditoria;
 import com.crystal.colmenacedi.retrofit.response.empezarAuditoria.RespuestaEmpezarAuditoria;
-import com.crystal.colmenacedi.ui.adapter.ConfirmarCerrarPosicionRecyclerViewAdapter;
-import com.crystal.colmenacedi.ui.dialogFragment.IntroducirClaveDialogFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Locale;
@@ -53,7 +51,6 @@ public class AuditoriaDobleActivity extends AppCompatActivity implements View.On
     String cedula, equipo, ubicacion, faltantes, ean, sobrantes;
     TextToSpeech speech;
     RecyclerView rvAuditoria;
-    ConfirmarCerrarPosicionRecyclerViewAdapter adapter;
     RespuestaEmpezarAuditoria respuestaEmpezarAuditoria;
     RespuestaAuditoria respuestaAuditoria;
     FloatingActionButton fabFinUbicacion;
@@ -100,7 +97,6 @@ public class AuditoriaDobleActivity extends AppCompatActivity implements View.On
 
         etEanAuditoria = findViewById(R.id.etEanAuditoria);
 
-        etFaltantesAuditoria = findViewById(R.id.etFaltantesAuditoria);
         etSobrantesAuditoria = findViewById(R.id.etSobrantesAuditoria);
         tvTituloSinRegistros = findViewById(R.id.tvTituloSinRegistros);
         tvTituloRFIDAuditoria = findViewById(R.id.tvTituloSeparar);
@@ -212,14 +208,6 @@ public class AuditoriaDobleActivity extends AppCompatActivity implements View.On
                         sobrantes = respuestaEmpezarAuditoria.getSobrantes();
                         if(faltantes.equals("0")){
                             regresarPrincipal();
-                        }else{
-                            tvTituloSinRegistros.setVisibility(View.GONE);
-                            adapter = new ConfirmarCerrarPosicionRecyclerViewAdapter(respuestaEmpezarAuditoria.getEmpezarAuditoria().gettFaltantes(),null, Constantes.CODE_AUDITORIA);
-                            rvAuditoria.setAdapter(adapter);
-
-                            etFaltantesAuditoria.setText(faltantes);
-                            etSobrantesAuditoria.setText(sobrantes);
-                            etEanAuditoria.requestFocus();
                         }
                     }
                 }else{
@@ -268,8 +256,7 @@ public class AuditoriaDobleActivity extends AppCompatActivity implements View.On
                         }else{
                             etEanAuditoria.setText("");
                             etEanAuditoria.requestFocus();
-                            adapter = new ConfirmarCerrarPosicionRecyclerViewAdapter(respuestaAuditoria.getEmpezarauditoria().gettFaltantes(), null, Constantes.CODE_AUDITORIA);
-                            rvAuditoria.setAdapter(adapter);
+
                             etFaltantesAuditoria.setText(faltantes);
                             etSobrantesAuditoria.setText(sobrantes);
                         }
@@ -346,11 +333,6 @@ public class AuditoriaDobleActivity extends AppCompatActivity implements View.On
     @Override
     public void onClick(View v) {
         //if(v.getId() == R.id.fabFinUbicacion){ introducirClave(); }
-    }
-
-    private void introducirClave() {
-        IntroducirClaveDialogFragment introducirClaveDialogFragment = new IntroducirClaveDialogFragment(ubicacion, Constantes.ACTIVITY_AUDITORIA);
-        introducirClaveDialogFragment.show(getSupportFragmentManager(), null);
     }
 
     private void ocultarTeclado(){

@@ -33,7 +33,7 @@
         app:cardCornerRadius="10sp"
         app:cardElevation="4dp"
         app:cardUseCompatPadding="true"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnTerminar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvTituloSeparar"
@@ -170,15 +170,17 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tilEanAuditoria">
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etFaltantesAuditoria"
+                        <TextView
+                            android:id="@+id/etUnidadesLeidas"
                             android:layout_width="match_parent"
                             android:layout_height="71dp"
                             android:layout_marginBottom="8dp"
                             android:backgroundTint="@color/white"
                             android:ems="10"
                             android:enabled="false"
-                            android:inputType="number"
+                            android:gravity="center_vertical"
+                            android:inputType="none"
+                            android:text="Unidades Leidas"
                             android:textColor="@color/black"
                             android:textColorHint="@color/white"
                             android:textSize="30sp"
@@ -186,8 +188,8 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="@+id/tilFaltantesAuditoria" />
-
                     </com.google.android.material.textfield.TextInputLayout>
+
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/tilSobrantesAuditoria"
@@ -199,7 +201,6 @@
                         android:layout_marginTop="2dp"
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
-                        android:hint="Unidades Leidas"
                         android:textColorHint="@color/black"
                         app:boxBackgroundMode="filled"
                         app:boxStrokeColor="@color/colorPrimary"
@@ -269,6 +270,7 @@
                         app:layout_constraintTop_toBottomOf="@+id/tvTituloEan"
                         tools:listitem="@layout/recyclerview_confirmar_cerrar_posicion" />
 
+
                     <TextView
                         android:id="@+id/tvTituloSinRegistros"
                         android:layout_width="wrap_content"
@@ -282,12 +284,26 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/rvAuditoria" />
 
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             </RelativeLayout>
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
-
+    <Button
+        android:id="@+id/btnTerminar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Terminar"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:fontFamily="sans-serif-medium"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
