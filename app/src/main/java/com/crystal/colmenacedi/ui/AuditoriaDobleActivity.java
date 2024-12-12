@@ -319,11 +319,6 @@ public class AuditoriaDobleActivity extends AppCompatActivity implements View.On
         }, 100);
     }
 
-    @Override
-    public void onBackPressed(){
-        regresarPrincipal();
-    }
-
     private void regresarPrincipal() {
         Intent i = new Intent(this, PrincipalActivity.class);
         startActivity(i);
@@ -343,4 +338,7 @@ public class AuditoriaDobleActivity extends AppCompatActivity implements View.On
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
+    @Override
+    public void onBackPressed(){}
 }

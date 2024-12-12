@@ -46,8 +46,6 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
     EditText etPosicionCP;
     Button btnEmpacar;
     TextToSpeech speech;
-
-    //Variables
     String cedula, equipo, ubicacion, leidos, faltantes;
     ArrayList<String> nombresParametros;
     List<List<String>> genericosCerradoRFID;
@@ -252,13 +250,13 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void irCierreCarton() {
-        Intent i = new Intent(this, CierreCartonActivity.class);
+/*        Intent i = new Intent(this, CierreCartonActivity.class);
         i.putExtra("leidos", (Serializable) leidos);
         i.putExtra("faltantes", (Serializable) faltantes);
         i.putExtra("ubicacion", (Serializable) ubicacion);
         i.putExtra("QR", (Serializable) qr);
         startActivity(i);
-        finish();
+        finish();*/
     }
 
     private void irLectura() {

@@ -239,13 +239,13 @@ public class LecturaDobleActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void irCierreCarton() {
-        Intent i = new Intent(this, CierreCartonActivity.class);
+/*        Intent i = new Intent(this, CierreCartonActivity.class);
         i.putExtra("leidos", (Serializable) actuales);
         i.putExtra("faltantes", (Serializable) faltantes);
         i.putExtra("ubicacion", (Serializable) ubicacion);
         i.putExtra("QR", (Serializable) qr);
         startActivity(i);
-        finish();
+        finish();*/
     }
 
     private void toSpeech(final String msj) {

@@ -36,16 +36,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LecturaActivity extends AppCompatActivity implements View.OnClickListener {
-    //Declaración del cliente REST
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
-
-    //Declaración de los objetos de la interfaz del activity
     EditText etUbicacionLectura, etEanLectura, etActualesLectura, etFaltantesLectura;
     Button btnTerminarCajaLectura;
     TextToSpeech speech;
-
-    //Variables
     String cedula, equipo, ubicacion, cartonG, actuales, faltantes;
     boolean qr;
     boolean consumirServicio = true;
@@ -57,7 +52,7 @@ public class LecturaActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_lectura);
         Utilidades.ocultarBarraEstado(getWindow());
 
-        this.setTitle(R.string.menu_lectura);
+        this.setTitle("titulo fuera");
         Objects.requireNonNull(getSupportActionBar()).setSubtitle(SPM.getString(Constantes.NOMBRE_USUARIO));
 
         //Iniciar el cliente REST
@@ -244,13 +239,13 @@ public class LecturaActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void irCierreCarton() {
-        Intent i = new Intent(this, CierreCartonActivity.class);
+/*        Intent i = new Intent(this, CierreCartonActivity.class);
         i.putExtra("leidos", (Serializable) actuales);
         i.putExtra("faltantes", (Serializable) faltantes);
         i.putExtra("ubicacion", (Serializable) ubicacion);
         i.putExtra("QR", (Serializable) qr);
         startActivity(i);
-        finish();
+        finish();*/
     }
 
     @Override
