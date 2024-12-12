@@ -69,6 +69,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         pbLogin.setVisibility(View.VISIBLE);
         mac = SPM.getString(Constantes.MAC_EQUIPO);
         Call<ResponseInicio> inicio = serviceRetrofit.doInicio(mac);
+
         inicio.enqueue(new Callback<ResponseInicio>() {
             @Override
             public void onResponse(Call<ResponseInicio> call, Response<ResponseInicio> response) {
