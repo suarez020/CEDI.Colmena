@@ -47,7 +47,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.LecturaDobleActivity"
+            android:name=".ui.ZonaActivity"
             android:screenOrientation="portrait"
             android:exported="false" />
 
@@ -68,7 +68,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".ui.LecturaActivity"
+            android:name=".ui.ZonaActivity"
             android:screenOrientation="portrait"
             android:exported="false" />
 

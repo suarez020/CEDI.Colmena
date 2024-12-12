@@ -39,18 +39,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-    //Declaración del cliente REST
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
-
-    //Declaración de los objetos de la interfaz del activity
     Button btnIngresarLogin;
     EditText etCedulaLogin;
     ProgressBar pbLogin;
     TextView tvEquipoLogin;
-    TextToSpeech speech;
-
-    //Variables
     String cedulaLogin, estacion, mac;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -64,13 +58,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if(SPM.getString(Constantes.SERVIDOR_API) == null){
             irConfiguracion();
         }else{
-            //Iniciar el cliente REST
             inicioRetrofit();
-            //Asignar referencias
             findViews();
-            //Eventos
             eventos();
-            //get inicio
             inicio();
         }
     }
@@ -84,7 +74,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onResponse(Call<ResponseInicio> call, Response<ResponseInicio> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    toSpeech(response.body().getRespuesta().getVoz());
                     LogFile.adjuntarLog(response.body().getRespuesta().toString());
                     if(response.body().getRespuesta().getError().getStatus()){
                         mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
@@ -115,25 +104,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void findViews() {
-        speech =  new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR){
-                    speech.setLanguage(new Locale("spa", "ESP"));
-                }
-            }
-        });
-
         estacion = SPM.getString(Constantes.EQUIPO_API);
-
         etCedulaLogin = findViewById(R.id.etCedulaLogin);
         etCedulaLogin.requestFocus();
         btnIngresarLogin = findViewById(R.id.btnIngresarLogin);
         tvEquipoLogin = findViewById(R.id.tvEquipoLogin);
-
         tvEquipoLogin.setVisibility(View.VISIBLE);
         tvEquipoLogin.setText(SPM.getString(Constantes.EQUIPO_API));
-
         pbLogin = findViewById(R.id.pbLogin);
         pbLogin.setVisibility(View.GONE);
     }
@@ -170,18 +147,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 return handled;
             }
         });
-    }
-
-    private void toSpeech(final String msj) {
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(speech != null){
-                    speech.speak(msj, TextToSpeech.QUEUE_FLUSH, null);
-                }
-            }
-        }, 100);
     }
 
     public void validarLogin(){
@@ -221,7 +186,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onResponse(Call<ResponseLogin> call, Response<ResponseLogin> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    toSpeech(response.body().getRespuesta().getVoz());
                     LogFile.adjuntarLog(response.body().getRespuesta().toString());
                     if(response.body().getRespuesta().getError().getStatus()){
                         mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());

@@ -41,80 +41,20 @@ import retrofit2.Response;
 public class PrincipalActivity extends AppCompatActivity implements View.OnClickListener{
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
-
-    //Declaración de los objetos de la interfaz del activity
     Button btnUbicarUnd, btnEmpacarBol, btnSepararUnd;
     String cedula, estacion;
-    TextToSpeech speech;
-    Animation animacionArriba, animacionAbajo;
     CardView cvPrincipalE;
     TextView tvEquipoPrincipal;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_principal);
         Utilidades.ocultarBarraEstado(getWindow());
-
         this.setTitle(R.string.menu_principal);
         Objects.requireNonNull(getSupportActionBar()).setSubtitle(SPM.getString(Constantes.NOMBRE_USUARIO));
-
-        //Agregar animaciones
-        animaciones();
-        //Iniciar el cliente REST
         inicioRetrofit();
-        //Asignar referencias
         findViews();
-        //Eventos
         eventos();
-    }
-
-    private void inicioRetrofit() {
-        appCliente = ClienteRetrofit.obtenerInstancia();
-        serviceRetrofit = appCliente.obtenerServicios();
-    }
-
-    private void findViews() {
-        tvEquipoPrincipal = findViewById(R.id.tvEquipoPrincipal);
-        tvEquipoPrincipal.setText(SPM.getString(Constantes.EQUIPO_API));
-        speech =  new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR){
-                    speech.setLanguage(new Locale("spa", "ESP"));
-                }
-            }
-        });
-
-        cvPrincipalE = findViewById(R.id.cvPrincipalE);
-        btnUbicarUnd = findViewById(R.id.btnUbicarUnd);
-        btnEmpacarBol = findViewById(R.id.btnEmpacarBol);
-        btnSepararUnd = findViewById(R.id.btnSepararUnd);
-    }
-
-    private void eventos() {
-        btnUbicarUnd.setOnClickListener(this);
-        btnEmpacarBol.setOnClickListener(this);
-        btnSepararUnd.setOnClickListener(this);
-    }
-
-    private void animaciones() {
-        animacionArriba = AnimationUtils.loadAnimation(this, R.anim.desplazamiento_arriba);
-        animacionAbajo = AnimationUtils.loadAnimation(this, R.anim.desplazamiento_abajo);
-    }
-
-    //Método para mostrar y ocultar el menú
-    public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.menuprincipal, menu);
-        return true;
-    }
-
-    //Método para asignar las funciones correspondientes a las opciones
-    public boolean onOptionsItemSelected(MenuItem item){
-        if (item.getItemId() == R.id.mItemCerrarSesion) {
-            cerrarSesion();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -157,6 +97,40 @@ public class PrincipalActivity extends AppCompatActivity implements View.OnClick
         cerrarSesion();
     }
 
+    private void inicioRetrofit() {
+        appCliente = ClienteRetrofit.obtenerInstancia();
+        serviceRetrofit = appCliente.obtenerServicios();
+    }
+
+    private void findViews() {
+        tvEquipoPrincipal = findViewById(R.id.tvEquipoPrincipal);
+        tvEquipoPrincipal.setText(SPM.getString(Constantes.EQUIPO_API));
+
+        cvPrincipalE = findViewById(R.id.cvPrincipalE);
+        btnUbicarUnd = findViewById(R.id.btnUbicarUnd);
+        btnEmpacarBol = findViewById(R.id.btnEmpacarBol);
+        btnSepararUnd = findViewById(R.id.btnSepararUnd);
+    }
+
+    private void eventos() {
+        btnUbicarUnd.setOnClickListener(this);
+        btnEmpacarBol.setOnClickListener(this);
+        btnSepararUnd.setOnClickListener(this);
+    }
+
+
+    public boolean onCreateOptionsMenu(Menu menu){//mostrar y ocultar el menú
+        getMenuInflater().inflate(R.menu.menuprincipal, menu);
+        return true;
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item){//funciones correspondientes a las opciones
+        if (item.getItemId() == R.id.mItemCerrarSesion) {
+            cerrarSesion();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void cerrarSesion() {
         int icon = R.drawable.vector_cerrar_sesion;
         //Alerta para confirmar el cierre de sesion
@@ -196,13 +170,11 @@ public class PrincipalActivity extends AppCompatActivity implements View.OnClick
             public void onResponse(Call<ResponseLogout> call, Response<ResponseLogout> response) {
                 if(response.isSuccessful()) {
                     assert response.body() != null;
-                    toSpeech(response.body().getRespuesta().getVoz());
                     LogFile.adjuntarLog(response.body().getRespuesta().toString());
                     if(response.body().getRespuesta().getError().getStatus()){
                         mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
                     }else{
                         if(response.body().getRespuesta().getLogout().isDesmatriculado()){
-                            //Cerrar sesión
                             irLogin();
                         }else{
                             mensajeSimpleDialog("Alerta", "No puede cerrar sesión, el dispositivo esta sin desmatricular");
@@ -221,7 +193,6 @@ public class PrincipalActivity extends AppCompatActivity implements View.OnClick
         });
     }
 
-    //Alert Dialog para mostrar mensajes de error, alertas o información
     public void mensajeSimpleDialog(String titulo, String msj){
 
         int icon = R.drawable.vector_alerta;
@@ -254,17 +225,4 @@ public class PrincipalActivity extends AppCompatActivity implements View.OnClick
         startActivity(intent);
         finish();
     }
-
-    private void toSpeech(final String msj) {
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(speech != null){
-                    speech.speak(msj, TextToSpeech.QUEUE_FLUSH, null);
-                }
-            }
-        }, 100);
-    }
-
 }

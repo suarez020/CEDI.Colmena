@@ -34,19 +34,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ConfirmarCerrarPosicionActivity extends AppCompatActivity implements View.OnClickListener {
-
-    //Declaración del cliente REST
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
-
-    //Declaración de los objetos de la interfaz del activity
     EditText etPosicionConfirmarCerrado, etFaltantesConfirmarCerrado;
     RecyclerView recyclerViewConfirmarCerrado;
     Button btnConfirmarCerradoPosicion;
     ArrayList<String> listInformacion;
-    TextToSpeech speech;
-
-    //Variables
     String activity, cedula, estacion, ubicacion, faltantes;
 
     @Override
@@ -57,14 +50,9 @@ public class ConfirmarCerrarPosicionActivity extends AppCompatActivity implement
 
         this.setTitle(R.string.menu_confirmarCerrarPosicion);
         Objects.requireNonNull(getSupportActionBar()).setSubtitle(SPM.getString(Constantes.NOMBRE_USUARIO));
-
-        //Iniciar el cliente REST
         inicioRetrofit();
-        //Asignar referencias
         findViews();
-        //Eventos
         eventos();
-        //Llenar ListWiew
         finalizarUbicacionInfo();
     }
 
@@ -75,15 +63,6 @@ public class ConfirmarCerrarPosicionActivity extends AppCompatActivity implement
 
     @SuppressLint("ResourceAsColor")
     private void findViews() {
-        speech =  new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR){
-                    speech.setLanguage(new Locale("spa", "ESP"));
-                }
-            }
-        });
-
         activity = SPM.getString(Constantes.ACTIVITY_NAVEGAR);
         cedula = SPM.getString(Constantes.CEDULA_USUARIO);
         estacion = SPM.getString(Constantes.EQUIPO_API);
@@ -114,20 +93,6 @@ public class ConfirmarCerrarPosicionActivity extends AppCompatActivity implement
         }
     }
 
-
-
-    private void toSpeech(final String msj) {
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(speech != null){
-                    speech.speak(msj, TextToSpeech.QUEUE_FLUSH, null);
-                }
-            }
-        }, 100);
-    }
-
     private void finalizarUbicacionInfo() {
         //Consultar la Api de finalizarUbicaciónInfo
         RequestPinado requestPinado = new RequestPinado(cedula, estacion, ubicacion);
@@ -137,7 +102,6 @@ public class ConfirmarCerrarPosicionActivity extends AppCompatActivity implement
             public void onResponse(Call<ResponseFinalizarUbicacionInfo> call, Response<ResponseFinalizarUbicacionInfo> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    toSpeech(response.body().getRespuesta().getVoz());
                     LogFile.adjuntarLog(response.body().getRespuesta().toString());
                     if(response.body().getRespuesta().getError().getStatus()){
                         mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
@@ -184,13 +148,13 @@ public class ConfirmarCerrarPosicionActivity extends AppCompatActivity implement
         }
     }
 
-/*
-    @Override
-    public void onBackPressed(){
-        //Regresar a la pantalla principal
-        regresarPrincipal();
-    }
-*/
+        /*
+            @Override
+            public void onBackPressed(){
+                //Regresar a la pantalla principal
+                regresarPrincipal();
+            }
+        */
 
     private void regresarPrincipal() {
         Intent i = new Intent(this, PrincipalActivity.class);

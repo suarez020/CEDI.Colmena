@@ -41,21 +41,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UbicarActivity extends AppCompatActivity implements View.OnClickListener{
-    //Declaración del cliente REST
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
-
-    //Declaración de los objetos de la interfaz del activity
     EditText etCartonGenericoRC, etPosicionRC;
     TextView tvTituloPedidoRC, tvPedidoRCV, tvTituloTiendaRC, tvTiendaRCV, tvTituloPosicionRC, tvPosicionRC, tvTituloTotalesRC, tvTotalesRCV;
     Button btnTerminarCarton;
     ProgressBar pbRecibirCaja;
-    TextToSpeech speech;
-
-    //Variables
     String cedula, estacion, cartonG, ubicacion, mensaje;
-    int contCarton, contPosicion;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,12 +56,8 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
 
         this.setTitle("Ubicar UND");
         Objects.requireNonNull(getSupportActionBar()).setSubtitle(SPM.getString(Constantes.NOMBRE_USUARIO));
-
-        //Iniciar el cliente REST
         inicioRetrofit();
-        //Asignar referencias
         findViews();
-        //Eventos
         eventos();
     }
 
@@ -79,22 +67,11 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void findViews() {
-        speech =  new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR){
-                    speech.setLanguage(new Locale("spa", "ESP"));
-                }
-            }
-        });
-
         cedula = SPM.getString(Constantes.CEDULA_USUARIO);
         estacion = SPM.getString(Constantes.EQUIPO_API);
-
         etCartonGenericoRC = findViewById(R.id.etCartonGenericoRC);
         etCartonGenericoRC.requestFocus();
         etPosicionRC = findViewById(R.id.etPosicionRC);
-
         tvTituloPedidoRC = findViewById(R.id.tvTituloPedidoRC);
         tvPedidoRCV = findViewById(R.id.tvPedidoRCV);
         tvTituloTiendaRC = findViewById(R.id.tvTituloTiendaRC);
@@ -104,7 +81,6 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
         tvTituloTotalesRC = findViewById(R.id.tvTituloTotalesRC);
         tvTotalesRCV = findViewById(R.id.tvTotalesRCV);
         ocultarConsulta();
-
         btnTerminarCarton = findViewById(R.id.btnTerminarCarton);
         btnTerminarCarton.setEnabled(false);
         pbRecibirCaja = findViewById(R.id.pbRecibirCaja);
@@ -179,18 +155,6 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    private void toSpeech(final String msj) {
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(speech != null){
-                    speech.speak(msj, TextToSpeech.QUEUE_FLUSH, null);
-                }
-            }
-        }, 100);
-    }
-
     private void recepcion() {
         //Consultar la Api de Recepción
         RequestRecepcion requestRecepcion = new RequestRecepcion(cedula, estacion, cartonG);
@@ -202,7 +166,6 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
             public void onResponse(Call<ResponseRecepcion> call, Response<ResponseRecepcion> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    toSpeech(response.body().getRespuesta().getVoz());
                     LogFile.adjuntarLog(response.body().getRespuesta().toString());
                     if(response.body().getRespuesta().getError().getStatus()){
                         mensajeDialog("Error", response.body().getRespuesta().getMensaje());
@@ -244,7 +207,6 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
             public void onResponse(Call<ResponseIniciaPinado> call, Response<ResponseIniciaPinado> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    toSpeech(response.body().getRespuesta().getVoz());
                     LogFile.adjuntarLog(response.body().getRespuesta().toString());
                     if(response.body().getRespuesta().getError().getStatus()){
                         mensajeDialog("Error", response.body().getRespuesta().getMensaje());
@@ -288,7 +250,6 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
             public void onResponse(Call<ResponseFinPinado> call, Response<ResponseFinPinado> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    toSpeech(response.body().getRespuesta().getVoz());
                     LogFile.adjuntarLog(response.body().getRespuesta().toString());
                     if(response.body().getRespuesta().getError().getStatus()){
                         mensajeDialog("Error", response.body().getRespuesta().getMensaje());
@@ -351,7 +312,6 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
         alerta.show();
     }
 
-    //Alert Dialog para mostrar mensajes de error, alertas o información
     public void mensajeDialog(final String titulo, final String msj){
 
         int icon = R.drawable.vector_alerta;

@@ -44,7 +44,6 @@ public class EmpaqueRFIDActivity extends AppCompatActivity implements View.OnCli
     GenericosCerradoRFID genericosCerradoRFID;
     String cedula, estacion, ubicacion, generico;
     boolean  consumirServicioapiCerradoRFID;
-    String tamanoElegido;
     Utilidades util;
     Context contexto;
 
@@ -87,7 +86,6 @@ public class EmpaqueRFIDActivity extends AppCompatActivity implements View.OnCli
         //todo: extras:
         ubicacion = getIntent().getExtras().getString("ubicacion");
         consumirServicioapiCerradoRFID = getIntent().getExtras().getBoolean("consumirServicioapiCerradoRFID");
-        tamanoElegido = getIntent().getExtras().getString("tamano");
         //todo: extras:
         genericosCerradoRFID = (GenericosCerradoRFID) getIntent().getSerializableExtra("genericosRFID");
         etUbicacionEmpaqueRFID = findViewById(R.id.etUbicacionEmpaqueRFID);

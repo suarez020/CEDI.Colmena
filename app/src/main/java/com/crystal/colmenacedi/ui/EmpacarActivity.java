@@ -45,12 +45,9 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
     ClienteRetrofit appCliente;
     EditText etPosicionCP;
     Button btnEmpacar;
-    TextToSpeech speech;
     String cedula, equipo, ubicacion, leidos, faltantes;
     ArrayList<String> nombresParametros;
     List<List<String>> genericosCerradoRFID;
-    boolean qr, isConfirmacion;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,15 +67,6 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void findViews() {
-        speech =  new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR){
-                    speech.setLanguage(new Locale("spa", "ESP"));
-                }
-            }
-        });
-
         cedula = SPM.getString(Constantes.CEDULA_USUARIO);
         equipo = SPM.getString(Constantes.EQUIPO_API);
         nombresParametros = new ArrayList<>();
@@ -92,8 +80,6 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
 
     private void eventos() {
         btnEmpacar.setOnClickListener(this);
-
-        //Eventos sobre el EditText posición
         etPosicionCP.setImeActionLabel("IR", KeyEvent.KEYCODE_ENTER);
         etPosicionCP.setOnKeyListener(new View.OnKeyListener() {
             @SuppressLint("ResourceAsColor")
@@ -143,7 +129,6 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnEmpacar:
-                isConfirmacion = false;
                 empezarCerrado();
                 break;
         }
@@ -158,7 +143,6 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
             public void onResponse(Call<ResponseCerradoRFID> call, Response<ResponseCerradoRFID> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    toSpeech(response.body().getRespuesta().getVoz());
                     LogFile.adjuntarLog(response.body().getRespuesta().toString());
                     if(response.body().getRespuesta().getError().getStatus()){
                         mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
@@ -192,18 +176,6 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
         finish();
     }
 
-    private void toSpeech(final String msj) {
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(speech != null){
-                    speech.speak(msj, TextToSpeech.QUEUE_FLUSH, null);
-                }
-            }
-        }, 100);
-    }
-
     private void empezarCerrado() {
         //Consultar la Api de empezar cerrado
         RequestPinado requestPinado = new RequestPinado(cedula, equipo, ubicacion);
@@ -213,7 +185,6 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
             public void onResponse(Call<ResponseEmpezarCerrado> call, Response<ResponseEmpezarCerrado> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    toSpeech(response.body().getRespuesta().getVoz());
                     LogFile.adjuntarLog(response.body().getRespuesta().toString());
                     if(response.body().getRespuesta().getError().getStatus()){
                         mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
@@ -224,17 +195,11 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
                     }else{
                         leidos = response.body().getRespuesta().getEmpezarCerrado().getLeidos();
                         faltantes = response.body().getRespuesta().getEmpezarCerrado().getFaltantes();
-                        qr = response.body().getRespuesta().isQr();
 
-                        if(isConfirmacion){
-                            irConfirmarCerrarPosicion();
-                        }else{
-                            if(faltantes.equals("0")){
-                                irCierreCarton();
-                            }else{
+
                                 irLectura();
-                            }
-                        }
+
+
                     }
                 }else{
                     mensajeSimpleDialog("Error", "Error de conexión con el servicio web base.");
@@ -248,28 +213,11 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
     }
-
-    private void irCierreCarton() {
-/*        Intent i = new Intent(this, CierreCartonActivity.class);
-        i.putExtra("leidos", (Serializable) leidos);
-        i.putExtra("faltantes", (Serializable) faltantes);
-        i.putExtra("ubicacion", (Serializable) ubicacion);
-        i.putExtra("QR", (Serializable) qr);
-        startActivity(i);
-        finish();*/
-    }
-
     private void irLectura() {
-        Intent i;
-        if(qr){
-            i = new Intent(this, LecturaDobleActivity.class);
-        }else{
-            i = new Intent(this, LecturaActivity.class);
-        }
+        Intent i =  new Intent(this, ZonaActivity.class);
         i.putExtra("leidos", (Serializable) leidos);
         i.putExtra("faltantes", (Serializable) faltantes);
         i.putExtra("ubicacion", (Serializable) ubicacion);
-        i.putExtra("QR", (Serializable) qr);
         startActivity(i);
         finish();
     }

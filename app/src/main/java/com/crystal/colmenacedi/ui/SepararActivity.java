@@ -46,7 +46,6 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
     EditText etPosicionAuditoria, etEanAuditoria, etSobrantesAuditoria;
     TextView tvTituloSinRegistros;
     String cedula, equipo, ubicacion, faltantes, ean, sobrantes;
-    TextToSpeech speech;
     RecyclerView rvAuditoria;
     RespuestaEmpezarAuditoria respuestaEmpezarAuditoria;
     RespuestaAuditoria respuestaAuditoria;
@@ -59,10 +58,7 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
 
         this.setTitle(R.string.menu_auditoria);
         Objects.requireNonNull(getSupportActionBar()).setSubtitle(SPM.getString(Constantes.NOMBRE_USUARIO));
-
-        //Iniciar el cliente REST
         inicioRetrofit();
-        //Asignar referencias
         //findViews();
         //Eventos
         //eventos();
@@ -173,7 +169,6 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
             public void onResponse(Call<ResponseEmpezarAuditoria> call, Response<ResponseEmpezarAuditoria> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    toSpeech(response.body().getRespuesta().getVoz());
                     LogFile.adjuntarLog(response.body().getRespuesta().toString());
                     if(response.body().getRespuesta().getError().getStatus()){
                         mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
@@ -219,7 +214,6 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
             public void onResponse(Call<ResponseAuditoria> call, Response<ResponseAuditoria> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    toSpeech(response.body().getRespuesta().getVoz());
                     LogFile.adjuntarLog(response.body().getRespuesta().toString());
                     if(response.body().getRespuesta().getError().getStatus()){
                         mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
@@ -285,18 +279,6 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
         if(!(SepararActivity.this.isFinishing())){
             alerta.show();
         }
-    }
-
-    private void toSpeech(final String msj) {
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(speech != null){
-                    speech.speak(msj, TextToSpeech.QUEUE_FLUSH, null);
-                }
-            }
-        }, 100);
     }
 
     @Override

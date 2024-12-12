@@ -41,20 +41,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AuditoriaDobleActivity extends AppCompatActivity implements View.OnClickListener{
-
-    //Declaración del cliente REST
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
-
     EditText etPosicionAuditoria, etEanAuditoria, etFaltantesAuditoria, etSobrantesAuditoria;
     TextView tvTituloSinRegistros, tvTituloRFIDAuditoria;
     String cedula, equipo, ubicacion, faltantes, ean, sobrantes;
-    TextToSpeech speech;
     RecyclerView rvAuditoria;
     RespuestaEmpezarAuditoria respuestaEmpezarAuditoria;
     RespuestaAuditoria respuestaAuditoria;
     FloatingActionButton fabFinUbicacion;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,14 +58,9 @@ public class AuditoriaDobleActivity extends AppCompatActivity implements View.On
 
         this.setTitle(R.string.menu_auditoria);
         Objects.requireNonNull(getSupportActionBar()).setSubtitle(SPM.getString(Constantes.NOMBRE_USUARIO));
-
-        //Iniciar el cliente REST
         inicioRetrofit();
-        //Asignar referencias
         findViews();
-        //Eventos
         eventos();
-
         empezarAuditoria();
     }
 
@@ -80,15 +70,6 @@ public class AuditoriaDobleActivity extends AppCompatActivity implements View.On
     }
 
     private void findViews() {
-        speech =  new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR){
-                    speech.setLanguage(new Locale("spa", "ESP"));
-                }
-            }
-        });
-
         ubicacion = getIntent().getExtras().getString("ubicacion");
 
         etPosicionAuditoria = findViewById(R.id.etUbicacion);
@@ -195,7 +176,6 @@ public class AuditoriaDobleActivity extends AppCompatActivity implements View.On
             public void onResponse(Call<ResponseEmpezarAuditoria> call, Response<ResponseEmpezarAuditoria> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    toSpeech(response.body().getRespuesta().getVoz());
                     LogFile.adjuntarLog(response.body().getRespuesta().toString());
                     if(response.body().getRespuesta().getError().getStatus()){
                         mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
@@ -239,7 +219,6 @@ public class AuditoriaDobleActivity extends AppCompatActivity implements View.On
             public void onResponse(Call<ResponseAuditoria> call, Response<ResponseAuditoria> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    toSpeech(response.body().getRespuesta().getVoz());
                     LogFile.adjuntarLog(response.body().getRespuesta().toString());
                     if(response.body().getRespuesta().getError().getStatus()){
                         mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
@@ -305,18 +284,6 @@ public class AuditoriaDobleActivity extends AppCompatActivity implements View.On
         if(!(AuditoriaDobleActivity.this.isFinishing())){
             alerta.show();
         }
-    }
-
-    private void toSpeech(final String msj) {
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(speech != null){
-                    speech.speak(msj, TextToSpeech.QUEUE_FLUSH, null);
-                }
-            }
-        }, 100);
     }
 
     private void regresarPrincipal() {

@@ -6,12 +6,12 @@
     android:id="@+id/cvPantallaLectura"
     android:layout_height="match_parent"
     android:background="@color/colorSecondary"
-    tools:context=".ui.LecturaActivity">
+    tools:context=".ui.ZonaActivity">
 
     <TextView
         android:id="@+id/tvTituloRFIDLectura"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="4dp"
+        android:layout_height="3dp"
         android:layout_marginTop="4dp"
         android:gravity="center_horizontal"
         android:textAlignment="center"
@@ -217,7 +217,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <Button
-                        android:id="@+id/btnTerminarEmpacar"
+                        android:id="@+id/btnTerminarEmpaque"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:layout_marginStart="4sp"

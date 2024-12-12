@@ -48,20 +48,13 @@ import retrofit2.Response;
 
 public class ConfiguracionActivity extends AppCompatActivity implements View.OnClickListener {
     Utilidades util = new Utilidades();
-
-    //Declaración del cliente REST
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
-
-    //Declaración de los objetos de la interfaz del activity
     EditText etServidorConf, etPuertoConf, etEquipoConf;
     Button btnGuardarConf;
     ProgressBar pbConfiguracion;
     Animation animacionArriba, animacionAbajo;
-    TextToSpeech speech;
     Context contexto;
-
-    //Variables
     String servidor, puerto, equipo, mac;
     String android_id;
 
@@ -77,14 +70,9 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
         if(SPM.getString(Constantes.API_POSSERVICE_URL) == null){
             Toast.makeText(this, "Configure el dispositivo", Toast.LENGTH_SHORT).show();
         }
-
-        //Asignar referencias
         findViews();
-        //Agregar animaciones
         animaciones();
-        //Eventos
         eventos();
-        //Permisos
         permisos();
     }
 
@@ -94,17 +82,7 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
     }
 
     private void findViews() {
-        speech =  new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR){
-                    speech.setLanguage(new Locale("spa", "ESP"));
-                }
-            }
-        });
-
         contexto = ConfiguracionActivity.this;
-
         etServidorConf = findViewById(R.id.etServidorConf);
         etServidorConf.requestFocus();
         etPuertoConf = findViewById(R.id.etPuertoConf);
@@ -112,7 +90,6 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
         btnGuardarConf = findViewById(R.id.btnGuardarConf);
         pbConfiguracion = findViewById(R.id.pbConfiguracion);
         pbConfiguracion.setVisibility(View.GONE);
-
         if(util.valConstVaciasConf()){
             cargarDatos();
         }
@@ -220,7 +197,6 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
             public void onResponse(Call<ResponseConfiguracion> call, Response<ResponseConfiguracion> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    toSpeech(response.body().getRespuesta().getVoz());
                     LogFile.adjuntarLog(response.body().getRespuesta().toString());
                     if(response.body().getRespuesta().getError().getStatus()){
                         Utilidades.mensajeDialog("Error", response.body().getRespuesta().getMensaje(), contexto);
@@ -324,21 +300,8 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    private void toSpeech(final String msj) {
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(speech != null){
-                    speech.speak(msj, TextToSpeech.QUEUE_FLUSH, null);
-                }
-            }
-        }, 100);
-    }
-
     @Override
     public void onBackPressed(){
-        //Salir de la pantalla configuración
         salirConfiguracion();
     }
 
