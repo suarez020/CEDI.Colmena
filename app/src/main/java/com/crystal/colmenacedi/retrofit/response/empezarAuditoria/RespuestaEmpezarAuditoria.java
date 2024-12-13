@@ -1,6 +1,6 @@
 package com.crystal.colmenacedi.retrofit.response.empezarAuditoria;
 
-import com.crystal.colmenacedi.models.Error;
+import com.crystal.colmenacedi.models.Errors;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -34,9 +34,9 @@ public class RespuestaEmpezarAuditoria {
 
     @SerializedName("Error")
     @Expose
-    private Error error;
+    private Errors error;
 
-    public RespuestaEmpezarAuditoria(String mensaje, String voz, String sobrantes, String faltantes, EmpezarAuditoria empezarAuditoria, boolean qr, Error error) {
+    public RespuestaEmpezarAuditoria(String mensaje, String voz, String sobrantes, String faltantes, EmpezarAuditoria empezarAuditoria, boolean qr, Errors error) {
         this.mensaje = mensaje;
         this.voz = voz;
         this.sobrantes = sobrantes;
@@ -94,11 +94,11 @@ public class RespuestaEmpezarAuditoria {
         this.qr = qr;
     }
 
-    public Error getError() {
+    public Errors getError() {
         return error;
     }
 
-    public void setError(Error error) {
+    public void setError(Errors error) {
         this.error = error;
     }
 

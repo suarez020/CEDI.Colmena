@@ -9,8 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.speech.tts.TextToSpeech;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -30,8 +28,8 @@ import com.crystal.colmenacedi.retrofit.ServiceRetrofit;
 import com.crystal.colmenacedi.retrofit.request.RequestLogin;
 import com.crystal.colmenacedi.retrofit.response.inicio.ResponseInicio;
 import com.crystal.colmenacedi.retrofit.response.login.ResponseLogin;
+import com.crystal.colmenacedi.retrofit.response.loginGet.ResponseLoginGet;
 
-import java.util.Locale;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -45,7 +43,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText etCedulaLogin;
     ProgressBar pbLogin;
     TextView tvEquipoLogin;
-    String cedulaLogin, estacion, mac;
+    String id, estacion, mac;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -68,28 +66,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void inicio() {
         pbLogin.setVisibility(View.VISIBLE);
         mac = SPM.getString(Constantes.MAC_EQUIPO);
-        Call<ResponseInicio> inicio = serviceRetrofit.doInicio(mac);
-
+        id = SPM.getString(Constantes.CEDULA_USUARIO);
+        estacion = SPM.getString(Constantes.EQUIPO_API);
+        Call<ResponseInicio> inicio = serviceRetrofit.doInicio(id,estacion);
         inicio.enqueue(new Callback<ResponseInicio>() {
             @Override
             public void onResponse(Call<ResponseInicio> call, Response<ResponseInicio> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getRespuesta().toString());
-                    if(response.body().getRespuesta().getError().getStatus()){
-                        mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
+                    LogFile.adjuntarLog(response.body().getErrors().getSource());
+                    if(response.body().getErrors().getStatus()){
+                        mensajeSimpleDialog("Error", response.body().getErrors().getSource());
                     }else {
-                        if(response.body().getRespuesta().getMatriculado().isMatriculado()){
-                            SPM.setString(Constantes.NOMBRE_USUARIO, response.body().getRespuesta().getMatriculado().getNombre());
-                            SPM.setString(Constantes.CEDULA_USUARIO, response.body().getRespuesta().getMatriculado().getCedula());
-                            //pasar a la pantalla principal
+                        if(response.body().getInicio().getLogin()){
+                            SPM.setString(Constantes.NOMBRE_USUARIO, response.body().getInicio().getNombre());
+                            SPM.setString(Constantes.CEDULA_USUARIO, response.body().getInicio().getId());
                             irPrincipal();
                         }
                     }
                     pbLogin.setVisibility(View.GONE);
                 }
             }
-
             @Override
             public void onFailure(Call<ResponseInicio> call, Throwable t) {
                 pbLogin.setVisibility(View.GONE);
@@ -125,8 +122,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    cedulaLogin = etCedulaLogin.getText().toString().replaceAll("\\s","");
-                    if (!cedulaLogin.isEmpty()) {
+                    id = etCedulaLogin.getText().toString().replaceAll("\\s","");
+                    if (!id.isEmpty()) {
                         validarLogin();
                     }
                     return true;
@@ -140,8 +137,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    cedulaLogin = etCedulaLogin.getText().toString().replaceAll("\\s","");
-                    if(!cedulaLogin.isEmpty()){
+                    id = etCedulaLogin.getText().toString().replaceAll("\\s","");
+                    if(!id.isEmpty()){
                         validarLogin();
                     }
                 }
@@ -151,7 +148,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void validarLogin(){
-        if(cedulaLogin.equals("135798642")){
+        if(id.equals("135798642")){
             irConfiguracion();
         }else{
             iniciarSesion();
@@ -162,8 +159,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         if(v.getId() == R.id.btnIngresarLogin){
             pbLogin.setVisibility(View.VISIBLE);
-            cedulaLogin = etCedulaLogin.getText().toString().replaceAll("\\s","");
-            if(cedulaLogin.isEmpty()){
+            id = etCedulaLogin.getText().toString().replaceAll("\\s","");
+            if(id.isEmpty()){
                 etCedulaLogin.setError("Ingrese la cedula");
             }else {
                 validarLogin();
@@ -172,30 +169,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void iniciarSesion() {
-        //Guardar cedula
-        SPM.setString(Constantes.CEDULA_USUARIO, cedulaLogin);
+        pbLogin.setVisibility(View.VISIBLE);
 
-        //Ocultar el teclado de pantalla
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(etCedulaLogin.getWindowToken(), 0);
+        mac = SPM.getString(Constantes.MAC_EQUIPO);
+        estacion = SPM.getString(Constantes.EQUIPO_API);
+        id = SPM.getString(Constantes.CEDULA_USUARIO);
 
-        //Consultar la Api de login
-        RequestLogin requestLogin = new RequestLogin(cedulaLogin, estacion);
-        Call<ResponseLogin> call = serviceRetrofit.doLogin(requestLogin);
-        call.enqueue(new Callback<ResponseLogin>() {
+        Call<ResponseLoginGet> loginGet = serviceRetrofit.doLoginGet(mac, estacion, id);
+        loginGet.enqueue(new Callback<ResponseLoginGet>() {
             @Override
-            public void onResponse(Call<ResponseLogin> call, Response<ResponseLogin> response) {
+            public void onResponse(Call<ResponseLoginGet> call, Response<ResponseLoginGet> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getRespuesta().toString());
-                    if(response.body().getRespuesta().getError().getStatus()){
-                        mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
-                        pbLogin.setVisibility(View.GONE);
-                        etCedulaLogin.setText("");
-                        etCedulaLogin.requestFocus();
+                    //LogFile.adjuntarLog(response.body().getRespuesta().toString());
+                    if(response.body().getErrors().getStatus()){
+                        mensajeSimpleDialog("Error", response.body().getErrors().getSource());
                     }else{
-                        SPM.setString(Constantes.NOMBRE_USUARIO, response.body().getRespuesta().getLogin().getMatriculado());
-                        irPrincipal();
+                            consumirPostLogin();
                     }
                 }else{
                     mensajeSimpleDialog("Error", "Error de conexión con el servicio web base.");
@@ -207,22 +197,57 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
 
             @Override
-            public void onFailure(Call<ResponseLogin> call, Throwable t) {
+            public void onFailure(Call<ResponseLoginGet> call, Throwable t) {
                 pbLogin.setVisibility(View.GONE);
                 SPM.setString(Constantes.CEDULA_USUARIO, "");
                 LogFile.adjuntarLog("ErrorResponseLogin", t);
                 mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
             }
         });
+
     }
 
-    private void irPrincipal() {
-        Intent i = new Intent(this, PrincipalActivity.class);
-        startActivity(i);
-        finish();
+    private void consumirPostLogin(){
+            SPM.setString(Constantes.CEDULA_USUARIO, id);
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);//Ocultar el teclado de pantalla
+            imm.hideSoftInputFromWindow(etCedulaLogin.getWindowToken(), 0);
+            RequestLogin requestLogin = new RequestLogin(id, estacion);
+            Call<ResponseLogin> call = serviceRetrofit.doLogin(requestLogin);
+            call.enqueue(new Callback<ResponseLogin>() {
+                @Override
+                public void onResponse(Call<ResponseLogin> call, Response<ResponseLogin> response) {
+                    if(response.isSuccessful()){
+                        assert response.body() != null;
+                        //LogFile.adjuntarLog(response.body().getRespuesta().toString());
+                        if(response.body().getErrors().getStatus()){          //.getRespuesta().getError().getStatus()){
+                            mensajeSimpleDialog("Error", response.body().getErrors().getSource());          //.getRespuesta().getMensaje());
+                            pbLogin.setVisibility(View.GONE);
+                            etCedulaLogin.setText("");
+                            etCedulaLogin.requestFocus();
+                        }else{
+                            SPM.setString(Constantes.NOMBRE_USUARIO, response.body().getLogin().getNombre());//getRespuesta().getLogin().getMatriculado());
+                            irPrincipal();
+                        }
+                    }else{
+                        mensajeSimpleDialog("Error", "Error de conexión con el servicio web base.");
+                        SPM.setString(Constantes.CEDULA_USUARIO, "");
+                        etCedulaLogin.setText("");
+                        etCedulaLogin.requestFocus();
+                        pbLogin.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseLogin> call, Throwable t) {
+                    pbLogin.setVisibility(View.GONE);
+                    SPM.setString(Constantes.CEDULA_USUARIO, "");
+                    LogFile.adjuntarLog("ErrorResponseLogin", t);
+                    mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
+                }
+            });
     }
 
-    //Alert Dialog para mostrar mensajes de error, alertas o información
+
     public void mensajeSimpleDialog(String titulo, String msj){
 
         int icon = R.drawable.vector_alerta;
@@ -247,6 +272,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if(!(LoginActivity.this.isFinishing())){
             alerta.show();
         }
+    }
+
+    private void irPrincipal() {
+        Intent i = new Intent(this, PrincipalActivity.class);
+        startActivity(i);
+        finish();
     }
 
     private void irConfiguracion() {

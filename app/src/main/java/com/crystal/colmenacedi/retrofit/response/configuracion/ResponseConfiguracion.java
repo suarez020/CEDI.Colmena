@@ -1,29 +1,43 @@
 package com.crystal.colmenacedi.retrofit.response.configuracion;
 
+import com.crystal.colmenacedi.models.Errors;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class ResponseConfiguracion {
-    @SerializedName("Respuesta")
-    @Expose
-    private RespuestaConfiguracion respuesta;
+        @SerializedName("configuracion")
+        @Expose
+        private Configuracion configuracion;
+        @SerializedName("errors")
+        @Expose
+        private Errors errors;
 
-    public ResponseConfiguracion(RespuestaConfiguracion respuesta) {
-        this.respuesta = respuesta;
+    public ResponseConfiguracion(Configuracion configuracion, Errors errors) {
+        this.configuracion = configuracion;
+        this.errors = errors;
     }
 
-    public RespuestaConfiguracion getRespuesta() {
-        return respuesta;
+    public Configuracion getConfiguracion() {
+        return configuracion;
     }
 
-    public void setRespuesta(RespuestaConfiguracion respuesta) {
-        this.respuesta = respuesta;
+    public void setConfiguracion(Configuracion configuracion) {
+        this.configuracion = configuracion;
+    }
+
+    public Errors getErrors() {
+        return errors;
+    }
+
+    public void setErrors(Errors errors) {
+        this.errors = errors;
     }
 
     @Override
     public String toString() {
         return "ResponseConfiguracion{" +
-                "respuesta=" + respuesta +
+                "configuracion=" + configuracion +
+                ", errors=" + errors +
                 '}';
     }
 }

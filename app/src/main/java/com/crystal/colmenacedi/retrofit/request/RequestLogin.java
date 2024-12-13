@@ -4,26 +4,24 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class RequestLogin {
-
-    @SerializedName("Cedula")
+    @SerializedName("id")
     @Expose
-    private String cedula;
-
-    @SerializedName("Estacion")
+    private String id;
+    @SerializedName("estacion")
     @Expose
     private String estacion;
 
-    public RequestLogin(String cedula, String estacion) {
-        this.cedula = cedula;
+    public RequestLogin(String id, String estacion) {
+        this.id = id;
         this.estacion = estacion;
     }
 
-    public String getCedula() {
-        return cedula;
+    public String getId() {
+        return id;
     }
 
-    public void setCedula(String cedula) {
-        this.cedula = cedula;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getEstacion() {
@@ -37,7 +35,7 @@ public class RequestLogin {
     @Override
     public String toString() {
         return "RequestLogin{" +
-                "cedula='" + cedula + '\'' +
+                "id='" + id + '\'' +
                 ", estacion='" + estacion + '\'' +
                 '}';
     }

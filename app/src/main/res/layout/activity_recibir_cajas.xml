@@ -70,7 +70,7 @@
                         app:startIconDrawable="@drawable/vector_camara">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etCartonGenericoRC"
+                            android:id="@+id/etEan"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"

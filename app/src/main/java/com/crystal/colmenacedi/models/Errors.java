@@ -1,18 +1,20 @@
 package com.crystal.colmenacedi.models;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Error {
+public class Errors {
     @SerializedName("status")
+    @Expose
     private Boolean status;
-
     @SerializedName("code")
+    @Expose
     private Integer code;
-
     @SerializedName("source")
+    @Expose
     private String source;
 
-    public Error(Boolean status, Integer code, String source) {
+    public Errors(Boolean status, Integer code, String source) {
         this.status = status;
         this.code = code;
         this.source = source;
@@ -44,10 +46,10 @@ public class Error {
 
     @Override
     public String toString() {
-        return "Error{" +
-                "\nstatus=" + status +
-                ", \ncode=" + code +
-                ", \nsource='" + source + '\'' +
-                "\n"+'}';
+        return "Errors{" +
+                "status=" + status +
+                ", code=" + code +
+                ", source='" + source + '\'' +
+                '}';
     }
 }

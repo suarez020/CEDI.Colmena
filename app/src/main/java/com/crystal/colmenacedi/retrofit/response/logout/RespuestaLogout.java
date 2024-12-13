@@ -1,6 +1,6 @@
 package com.crystal.colmenacedi.retrofit.response.logout;
 
-import com.crystal.colmenacedi.models.Error;
+import com.crystal.colmenacedi.models.Errors;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -19,9 +19,9 @@ public class RespuestaLogout{
 
     @SerializedName("Error")
     @Expose
-    private Error error;
+    private Errors error;
 
-    public RespuestaLogout(Logout logout, String mensaje, String voz, Error error) {
+    public RespuestaLogout(Logout logout, String mensaje, String voz, Errors error) {
         this.logout = logout;
         this.mensaje = mensaje;
         this.voz = voz;
@@ -52,11 +52,11 @@ public class RespuestaLogout{
         this.voz = voz;
     }
 
-    public Error getError() {
+    public Errors getError() {
         return error;
     }
 
-    public void setError(Error error) {
+    public void setError(Errors error) {
         this.error = error;
     }
 

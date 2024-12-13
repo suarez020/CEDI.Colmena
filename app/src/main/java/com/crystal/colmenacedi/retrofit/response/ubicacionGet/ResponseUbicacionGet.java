@@ -1,28 +1,28 @@
-package com.crystal.colmenacedi.retrofit.response.inicio;
+package com.crystal.colmenacedi.retrofit.response.ubicacionGet;
 
 import com.crystal.colmenacedi.models.Errors;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class ResponseInicio {
-    @SerializedName("inicio")
+public class ResponseUbicacionGet {
+    @SerializedName("data")
     @Expose
-    private Inicio inicio;
+    private Data data;
     @SerializedName("errors")
     @Expose
     private Errors errors;
 
-    public ResponseInicio(Inicio inicio, Errors errors) {
-        this.inicio = inicio;
+    public ResponseUbicacionGet(Data data, Errors errors) {
+        this.data = data;
         this.errors = errors;
     }
 
-    public Inicio getInicio() {
-        return inicio;
+    public Data getData() {
+        return data;
     }
 
-    public void setInicio(Inicio inicio) {
-        this.inicio = inicio;
+    public void setData(Data data) {
+        this.data = data;
     }
 
     public Errors getErrors() {
@@ -35,8 +35,8 @@ public class ResponseInicio {
 
     @Override
     public String toString() {
-        return "ResponseInicio{" +
-                "inicio=" + inicio +
+        return "ResponseUbicacionGet{" +
+                "data=" + data +
                 ", errors=" + errors +
                 '}';
     }

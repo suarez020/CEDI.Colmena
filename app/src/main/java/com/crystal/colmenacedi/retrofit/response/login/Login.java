@@ -1,27 +1,29 @@
 package com.crystal.colmenacedi.retrofit.response.login;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Login {
-    @SerializedName("Matriculado")
-    private String matriculado;
+    @SerializedName("nombre")
+    @Expose
+    private String nombre;
 
-    public Login(String matriculado) {
-        this.matriculado = matriculado;
+    public Login(String nombre) {
+        this.nombre = nombre;
     }
 
-    public String getMatriculado() {
-        return matriculado;
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setMatriculado(String matriculado) {
-        this.matriculado = matriculado;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     @Override
     public String toString() {
         return "Login{" +
-                "matriculado='" + matriculado + '\'' +
+                "nombre='" + nombre + '\'' +
                 '}';
     }
 }

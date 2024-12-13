@@ -1,6 +1,6 @@
 package com.crystal.colmenacedi.retrofit.response.iniciaPinado;
 
-import com.crystal.colmenacedi.models.Error;
+import com.crystal.colmenacedi.models.Errors;
 import com.crystal.colmenacedi.models.Pinado;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -20,9 +20,9 @@ public class RespuestaIniciaPinado {
 
     @SerializedName("Error")
     @Expose
-    private Error error;
+    private Errors error;
 
-    public RespuestaIniciaPinado(Pinado iniciaPinado, String mensaje, String voz, Error error) {
+    public RespuestaIniciaPinado(Pinado iniciaPinado, String mensaje, String voz, Errors error) {
         this.iniciaPinado = iniciaPinado;
         this.mensaje = mensaje;
         this.voz = voz;
@@ -53,11 +53,11 @@ public class RespuestaIniciaPinado {
         this.voz = voz;
     }
 
-    public Error getError() {
+    public Errors getError() {
         return error;
     }
 
-    public void setError(Error error) {
+    public void setError(Errors error) {
         this.error = error;
     }
 

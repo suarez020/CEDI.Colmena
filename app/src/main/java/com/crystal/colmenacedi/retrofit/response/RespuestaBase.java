@@ -1,6 +1,6 @@
 package com.crystal.colmenacedi.retrofit.response;
 
-import com.crystal.colmenacedi.models.Error;
+import com.crystal.colmenacedi.models.Errors;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,9 +13,9 @@ public class RespuestaBase {
     private String voz;
     @SerializedName("Error")
     @Expose
-    private Error error;
+    private Errors error;
 
-    public RespuestaBase(String mensaje, String voz, Error error) {
+    public RespuestaBase(String mensaje, String voz, Errors error) {
         this.mensaje = mensaje;
         this.voz = voz;
         this.error = error;
@@ -37,11 +37,11 @@ public class RespuestaBase {
         this.voz = voz;
     }
 
-    public Error getError() {
+    public Errors getError() {
         return error;
     }
 
-    public void setError(Error error) {
+    public void setError(Errors error) {
         this.error = error;
     }
 

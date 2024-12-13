@@ -9,8 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -31,9 +29,8 @@ import com.crystal.colmenacedi.retrofit.request.RequestPinado;
 import com.crystal.colmenacedi.retrofit.request.RequestRecepcion;
 import com.crystal.colmenacedi.retrofit.response.finPinado.ResponseFinPinado;
 import com.crystal.colmenacedi.retrofit.response.iniciaPinado.ResponseIniciaPinado;
-import com.crystal.colmenacedi.retrofit.response.recepcion.ResponseRecepcion;
+import com.crystal.colmenacedi.retrofit.response.ubicacion.ResponseUbicacion;
 
-import java.util.Locale;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -43,7 +40,7 @@ import retrofit2.Response;
 public class UbicarActivity extends AppCompatActivity implements View.OnClickListener{
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
-    EditText etCartonGenericoRC, etPosicionRC;
+    EditText etEan, etPosicionRC;
     TextView tvTituloPedidoRC, tvPedidoRCV, tvTituloTiendaRC, tvTiendaRCV, tvTituloPosicionRC, tvPosicionRC, tvTituloTotalesRC, tvTotalesRCV;
     Button btnTerminarCarton;
     ProgressBar pbRecibirCaja;
@@ -69,8 +66,8 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
     private void findViews() {
         cedula = SPM.getString(Constantes.CEDULA_USUARIO);
         estacion = SPM.getString(Constantes.EQUIPO_API);
-        etCartonGenericoRC = findViewById(R.id.etCartonGenericoRC);
-        etCartonGenericoRC.requestFocus();
+        etEan = findViewById(R.id.etEan);
+        etEan.requestFocus();
         etPosicionRC = findViewById(R.id.etPosicionRC);
         tvTituloPedidoRC = findViewById(R.id.tvTituloPedidoRC);
         tvPedidoRCV = findViewById(R.id.tvPedidoRCV);
@@ -123,15 +120,15 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
         });
 
         //Evento sobre el EditText cartón genérico
-        etCartonGenericoRC.setImeActionLabel("IR", KeyEvent.KEYCODE_ENTER);
-        etCartonGenericoRC.setOnKeyListener(new View.OnKeyListener() {
+        etEan.setImeActionLabel("IR", KeyEvent.KEYCODE_ENTER);
+        etEan.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    cartonG = etCartonGenericoRC.getText().toString().replaceAll("\\s","");
+                    cartonG = etEan.getText().toString().replaceAll("\\s","");
                     if(!cartonG.isEmpty()){
                             pbRecibirCaja.setVisibility(View.VISIBLE);
-                            recepcion();
+                            LLenarMenu();
                         }
                         return true;
                     }
@@ -139,15 +136,15 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
 
-        etCartonGenericoRC.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        etEan.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    cartonG = etCartonGenericoRC.getText().toString().replaceAll("\\s","");
+                    cartonG = etEan.getText().toString().replaceAll("\\s","");
                     if(!cartonG.isEmpty()){
                         pbRecibirCaja.setVisibility(View.VISIBLE);
-                        recepcion();
+                        LLenarMenu();
                     }
                 }
                 return handled;
@@ -155,30 +152,29 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    private void recepcion() {
-        //Consultar la Api de Recepción
+    private void LLenarMenu() {
         RequestRecepcion requestRecepcion = new RequestRecepcion(cedula, estacion, cartonG);
-        Call<ResponseRecepcion> call = serviceRetrofit.doRecepcion(requestRecepcion);
-        call.enqueue(new Callback<ResponseRecepcion>() {
+        Call<ResponseUbicacion> call = serviceRetrofit.doUbicacion(requestRecepcion);
+        call.enqueue(new Callback<ResponseUbicacion>() {
             @RequiresApi(api = Build.VERSION_CODES.P)
             @SuppressLint("ResourceAsColor")
             @Override
-            public void onResponse(Call<ResponseRecepcion> call, Response<ResponseRecepcion> response) {
+            public void onResponse(Call<ResponseUbicacion> call, Response<ResponseUbicacion> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getRespuesta().toString());
-                    if(response.body().getRespuesta().getError().getStatus()){
-                        mensajeDialog("Error", response.body().getRespuesta().getMensaje());
-                        etCartonGenericoRC.setText("");
-                        etCartonGenericoRC.requestFocus();
+                    //LogFile.adjuntarLog(response.body().getRespuesta().toString());
+                    if(response.body().getErrors().getStatus()){//            .getRespuesta().getError().getStatus()){
+                        mensajeDialog("Error", response.body().getErrors().getSource());//.getRespuesta().getMensaje());
+                        etEan.setText("");
+                        etEan.requestFocus();
                     }else{
-                        tvPedidoRCV.setText(response.body().getRespuesta().getRecepcion().getPedido());
-                        tvTiendaRCV.setText(response.body().getRespuesta().getRecepcion().getTienda());
-                        tvPosicionRC.setText(response.body().getRespuesta().getRecepcion().getUbicacion());
-                        tvTotalesRCV.setText(response.body().getRespuesta().getRecepcion().getCantidad());
+                       // tvPedidoRCV.setText(response.body().getRespuesta().getRecepcion().getPedido());
+                      //  tvTiendaRCV.setText(response.body().getRespuesta().getRecepcion().getTienda());
+                      //  tvPosicionRC.setText(response.body().getRespuesta().getRecepcion().getUbicacion());
+                      //  tvTotalesRCV.setText(response.body().getRespuesta().getRecepcion().getCantidad());
                         verConsulta();
-                        etCartonGenericoRC.setEnabled(false);
-                        etCartonGenericoRC.setTextColor(R.color.opaco);
+                        etEan.setEnabled(false);
+                        etEan.setTextColor(R.color.opaco);
                         etPosicionRC.setEnabled(true);
                         etPosicionRC.requestFocus();
                     }
@@ -189,7 +185,7 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
             }
 
             @Override
-            public void onFailure(Call<ResponseRecepcion> call, Throwable t) {
+            public void onFailure(Call<ResponseUbicacion> call, Throwable t) {
                 pbRecibirCaja.setVisibility(View.GONE);
                 LogFile.adjuntarLog("ErrorResponseRecepcion",t);
                 mensajeDialog("Error", "Error de conexión: " + t.getMessage());
@@ -272,7 +268,7 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    private void ocultarConsulta(){
+    private void verConsulta(){
         tvTituloPedidoRC.setVisibility(View.GONE);
         tvPedidoRCV.setVisibility(View.GONE);
         tvTituloTiendaRC.setVisibility(View.GONE);
@@ -283,7 +279,7 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
         tvTotalesRCV.setVisibility(View.GONE);
     }
 
-    private void verConsulta() {
+    private void ocultarConsulta() {
         tvTituloPedidoRC.setVisibility(View.VISIBLE);
         tvPedidoRCV.setVisibility(View.VISIBLE);
         tvTituloTiendaRC.setVisibility(View.VISIBLE);

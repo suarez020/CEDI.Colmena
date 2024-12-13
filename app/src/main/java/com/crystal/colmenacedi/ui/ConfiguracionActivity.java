@@ -35,11 +35,8 @@ import com.crystal.colmenacedi.common.SPM;
 import com.crystal.colmenacedi.common.Utilidades;
 import com.crystal.colmenacedi.retrofit.ClienteRetrofit;
 import com.crystal.colmenacedi.retrofit.ServiceRetrofit;
-import com.crystal.colmenacedi.retrofit.request.RequestConfiguracion;
 import com.crystal.colmenacedi.retrofit.response.configuracion.ResponseConfiguracion;
 import com.google.android.material.snackbar.Snackbar;
-
-import java.util.Locale;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -55,8 +52,9 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
     ProgressBar pbConfiguracion;
     Animation animacionArriba, animacionAbajo;
     Context contexto;
-    String servidor, puerto, equipo, mac;
+    String servidor, puerto, estacion, mac;
     String android_id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,8 +103,8 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    equipo = etEquipoConf.getText().toString().replaceAll("\\s","");
-                    if (!equipo.isEmpty()) {
+                    estacion = etEquipoConf.getText().toString().replaceAll("\\s","");
+                    if (!estacion.isEmpty()) {
                         validarCampos();
                     }
                     return true;
@@ -120,8 +118,8 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    equipo = etEquipoConf.getText().toString().replaceAll("\\s","");
-                    if(!equipo.isEmpty()){
+                    estacion = etEquipoConf.getText().toString().replaceAll("\\s","");
+                    if(!estacion.isEmpty()){
                         validarCampos();
                     }
                 }
@@ -132,8 +130,8 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
 
     public void validarCampos(){
         cogerValoresConf();
-        btnGuardarConf.setEnabled(Utilidades.validarCamposVacios(servidor, puerto, equipo));
-        if(Utilidades.validarCamposVacios(servidor, puerto, equipo)){
+        btnGuardarConf.setEnabled(Utilidades.validarCamposVacios(servidor, puerto, estacion));
+        if(Utilidades.validarCamposVacios(servidor, puerto, estacion)){
             btnGuardarConf.callOnClick();
         }
     }
@@ -147,7 +145,7 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
     private void cogerValoresConf() {
         servidor = etServidorConf.getText().toString();
         puerto = etPuertoConf.getText().toString();
-        equipo = etEquipoConf.getText().toString();
+        estacion = etEquipoConf.getText().toString();
     }
 
     @Override
@@ -158,7 +156,7 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
                 mensajeFab("Error", "Servidor requerido", v);
             }else if(puerto.isEmpty()){
                 mensajeFab("Error", "Puerto requerido", v);
-            }else if(equipo.isEmpty()){
+            }else if(estacion.isEmpty()){
                 mensajeFab("Error", "Equipo requerido", v);
             }else{
                       mac = Utilidades.getMacAddr();
@@ -168,7 +166,7 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
                 Log.e("LOGCAT", "Dirección MAC: "+mac);
                 if(!mac.equals("")){
                     iniciarProgressBar();
-                    SPM.setString(Constantes.API_POSSERVICE_URL, "http://"+servidor+":"+puerto+"/Entrega_Amigable/");
+                    SPM.setString(Constantes.API_POSSERVICE_URL, "http://"+servidor+":"+puerto+"/colmena/");
                     appCliente = ClienteRetrofit.obtenerInstancia();
                     serviceRetrofit = appCliente.obtenerServicios();
 
@@ -187,32 +185,29 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
         android_id = Settings.Secure.getString(getContext().getContentResolver(),
                 Settings.Secure.ANDROID_ID);
     }
-
     private void apiConfiguracion(){
-        //Consultar la Api de configuración
-        RequestConfiguracion requestConfiguracion = new RequestConfiguracion(mac, equipo);
-        Call<ResponseConfiguracion> call = serviceRetrofit.doConfiguracion(requestConfiguracion);
+        Call<ResponseConfiguracion> call = serviceRetrofit.doConfiguracion(mac,estacion);
         call.enqueue(new Callback<ResponseConfiguracion>() {
             @Override
             public void onResponse(Call<ResponseConfiguracion> call, Response<ResponseConfiguracion> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getRespuesta().toString());
-                    if(response.body().getRespuesta().getError().getStatus()){
-                        Utilidades.mensajeDialog("Error", response.body().getRespuesta().getMensaje(), contexto);
+                    LogFile.adjuntarLog(response.body().getErrors().getSource().toString());
+                    if(response.body().getErrors().getStatus()){
+                        Utilidades.mensajeDialog("Error", response.body().getErrors().getSource(), contexto);
                         pararProgressBar();
                     }else{
                         Log.i("LOGCAT", "RespuestaServicioConfiguracion: "+ response.body());
-                        if(response.body().getRespuesta().getConfiguracion().getCambioEstacion()){
+//                        if(response.body(). getRespuesta().getConfiguracion().getCambioEstacion()){
                             msjToast("Configuración realizada satisfactoriamente");
                             SPM.setString(Constantes.SERVIDOR_API, servidor);
                             SPM.setString(Constantes.PUERTO_API, puerto);
-                            SPM.setString(Constantes.EQUIPO_API, equipo);
+                            SPM.setString(Constantes.EQUIPO_API, estacion);
                             irLogin();
-                        }else{
-                            Utilidades.mensajeDialog("Error", response.body().getRespuesta().getMensaje(), contexto);
-                            pararProgressBar();
-                        }
+//                        }else{
+//                            Utilidades.mensajeDialog("Error", response.body().getRespuesta().getMensaje(), contexto);
+//                            pararProgressBar();
+//                        }
                     }
                 }else{
                     Utilidades.mensajeDialog("Error", "Error de conexión con el servicio web base.", contexto);

@@ -1,28 +1,26 @@
-package com.crystal.colmenacedi.retrofit.response.inicio;
-
+package com.crystal.colmenacedi.retrofit.response.loginGet;
 import com.crystal.colmenacedi.models.Errors;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
-public class ResponseInicio {
-    @SerializedName("inicio")
+public class ResponseLoginGet {
+    @SerializedName("login")
     @Expose
-    private Inicio inicio;
+    private LoginGet loginGet;
     @SerializedName("errors")
     @Expose
     private Errors errors;
 
-    public ResponseInicio(Inicio inicio, Errors errors) {
-        this.inicio = inicio;
+    public ResponseLoginGet(LoginGet loginGet, Errors errors) {
+        this.loginGet = loginGet;
         this.errors = errors;
     }
 
-    public Inicio getInicio() {
-        return inicio;
+    public LoginGet getLoginGet() {
+        return loginGet;
     }
 
-    public void setInicio(Inicio inicio) {
-        this.inicio = inicio;
+    public void setLoginGet(LoginGet loginGet) {
+        this.loginGet = loginGet;
     }
 
     public Errors getErrors() {
@@ -35,8 +33,8 @@ public class ResponseInicio {
 
     @Override
     public String toString() {
-        return "ResponseInicio{" +
-                "inicio=" + inicio +
+        return "ResponseLoginGet{" +
+                "loginGet=" + loginGet +
                 ", errors=" + errors +
                 '}';
     }

@@ -1,30 +1,43 @@
 package com.crystal.colmenacedi.retrofit.response.login;
 
+import com.crystal.colmenacedi.models.Errors;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class ResponseLogin {
-
-    @SerializedName("Respuesta")
+    @SerializedName("login")
     @Expose
-    private RespuestaLogin respuesta;
+    private Login login;
+    @SerializedName("errors")
+    @Expose
+    private Errors errors;
 
-    public ResponseLogin(RespuestaLogin resLogin) {
-        this.respuesta = resLogin;
+    public ResponseLogin(Login login, Errors errors) {
+        this.login = login;
+        this.errors = errors;
     }
 
-    public RespuestaLogin getRespuesta() {
-        return respuesta;
+    public Login getLogin() {
+        return login;
     }
 
-    public void setRespuesta(RespuestaLogin resLogin) {
-        this.respuesta = resLogin;
+    public void setLogin(Login login) {
+        this.login = login;
+    }
+
+    public Errors getErrors() {
+        return errors;
+    }
+
+    public void setErrors(Errors errors) {
+        this.errors = errors;
     }
 
     @Override
     public String toString() {
         return "ResponseLogin{" +
-                "respuesta=" + respuesta +
+                "login=" + login +
+                ", errors=" + errors +
                 '}';
     }
 }

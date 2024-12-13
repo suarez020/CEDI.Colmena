@@ -1,9 +1,9 @@
-package com.crystal.colmenacedi.retrofit.response.configuracion;
+package com.crystal.colmenacedi.retrofit.response.ubicacion;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Configuracion {
+public class Ubicacion {
     @SerializedName("status")
     @Expose
     private Boolean status;
@@ -16,13 +16,13 @@ public class Configuracion {
         this.status = status;
     }
 
-    public Configuracion(Boolean status) {
+    public Ubicacion(Boolean status) {
         this.status = status;
     }
 
     @Override
     public String toString() {
-        return "Configuracion{" +
+        return "Ubicacion{" +
                 "status=" + status +
                 '}';
     }

@@ -17,7 +17,6 @@ public class Constantes {
     public static final String PUERTO_API= "PUERTO_API";
     public static final String EQUIPO_API= "EQUIPO_API";
     public static final String MAC_EQUIPO= "MAC_EQUIPO";
-
     public static final String ENTORNO_API="Pruebas";
     //public static final String ENTORNO_API="Productivo";
 }

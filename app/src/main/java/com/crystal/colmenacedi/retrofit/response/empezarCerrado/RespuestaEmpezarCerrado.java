@@ -1,6 +1,6 @@
 package com.crystal.colmenacedi.retrofit.response.empezarCerrado;
 
-import com.crystal.colmenacedi.models.Error;
+import com.crystal.colmenacedi.models.Errors;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -22,9 +22,9 @@ public class RespuestaEmpezarCerrado{
 
     @SerializedName("Error")
     @Expose
-    private Error error;
+    private Errors error;
 
-    public RespuestaEmpezarCerrado(EmpezarCerrado empezarCerrado, String mensaje, String voz, boolean qr, Error error) {
+    public RespuestaEmpezarCerrado(EmpezarCerrado empezarCerrado, String mensaje, String voz, boolean qr, Errors error) {
         this.empezarCerrado = empezarCerrado;
         this.mensaje = mensaje;
         this.voz = voz;
@@ -64,11 +64,11 @@ public class RespuestaEmpezarCerrado{
         this.qr = qr;
     }
 
-    public Error getError() {
+    public Errors getError() {
         return error;
     }
 
-    public void setError(Error error) {
+    public void setError(Errors error) {
         this.error = error;
     }
 

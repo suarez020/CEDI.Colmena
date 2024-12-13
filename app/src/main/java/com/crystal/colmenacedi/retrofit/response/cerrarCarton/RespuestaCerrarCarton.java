@@ -1,6 +1,6 @@
 package com.crystal.colmenacedi.retrofit.response.cerrarCarton;
 
-import com.crystal.colmenacedi.models.Error;
+import com.crystal.colmenacedi.models.Errors;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -19,9 +19,9 @@ public class RespuestaCerrarCarton {
 
     @SerializedName("Error")
     @Expose
-    private Error error;
+    private Errors error;
 
-    public RespuestaCerrarCarton(CerrarCarton cerrarCarton, String mensaje, String voz, Error error) {
+    public RespuestaCerrarCarton(CerrarCarton cerrarCarton, String mensaje, String voz, Errors error) {
         this.cerrarCarton = cerrarCarton;
         this.mensaje = mensaje;
         this.voz = voz;
@@ -52,11 +52,11 @@ public class RespuestaCerrarCarton {
         this.voz = voz;
     }
 
-    public Error getError() {
+    public Errors getError() {
         return error;
     }
 
-    public void setError(Error error) {
+    public void setError(Errors error) {
         this.error = error;
     }
 
