@@ -3,6 +3,8 @@ package com.crystal.colmenacedi.ui;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -29,8 +31,12 @@ import com.crystal.colmenacedi.retrofit.request.RequestPinado;
 import com.crystal.colmenacedi.retrofit.request.RequestRecepcion;
 import com.crystal.colmenacedi.retrofit.response.finPinado.ResponseFinPinado;
 import com.crystal.colmenacedi.retrofit.response.iniciaPinado.ResponseIniciaPinado;
+import com.crystal.colmenacedi.retrofit.response.loginGet.ResponseLoginGet;
 import com.crystal.colmenacedi.retrofit.response.ubicacion.ResponseUbicacion;
+import com.crystal.colmenacedi.retrofit.response.ubicacionGet.ResponseUbicacionGet;
+import com.crystal.colmenacedi.ui.adapter.ListaDeItemsRecyclerViewAdapter;
 
+import java.util.List;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -38,13 +44,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UbicarActivity extends AppCompatActivity implements View.OnClickListener{
+    RecyclerView rvDynamicItems;
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
     EditText etEan, etPosicionRC;
     TextView tvTituloPedidoRC, tvPedidoRCV, tvTituloTiendaRC, tvTiendaRCV, tvTituloPosicionRC, tvPosicionRC, tvTituloTotalesRC, tvTotalesRCV;
     Button btnTerminarCarton;
     ProgressBar pbRecibirCaja;
-    String cedula, estacion, cartonG, ubicacion, mensaje;
+    String cedula, estacion, ean, ubicacion, mensaje;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,20 +71,14 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void findViews() {
+        rvDynamicItems = findViewById(R.id.rvDynamicItems);
+        rvDynamicItems.setLayoutManager(new LinearLayoutManager(this));
+
         cedula = SPM.getString(Constantes.CEDULA_USUARIO);
         estacion = SPM.getString(Constantes.EQUIPO_API);
         etEan = findViewById(R.id.etEan);
         etEan.requestFocus();
         etPosicionRC = findViewById(R.id.etPosicionRC);
-        tvTituloPedidoRC = findViewById(R.id.tvTituloPedidoRC);
-        tvPedidoRCV = findViewById(R.id.tvPedidoRCV);
-        tvTituloTiendaRC = findViewById(R.id.tvTituloTiendaRC);
-        tvTiendaRCV = findViewById(R.id.tvTiendaRCV);
-        tvTituloPosicionRC = findViewById(R.id.tvTituloPosicionRC);
-        tvPosicionRC = findViewById(R.id.tvPosicionRC);
-        tvTituloTotalesRC = findViewById(R.id.tvTituloTotalesRC);
-        tvTotalesRCV = findViewById(R.id.tvTotalesRCV);
-        ocultarConsulta();
         btnTerminarCarton = findViewById(R.id.btnTerminarCarton);
         btnTerminarCarton.setEnabled(false);
         pbRecibirCaja = findViewById(R.id.pbRecibirCaja);
@@ -125,8 +126,8 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    cartonG = etEan.getText().toString().replaceAll("\\s","");
-                    if(!cartonG.isEmpty()){
+                    ean = etEan.getText().toString().replaceAll("\\s","");
+                    if(!ean.isEmpty()){
                             pbRecibirCaja.setVisibility(View.VISIBLE);
                             LLenarMenu();
                         }
@@ -141,8 +142,8 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    cartonG = etEan.getText().toString().replaceAll("\\s","");
-                    if(!cartonG.isEmpty()){
+                    ean = etEan.getText().toString().replaceAll("\\s","");
+                    if(!ean.isEmpty()){
                         pbRecibirCaja.setVisibility(View.VISIBLE);
                         LLenarMenu();
                     }
@@ -153,44 +154,81 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void LLenarMenu() {
-        RequestRecepcion requestRecepcion = new RequestRecepcion(cedula, estacion, cartonG);
-        Call<ResponseUbicacion> call = serviceRetrofit.doUbicacion(requestRecepcion);
-        call.enqueue(new Callback<ResponseUbicacion>() {
-            @RequiresApi(api = Build.VERSION_CODES.P)
-            @SuppressLint("ResourceAsColor")
+        //ean = SPM.getString(Constantes.EQUIPO_API);
+        Call<ResponseUbicacionGet> ubicacionGet = serviceRetrofit.doUbicacionGET(ean);
+        ubicacionGet.enqueue(new Callback<ResponseUbicacionGet>() {
             @Override
-            public void onResponse(Call<ResponseUbicacion> call, Response<ResponseUbicacion> response) {
-                if(response.isSuccessful()){
+            public void onResponse(Call<ResponseUbicacionGet> call, Response<ResponseUbicacionGet> response) {
+                if (response.isSuccessful()) {
                     assert response.body() != null;
                     //LogFile.adjuntarLog(response.body().getRespuesta().toString());
-                    if(response.body().getErrors().getStatus()){//            .getRespuesta().getError().getStatus()){
+                    if (response.body().getErrors().getStatus()) {//            .getRespuesta().getError().getStatus()){
                         mensajeDialog("Error", response.body().getErrors().getSource());//.getRespuesta().getMensaje());
                         etEan.setText("");
                         etEan.requestFocus();
-                    }else{
-                       // tvPedidoRCV.setText(response.body().getRespuesta().getRecepcion().getPedido());
-                      //  tvTiendaRCV.setText(response.body().getRespuesta().getRecepcion().getTienda());
-                      //  tvPosicionRC.setText(response.body().getRespuesta().getRecepcion().getUbicacion());
-                      //  tvTotalesRCV.setText(response.body().getRespuesta().getRecepcion().getCantidad());
-                        verConsulta();
-                        etEan.setEnabled(false);
-                        etEan.setTextColor(R.color.opaco);
-                        etPosicionRC.setEnabled(true);
-                        etPosicionRC.requestFocus();
+                    } else {
+                        mostrarCategorias();
+                        List<List<String>> lista = response.body().getData().getItems();//getRespuesta().getSku().getItems();
+                        ListaDeItemsRecyclerViewAdapter categoriasAdapter = new ListaDeItemsRecyclerViewAdapter(lista);
+
+                        rvDynamicItems.setAdapter(categoriasAdapter);
+//                        UnidadesFaltantes=response.body().getRespuesta().getCampos().getUnidadesFaltantes();
+//                        UnidadesLeidas=response.body().getRespuesta().getCampos().getUnidadesLeidas();
+//                        isConteo = response.body().getRespuesta().getCampos().getContar();
                     }
-                }else{
+                } else {
                     mensajeDialog("Error", "Error de conexión con el servicio web base.");
                 }
                 pbRecibirCaja.setVisibility(View.GONE);
             }
 
             @Override
-            public void onFailure(Call<ResponseUbicacion> call, Throwable t) {
-                pbRecibirCaja.setVisibility(View.GONE);
-                LogFile.adjuntarLog("ErrorResponseRecepcion",t);
-                mensajeDialog("Error", "Error de conexión: " + t.getMessage());
+            public void onFailure(Call<ResponseUbicacionGet> call, Throwable t) {
+
             }
         });
+    }
+        private void UbicacionPostTodoSalioOK (){
+
+            RequestRecepcion requestRecepcion = new RequestRecepcion(cedula, estacion, ean);
+            Call<ResponseUbicacion> call = serviceRetrofit.doUbicacion(requestRecepcion);
+            call.enqueue(new Callback<ResponseUbicacion>() {
+                @RequiresApi(api = Build.VERSION_CODES.P)
+                @SuppressLint("ResourceAsColor")
+                @Override
+                public void onResponse(Call<ResponseUbicacion> call, Response<ResponseUbicacion> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        //LogFile.adjuntarLog(response.body().getRespuesta().toString());
+                        if (response.body().getErrors().getStatus()) {//            .getRespuesta().getError().getStatus()){
+                            mensajeDialog("Error", response.body().getErrors().getSource());//.getRespuesta().getMensaje());
+                            etEan.setText("");
+                            etEan.requestFocus();
+                        } else {
+                            // tvPedidoRCV.setText(response.body().getRespuesta().getRecepcion().getPedido());
+                            //  tvTiendaRCV.setText(response.body().getRespuesta().getRecepcion().getTienda());
+                            //  tvPosicionRC.setText(response.body().getRespuesta().getRecepcion().getUbicacion());
+                            //  tvTotalesRCV.setText(response.body().getRespuesta().getRecepcion().getCantidad());
+                            mostrarCategorias();
+                            etEan.setEnabled(false);
+                            etEan.setTextColor(R.color.opaco);
+                            etPosicionRC.setEnabled(true);
+                            etPosicionRC.requestFocus();
+                        }
+                    } else {
+                        mensajeDialog("Error", "Error de conexión con el servicio web base.");
+                    }
+                    pbRecibirCaja.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onFailure(Call<ResponseUbicacion> call, Throwable t) {
+                    pbRecibirCaja.setVisibility(View.GONE);
+                    LogFile.adjuntarLog("ErrorResponseRecepcion", t);
+                    mensajeDialog("Error", "Error de conexión: " + t.getMessage());
+                }
+            });
+
     }
 
     private void iniciaPinado() {
@@ -268,26 +306,8 @@ public class UbicarActivity extends AppCompatActivity implements View.OnClickLis
         });
     }
 
-    private void verConsulta(){
-        tvTituloPedidoRC.setVisibility(View.GONE);
-        tvPedidoRCV.setVisibility(View.GONE);
-        tvTituloTiendaRC.setVisibility(View.GONE);
-        tvTiendaRCV.setVisibility(View.GONE);
-        tvTituloPosicionRC.setVisibility(View.GONE);
-        tvPosicionRC.setVisibility(View.GONE);
-        tvTituloTotalesRC.setVisibility(View.GONE);
-        tvTotalesRCV.setVisibility(View.GONE);
-    }
-
-    private void ocultarConsulta() {
-        tvTituloPedidoRC.setVisibility(View.VISIBLE);
-        tvPedidoRCV.setVisibility(View.VISIBLE);
-        tvTituloTiendaRC.setVisibility(View.VISIBLE);
-        tvTiendaRCV.setVisibility(View.VISIBLE);
-        tvTituloPosicionRC.setVisibility(View.VISIBLE);
-        tvPosicionRC.setVisibility(View.VISIBLE);
-        tvTituloTotalesRC.setVisibility(View.VISIBLE);
-        tvTotalesRCV.setVisibility(View.VISIBLE);
+    private void mostrarCategorias(){
+        rvDynamicItems.setVisibility(View.VISIBLE);
     }
 
     //Alert Dialog para mostrar mensajes simples
