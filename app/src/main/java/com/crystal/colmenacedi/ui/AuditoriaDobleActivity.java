@@ -1,55 +1,18 @@
 package com.crystal.colmenacedi.ui;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.speech.tts.TextToSpeech;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.TextView;
-
 import com.crystal.colmenacedi.R;
 import com.crystal.colmenacedi.common.Constantes;
-import com.crystal.colmenacedi.common.LogFile;
 import com.crystal.colmenacedi.common.SPM;
 import com.crystal.colmenacedi.common.Utilidades;
-import com.crystal.colmenacedi.retrofit.ClienteRetrofit;
-import com.crystal.colmenacedi.retrofit.ServiceRetrofit;
-import com.crystal.colmenacedi.retrofit.request.RequestLecturaEan;
-import com.crystal.colmenacedi.retrofit.request.RequestPinado;
-import com.crystal.colmenacedi.retrofit.response.auditoria.ResponseAuditoria;
-import com.crystal.colmenacedi.retrofit.response.auditoria.RespuestaAuditoria;
-import com.crystal.colmenacedi.retrofit.response.empezarAuditoria.ResponseEmpezarAuditoria;
-import com.crystal.colmenacedi.retrofit.response.empezarAuditoria.RespuestaEmpezarAuditoria;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.Locale;
 import java.util.Objects;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class AuditoriaDobleActivity extends AppCompatActivity implements View.OnClickListener{
-    ServiceRetrofit serviceRetrofit;
-    ClienteRetrofit appCliente;
-    EditText etPosicionAuditoria, etEanAuditoria, etFaltantesAuditoria, etSobrantesAuditoria;
-    TextView tvTituloSinRegistros, tvTituloRFIDAuditoria;
-    String cedula, equipo, ubicacion, faltantes, ean, sobrantes;
-    RecyclerView rvAuditoria;
-    RespuestaEmpezarAuditoria respuestaEmpezarAuditoria;
-    RespuestaAuditoria respuestaAuditoria;
-    FloatingActionButton fabFinUbicacion;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,110 +21,6 @@ public class AuditoriaDobleActivity extends AppCompatActivity implements View.On
 
         this.setTitle(R.string.menu_auditoria);
         Objects.requireNonNull(getSupportActionBar()).setSubtitle(SPM.getString(Constantes.NOMBRE_USUARIO));
-        inicioRetrofit();
-        findViews();
-        eventos();
-        empezarAuditoria();
-    }
-
-    private void inicioRetrofit() {
-        appCliente = ClienteRetrofit.obtenerInstancia();
-        serviceRetrofit = appCliente.obtenerServicios();
-    }
-
-    private void findViews() {
-        ubicacion = getIntent().getExtras().getString("ubicacion");
-
-        etPosicionAuditoria = findViewById(R.id.etUbicacion);
-        etPosicionAuditoria.setText(ubicacion);
-        etPosicionAuditoria.callOnClick();
-
-        etEanAuditoria = findViewById(R.id.etEanAuditoria);
-
-        etSobrantesAuditoria = findViewById(R.id.etSobrantesAuditoria);
-        tvTituloSinRegistros = findViewById(R.id.tvTituloSinRegistros);
-        tvTituloRFIDAuditoria = findViewById(R.id.tvTituloSeparar);
-        tvTituloRFIDAuditoria.setVisibility(View.VISIBLE);
-
-        rvAuditoria = findViewById(R.id.rvAuditoria);
-        rvAuditoria.setLayoutManager(new LinearLayoutManager(this));
-
-        cedula = SPM.getString(Constantes.CEDULA_USUARIO);
-        equipo = SPM.getString(Constantes.EQUIPO_API);
-
-        etEanAuditoria.requestFocus(0);
-        //fabFinUbicacion = findViewById(R.id.fabFinUbicacion);
-        fabFinUbicacion.setEnabled(false);
-        //Ocultar el teclado de pantalla
-        ocultarTeclado();
-    }
-
-    private void eventos() {
-        //Eventos sobre el EditText Posicion
-        etPosicionAuditoria.setImeActionLabel("IR", KeyEvent.KEYCODE_ENTER);
-        etPosicionAuditoria.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    ubicacion = etPosicionAuditoria.getText().toString().replaceAll("\\s","");
-                    if (!ubicacion.isEmpty()) {
-                        //Consultar Api
-                        fabFinUbicacion.setEnabled(true);
-                        empezarAuditoria();
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        etPosicionAuditoria.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    ubicacion = etPosicionAuditoria.getText().toString().replaceAll("\\s","");
-                    if(!ubicacion.isEmpty()){
-                        //Consultar Api
-                        fabFinUbicacion.setEnabled(true);
-                        empezarAuditoria();
-                    }
-                }
-                return handled;
-            }
-        });
-
-        etEanAuditoria.setImeActionLabel("IR", KeyEvent.KEYCODE_ENTER);
-        etEanAuditoria.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    ean = etEanAuditoria.getText().toString().replaceAll("\\s","");
-                    if (!ean.isEmpty()) {
-                        //Consultar Api
-                        auditoria();
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        etEanAuditoria.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                boolean handled = false;
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    ean = etEanAuditoria.getText().toString().replaceAll("\\s","");
-                    if(!ean.isEmpty()){
-                        auditoria();
-                    }
-                }
-                return handled;
-            }
-        });
-
-        fabFinUbicacion.setOnClickListener(this);
     }
 
     private void empezarAuditoria() {

@@ -86,7 +86,7 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
         etUnidades.setTextColor(R.color.opaco);
         etUnidades.setText(actuales);
 
-        etPaquetes = findViewById(R.id.etFaltantesLectura);
+        etPaquetes = findViewById(R.id.etUnidadesLeidasSp);
         etPaquetes.setTextColor(R.color.opaco);
         etPaquetes.setText(faltantes);
 

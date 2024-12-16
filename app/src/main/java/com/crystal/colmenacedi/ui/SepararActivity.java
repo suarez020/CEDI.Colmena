@@ -9,8 +9,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.speech.tts.TextToSpeech;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -20,35 +18,21 @@ import android.widget.TextView;
 
 import com.crystal.colmenacedi.R;
 import com.crystal.colmenacedi.common.Constantes;
-import com.crystal.colmenacedi.common.LogFile;
 import com.crystal.colmenacedi.common.SPM;
 import com.crystal.colmenacedi.common.Utilidades;
 import com.crystal.colmenacedi.retrofit.ClienteRetrofit;
 import com.crystal.colmenacedi.retrofit.ServiceRetrofit;
-import com.crystal.colmenacedi.retrofit.request.RequestLecturaEan;
-import com.crystal.colmenacedi.retrofit.request.RequestPinado;
-import com.crystal.colmenacedi.retrofit.response.auditoria.ResponseAuditoria;
-import com.crystal.colmenacedi.retrofit.response.auditoria.RespuestaAuditoria;
-import com.crystal.colmenacedi.retrofit.response.empezarAuditoria.ResponseEmpezarAuditoria;
-import com.crystal.colmenacedi.retrofit.response.empezarAuditoria.RespuestaEmpezarAuditoria;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class SepararActivity extends AppCompatActivity implements View.OnClickListener{
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
-    EditText etPosicionAuditoria, etEanAuditoria, etSobrantesAuditoria;
-    TextView tvTituloSinRegistros;
+    EditText etUnidadesLeidasSp , etPosicionAuditoria , etEanAuditoria;
+    TextView etUnidadesLeidas;
     String cedula, equipo, ubicacion, faltantes, ean, sobrantes;
-    RecyclerView rvAuditoria;
-    RespuestaEmpezarAuditoria respuestaEmpezarAuditoria;
-    RespuestaAuditoria respuestaAuditoria;
     FloatingActionButton fabFinUbicacion;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +43,7 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
         this.setTitle(R.string.menu_auditoria);
         Objects.requireNonNull(getSupportActionBar()).setSubtitle(SPM.getString(Constantes.NOMBRE_USUARIO));
         inicioRetrofit();
-        //findViews();
-        //Eventos
+        findViews();
         //eventos();
     }
 
@@ -71,23 +54,17 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
 
     private void findViews() {
 
-        etPosicionAuditoria = findViewById(R.id.etUbicacion);
+        etPosicionAuditoria = findViewById(R.id.etUbicacionSp);
 
-        etEanAuditoria = findViewById(R.id.etEanAuditoria);
-        etSobrantesAuditoria = findViewById(R.id.etSobrantesAuditoria);
-        tvTituloSinRegistros = findViewById(R.id.tvTituloSinRegistros);
-
-        rvAuditoria = findViewById(R.id.rvAuditoria);
-        rvAuditoria.setLayoutManager(new LinearLayoutManager(this));
+        etEanAuditoria = findViewById(R.id.etEanSp);
+        etUnidadesLeidas = findViewById(R.id.tvUnidadesLeidas);
+        etUnidadesLeidasSp = findViewById(R.id.etUnidadesLeidasSp);
 
         cedula = SPM.getString(Constantes.CEDULA_USUARIO);
         equipo = SPM.getString(Constantes.EQUIPO_API);
 
         etPosicionAuditoria.requestFocus(0);
-        //Ocultar el teclado de pantalla
         ocultarTeclado();
-        //fabFinUbicacion = findViewById(R.id.fabFinUbicacion);
-        //fabFinUbicacion.setEnabled(false);
     }
 
     private void eventos() {

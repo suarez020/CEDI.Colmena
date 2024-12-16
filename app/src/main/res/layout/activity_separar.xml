@@ -3,24 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/cvPantaSeparar"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".ui.ConfirmarCerrarPosicionActivity">
-
-    <TextView
-        android:id="@+id/tvTituloSeparar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="@string/txt_RFID"
-        android:textAlignment="center"
-        android:textColor="@color/rojo"
-        android:visibility="gone"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:background="@color/colorSecondary"
+    tools:context=".ui.SepararActivity">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv"
@@ -33,32 +19,30 @@
         app:cardCornerRadius="10sp"
         app:cardElevation="4dp"
         app:cardUseCompatPadding="true"
-        app:layout_constraintBottom_toTopOf="@+id/btnTerminar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTituloSeparar"
+        app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
-            android:background="@color/opaco_dark"
             android:gravity="center"
             android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/rlFondo"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/opaco_dark"
+                android:layout_height="489dp"
                 android:orientation="horizontal"
                 android:padding="6dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/opaco_dark">
+                    android:layout_height="wrap_content">
 
                     <androidx.constraintlayout.widget.Guideline
                         android:id="@+id/guidelineLA"
@@ -68,19 +52,15 @@
                         app:layout_constraintGuide_percent="0.5" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilUbicacion"
+                        android:id="@+id/tilUbicacionLectura"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginLeft="4dp"
-                        android:layout_marginTop="2dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginRight="4dp"
-                        android:hint="@string/hint_etUbicacion"
-                        android:textColorHint="@color/black"
-                        app:boxBackgroundColor="@color/black"
-                        app:boxBackgroundMode="filled"
+                        android:layout_marginStart="4sp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="4sp"
+                        android:hint="@string/txt_UbicacionRC"
+                        android:textColorHint="@color/opaco"
                         app:boxStrokeColor="@color/colorPrimary"
                         app:counterTextColor="@color/white"
                         app:hintTextColor="@color/black"
@@ -90,48 +70,44 @@
                         app:startIconDrawable="@drawable/vector_posicion">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etUbicacion"
+                            android:id="@+id/etUbicacionSp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
-                            android:background="@color/white"
+                            android:backgroundTint="@color/white"
                             android:ems="10"
-                            android:focusable="true"
-                            android:imeOptions="actionSearch"
+                            android:enabled="false"
                             android:inputType="text"
                             android:textColor="@color/black"
                             android:textColorHint="@color/white"
                             android:textSize="20sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/tilUbicacion"
+                            app:layout_constraintBottom_toBottomOf="@+id/tilUbicacionLectura"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/tilUbicacion" />
+                            app:layout_constraintTop_toTopOf="@+id/tilUbicacionLectura" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilEanAuditoria"
+                        android:id="@+id/tilEanLectura"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="4dp"
-                        android:layout_marginLeft="4dp"
+                        android:layout_marginStart="4sp"
                         android:layout_marginTop="2dp"
-                        android:layout_marginEnd="4dp"
-                        android:layout_marginRight="4dp"
+                        android:layout_marginEnd="4sp"
                         android:hint="@string/hint_etEanLectura"
                         android:textColorHint="@color/black"
-                        app:boxBackgroundMode="filled"
                         app:boxStrokeColor="@color/colorPrimary"
                         app:counterTextColor="@color/white"
                         app:hintTextColor="@color/black"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tilUbicacion"
+                        app:layout_constraintTop_toBottomOf="@+id/tilUbicacionLectura"
                         app:startIconDrawable="@drawable/vector_camara">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etEanAuditoria"
+                            android:id="@+id/etEanSp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -151,27 +127,25 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilFaltantesAuditoria"
+                        android:id="@+id/tilActualesLectura"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
                         android:layout_marginLeft="4dp"
-                        android:layout_marginTop="2dp"
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
-                        android:hint="@string/hint_etFaltantesLectura"
-                        android:textColorHint="@color/black"
-                        app:boxBackgroundMode="filled"
+                        android:hint="@string/hint_etActualesLectura"
+                        android:textColorHint="@color/opaco"
                         app:boxStrokeColor="@color/colorPrimary"
                         app:counterTextColor="@color/white"
                         app:hintTextColor="@color/black"
                         app:layout_constraintEnd_toStartOf="@+id/guidelineLA"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tilEanAuditoria">
+                        app:layout_constraintTop_toBottomOf="@+id/rvDynamicItemsZonaEmpacar">
 
                         <TextView
-                            android:id="@+id/etUnidadesLeidas"
+                            android:id="@+id/tvUnidadesLeidas"
                             android:layout_width="match_parent"
                             android:layout_height="71dp"
                             android:layout_marginBottom="8dp"
@@ -188,30 +162,29 @@
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="@+id/tilFaltantesAuditoria" />
+
                     </com.google.android.material.textfield.TextInputLayout>
 
-
                     <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilSobrantesAuditoria"
+                        android:id="@+id/tilFaltantesLectura"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
                         android:layout_marginLeft="4dp"
-                        android:layout_marginTop="2dp"
                         android:layout_marginEnd="4dp"
                         android:layout_marginRight="4dp"
-                        android:textColorHint="@color/black"
-                        app:boxBackgroundMode="filled"
+                        android:hint="@string/hint_etFaltantesLectura"
+                        android:textColorHint="@color/opaco"
                         app:boxStrokeColor="@color/colorPrimary"
                         app:counterTextColor="@color/white"
                         app:hintTextColor="@color/black"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/guidelineLA"
-                        app:layout_constraintTop_toBottomOf="@+id/tilEanAuditoria">
+                        app:layout_constraintTop_toBottomOf="@+id/rvDynamicItemsZonaEmpacar">
 
                         <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etSobrantesAuditoria"
+                            android:id="@+id/etUnidadesLeidasSp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -222,70 +195,50 @@
                             android:textColor="@color/black"
                             android:textColorHint="@color/white"
                             android:textSize="30sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/tilSobrantesAuditoria"
+                            app:layout_constraintBottom_toBottomOf="@+id/tilFaltantesLectura"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/tilSobrantesAuditoria" />
+                            app:layout_constraintTop_toTopOf="@+id/tilFaltantesLectura" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <TextView
-                        android:id="@+id/tvTituloEan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="18dp"
-                        android:layout_marginLeft="18dp"
-                        android:layout_marginTop="2dp"
-                        android:text="@string/txt_tituloEanAudtioria"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tilFaltantesAuditoria" />
-
-                    <TextView
-                        android:id="@+id/tvTituloUDS"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="@string/txt_tituloUnidadesAuditoria"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tilFaltantesAuditoria" />
-
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvAuditoria"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:layout_marginStart="2dp"
-                        android:layout_marginLeft="2dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginEnd="2dp"
-                        android:layout_marginRight="2dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:id="@+id/rvDynamicItemsZonaEmpacar"
+                        android:layout_width="380dp"
+                        android:layout_height="142dp"
+                        android:padding="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tvTituloEan"
-                        tools:listitem="@layout/recyclerview_confirmar_cerrar_posicion" />
-
-
-                    <TextView
-                        android:id="@+id/tvTituloSinRegistros"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/txt_SinRegistros"
-                        android:textColor="@color/black"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="@+id/rvAuditoria"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/rvAuditoria" />
+                        app:layout_constraintTop_toBottomOf="@+id/tilEanLectura" />
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <Button
+                    android:id="@+id/btnTerminarEmpaque"
+                    android:layout_width="2dp"
+                    android:layout_height="56dp"
+                    android:layout_below="@+id/constraintLayout"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="9dp"
+                    android:layout_marginEnd="13dp"
+                    android:layout_marginRight="13dp"
+                    android:layout_marginBottom="13dp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp"
+                    android:text="Terminar"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
 
 
             </RelativeLayout>
@@ -293,17 +246,5 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
-    <Button
-        android:id="@+id/btnTerminar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:text="Terminar"
-        android:backgroundTint="@color/colorPrimary"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:fontFamily="sans-serif-medium"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
