@@ -61,7 +61,7 @@ public class UbicarActivity extends AppCompatActivity{
     }
 
     private void findViews() {
-        rvDynamicItems = findViewById(R.id.rvDynamicItems);
+        rvDynamicItems = findViewById(R.id.rvDynamicItemsUbicar);
         rvDynamicItems.setLayoutManager(new LinearLayoutManager(this));
 
         id = SPM.getString(Constantes.CEDULA_USUARIO);

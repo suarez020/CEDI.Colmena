@@ -1,6 +1,8 @@
 package com.crystal.colmenacedi.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -20,9 +22,11 @@ import com.crystal.colmenacedi.common.SPM;
 import com.crystal.colmenacedi.common.Utilidades;
 import com.crystal.colmenacedi.retrofit.ClienteRetrofit;
 import com.crystal.colmenacedi.retrofit.ServiceRetrofit;
-import com.crystal.colmenacedi.retrofit.request.RequestLecturaEan;
-import com.crystal.colmenacedi.retrofit.response.lecturaEan.ResponseLecturaEan;
+import com.crystal.colmenacedi.retrofit.request.RequestExtraerPost;
+import com.crystal.colmenacedi.retrofit.response.extraer.ResponseExtraerPost;
+import com.crystal.colmenacedi.ui.adapter.ListaDeItemsRecyclerViewAdapter;
 
+import java.util.List;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -30,14 +34,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ZonaActivity extends AppCompatActivity implements View.OnClickListener {
+    RecyclerView rvDynamicItems;
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
-    EditText etUbicacionLectura, etEanLectura, etActualesLectura, etFaltantesLectura;
+    EditText etUbicacionLectura, etEanLectura, etUnidades, etPaquetes;
     Button btnTerminarCajaLectura;
-    String cedula, equipo, ubicacion, cartonG, actuales, faltantes;
+    String cedula, equipo, ubicacion, ean, actuales, faltantes;
     boolean consumirServicio = true;
     Context contexto;
-
+    List<List<String>> listaItems2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,12 +62,19 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
 
     @SuppressLint("ResourceAsColor")
     private void findViews() {
+        rvDynamicItems = findViewById(R.id.rvDynamicItemsZonaEmpacar);
+        rvDynamicItems.setLayoutManager(new LinearLayoutManager(this));
+
         cedula = SPM.getString(Constantes.CEDULA_USUARIO);
         equipo = SPM.getString(Constantes.EQUIPO_API);
 
+        listaItems2 = (List<List<String>>) getIntent().getSerializableExtra("listaItems2");
         actuales = getIntent().getExtras().getString("leidos");
         faltantes = getIntent().getExtras().getString("faltantes");
         ubicacion = getIntent().getExtras().getString("ubicacion");
+
+        ListaDeItemsRecyclerViewAdapter categoriasAdapter = new ListaDeItemsRecyclerViewAdapter(listaItems2);
+        rvDynamicItems.setAdapter(categoriasAdapter);
 
         etUbicacionLectura = findViewById(R.id.etUbicacionLectura);
         etUbicacionLectura.setTextColor(R.color.opaco);
@@ -70,13 +82,13 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
 
         etEanLectura = findViewById(R.id.etEanLectura);
 
-        etActualesLectura = findViewById(R.id.etActualesLectura);
-        etActualesLectura.setTextColor(R.color.opaco);
-        etActualesLectura.setText(actuales);
+        etUnidades = findViewById(R.id.etActualesLectura);
+        etUnidades.setTextColor(R.color.opaco);
+        etUnidades.setText(actuales);
 
-        etFaltantesLectura = findViewById(R.id.etFaltantesLectura);
-        etFaltantesLectura.setTextColor(R.color.opaco);
-        etFaltantesLectura.setText(faltantes);
+        etPaquetes = findViewById(R.id.etFaltantesLectura);
+        etPaquetes.setTextColor(R.color.opaco);
+        etPaquetes.setText(faltantes);
 
         btnTerminarCajaLectura = findViewById(R.id.btnTerminarEmpaque);
 
@@ -89,8 +101,8 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    cartonG = etEanLectura.getText().toString().replaceAll("\\s","");
-                    if (!cartonG.isEmpty()) {
+                    ean = etEanLectura.getText().toString().replaceAll("\\s","");
+                    if (!ean.isEmpty()) {
                         lecturaEan(); //ClickActionDown
                     }
                     return true;
@@ -104,8 +116,8 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    cartonG = etEanLectura.getText().toString().replaceAll("\\s","");
-                    if(!cartonG.isEmpty()){
+                    ean = etEanLectura.getText().toString().replaceAll("\\s","");
+                    if(!ean.isEmpty()){
                         lecturaEan();//enterCode
                     }
                 }
@@ -119,29 +131,28 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
     private void lecturaEan() {
       if (consumirServicio){
           consumirServicio = false;
-        //Consultar la Api de lecturaEan
-        RequestLecturaEan requestLecturaEan = new RequestLecturaEan(cedula, equipo, cartonG, ubicacion);
-        Call<ResponseLecturaEan> call = serviceRetrofit.doLecturaEan(requestLecturaEan);
-        call.enqueue(new Callback<ResponseLecturaEan>() {
+        RequestExtraerPost requestExtraerPost=new RequestExtraerPost(cedula,ean,"83429","43232");
+        Call<ResponseExtraerPost> call = serviceRetrofit.doExtraerPost(requestExtraerPost);
+        call.enqueue(new Callback<ResponseExtraerPost>() {
             @Override
-            public void onResponse(Call<ResponseLecturaEan> call, Response<ResponseLecturaEan> response) {
+            public void onResponse(Call<ResponseExtraerPost> call, Response<ResponseExtraerPost> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getRespuesta().toString());
-                    if(response.body().getRespuesta().getError().getStatus()){
-                        Utilidades.mensajeDialog("Error", response.body().getRespuesta().getMensaje(), contexto);
+                    //LogFile.adjuntarLog(response.body().getRespuesta().toString());
+                    if(response.body().getErrors().getStatus()){
+                        Utilidades.mensajeDialog("Error", response.body().getErrors().getSource(), contexto);
                         etEanLectura.setText("");
                         etEanLectura.requestFocus();
                     }else{
-                        etActualesLectura.setText(response.body().getRespuesta().getEan().getLeidos());
-                        etFaltantesLectura.setText(response.body().getRespuesta().getEan().getFaltantes());
-
+                        etUnidades.setText(response.body().getData().getUnidadesLeidas().toString());
+                        etPaquetes.setText(response.body().getData().getPaquetesLeidos().toString());
+                        /*
                         if(response.body().getRespuesta().getEan().getFaltantes().equals("0")){
                             Terminar();
                         }else{
                             etEanLectura.setText("");
                             etEanLectura.requestFocus();
-                        }
+                        }*/
                     }
                 }else{
                     Utilidades.mensajeDialog("Error", "Error de conexión con el servicio web base", contexto);
@@ -150,7 +161,7 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             @Override
-            public void onFailure(Call<ResponseLecturaEan> call, Throwable t) {
+            public void onFailure(Call<ResponseExtraerPost> call, Throwable t) {
                 LogFile.adjuntarLog("ErrorResponseLecturaEan",t);
                 Utilidades.mensajeDialog("Error", "Error de conexión: " + t.getMessage(), contexto);
                 consumirServicio = true;
