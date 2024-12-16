@@ -134,17 +134,6 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private GenericosCerradoRFID genericos;
-
-
-    private void irEmpaqueRFID() {
-        Intent i = new Intent(this, EmpaqueRFIDActivity.class);
-        i.putExtra("ubicacion", (Serializable) ubicacion);
-        i.putExtra("genericosRFID", genericos);
-        startActivity(i);
-        finish();
-    }
-
     private void irZonaActivity() {
         Intent i =  new Intent(this, ZonaActivity.class);
         i.putExtra("leidos", (Serializable) leidos);

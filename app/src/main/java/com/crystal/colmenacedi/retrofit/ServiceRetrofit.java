@@ -49,11 +49,11 @@ public interface ServiceRetrofit {
     @GET("extraer")
     Call<ResponseExtraerGet> doExtraerGet(@Query("ubicacion") String ubicacion, @Query("proceso") String procesoBoton);
 //5-------------------------------------------------------------------------------------------------
-
     @Headers({"entorno: "+ Constantes.ENTORNO_API})
     @POST("lecturaean")
     Call<ResponseLecturaEan> doLecturaEan(@Body RequestLecturaEan requestLecturaEan);
-/*    @POST("empezarcerrado")
+    /*
+    @POST("empezarcerrado")
     Call<ResponseEmpezarCerrado> doEmpezarCerrado(@Body RequestPinado requestPinado);
     @Headers({"entorno: "+ Constantes.ENTORNO_API})
     @POST("empezarauditoria")
@@ -62,5 +62,6 @@ public interface ServiceRetrofit {
     @POST("auditoria")
     Call<ResponseAuditoria> doAuditoria(@Body RequestLecturaEan requestLecturaEan);
     @POST("empezarcerradoRFID")
-    Call<ResponseCerradoRFID> doEmpezarCerrdaoRFID(@Body RequestPinado requestEmpezarCerradoRFID);*/
+    Call<ResponseCerradoRFID> doEmpezarCerrdaoRFID(@Body RequestPinado requestEmpezarCerradoRFID);
+    */
 }
