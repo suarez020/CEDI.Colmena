@@ -129,44 +129,13 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnEmpacar:
-                empezarCerrado();
+                irZonaActivity();
                 break;
         }
     }
 
     private GenericosCerradoRFID genericos;
-    private void apiEmpezarCerradoRFID() {
-        RequestPinado requestEmpezarCerradoRFID = new RequestPinado(cedula, equipo, ubicacion);
-        Call<ResponseCerradoRFID> call = serviceRetrofit.doEmpezarCerrdaoRFID(requestEmpezarCerradoRFID);
-        call.enqueue(new Callback<ResponseCerradoRFID>() {
-            @Override
-            public void onResponse(Call<ResponseCerradoRFID> call, Response<ResponseCerradoRFID> response) {
-                if(response.isSuccessful()){
-                    assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getRespuesta().toString());
-                    if(response.body().getRespuesta().getError().getStatus()){
-                        mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
-                        etPosicionCP.setEnabled(true);
-                        etPosicionCP.setText("");
-                        etPosicionCP.requestFocus();
-                        desabilitarBotones();
-                    }else{
-                        genericosCerradoRFID = response.body().getRespuesta().getGenericos().getArray();
-                        genericos = new GenericosCerradoRFID(genericosCerradoRFID);
-                        irEmpaqueRFID();
-                    }
-                }else{
-                    mensajeSimpleDialog("Error", "Error de conexión con el servicio web base.");
-                }
-            }
 
-            @Override
-            public void onFailure(Call<ResponseCerradoRFID> call, Throwable t) {
-                LogFile.adjuntarLog("ErrorResponseEmpezarCerradoRFID",t);
-                mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
-            }
-        });
-    }
 
     private void irEmpaqueRFID() {
         Intent i = new Intent(this, EmpaqueRFIDActivity.class);
@@ -176,56 +145,11 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
         finish();
     }
 
-    private void empezarCerrado() {
-        //Consultar la Api de empezar cerrado
-        RequestPinado requestPinado = new RequestPinado(cedula, equipo, ubicacion);
-        Call<ResponseEmpezarCerrado> call = serviceRetrofit.doEmpezarCerrado(requestPinado);
-        call.enqueue(new Callback<ResponseEmpezarCerrado>() {
-            @Override
-            public void onResponse(Call<ResponseEmpezarCerrado> call, Response<ResponseEmpezarCerrado> response) {
-                if(response.isSuccessful()){
-                    assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getRespuesta().toString());
-                    if(response.body().getRespuesta().getError().getStatus()){
-                        mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
-                        etPosicionCP.setEnabled(true);
-                        etPosicionCP.setText("");
-                        etPosicionCP.requestFocus();
-                        desabilitarBotones();
-                    }else{
-                        leidos = response.body().getRespuesta().getEmpezarCerrado().getLeidos();
-                        faltantes = response.body().getRespuesta().getEmpezarCerrado().getFaltantes();
-
-
-                                irLectura();
-
-
-                    }
-                }else{
-                    mensajeSimpleDialog("Error", "Error de conexión con el servicio web base.");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseEmpezarCerrado> call, Throwable t) {
-                LogFile.adjuntarLog("ErrorResponseEmpezarCerrado",t);
-                mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
-            }
-        });
-    }
-    private void irLectura() {
+    private void irZonaActivity() {
         Intent i =  new Intent(this, ZonaActivity.class);
         i.putExtra("leidos", (Serializable) leidos);
         i.putExtra("faltantes", (Serializable) faltantes);
         i.putExtra("ubicacion", (Serializable) ubicacion);
-        startActivity(i);
-        finish();
-    }
-
-    private void irConfirmarCerrarPosicion() {
-        Intent i = new Intent(this, ConfirmarCerrarPosicionActivity.class);
-        i.putExtra("ubicacion", (Serializable) ubicacion);
-        i.putExtra("faltantes", (Serializable) faltantes);
         startActivity(i);
         finish();
     }

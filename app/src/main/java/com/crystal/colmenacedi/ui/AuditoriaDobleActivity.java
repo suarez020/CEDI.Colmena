@@ -169,7 +169,7 @@ public class AuditoriaDobleActivity extends AppCompatActivity implements View.On
         //Ocultar el teclado de pantalla
         ocultarTeclado();
 
-        RequestPinado requestPinado = new RequestPinado(cedula, equipo, ubicacion);
+/*        RequestPinado requestPinado = new RequestPinado(cedula, equipo, ubicacion);
         Call<ResponseEmpezarAuditoria> call = serviceRetrofit.doEmpezarAuditoria(requestPinado);
         call.enqueue(new Callback<ResponseEmpezarAuditoria>() {
             @Override
@@ -205,14 +205,15 @@ public class AuditoriaDobleActivity extends AppCompatActivity implements View.On
                 mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
             }
         });
-    }
+        */
+     }
 
     private void auditoria() {
 
         //Ocultar el teclado de pantalla
         ocultarTeclado();
 
-        RequestLecturaEan requestLecturaEan = new RequestLecturaEan(cedula, equipo, ean, ubicacion);
+/*        RequestLecturaEan requestLecturaEan = new RequestLecturaEan(cedula, equipo, ean, ubicacion);
         Call<ResponseAuditoria> call = serviceRetrofit.doAuditoria(requestLecturaEan);
         call.enqueue(new Callback<ResponseAuditoria>() {
             @Override
@@ -254,7 +255,7 @@ public class AuditoriaDobleActivity extends AppCompatActivity implements View.On
                 LogFile.adjuntarLog("ErrorResponseLecturaEan",t);
                 mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
             }
-        });
+        });*/
     }
 
     //Alert Dialog para mostrar mensajes de error, alertas o información

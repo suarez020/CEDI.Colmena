@@ -1,14 +1,9 @@
 package com.crystal.colmenacedi.retrofit;
 import com.crystal.colmenacedi.common.Constantes;
 import com.crystal.colmenacedi.retrofit.request.RequestLecturaEan;
-import com.crystal.colmenacedi.retrofit.request.RequestPinado;
 import com.crystal.colmenacedi.retrofit.request.RequestLogin;
 import com.crystal.colmenacedi.retrofit.request.RequestUbicacion;
-import com.crystal.colmenacedi.retrofit.response.auditoria.ResponseAuditoria;
-import com.crystal.colmenacedi.retrofit.response.cerradoRFID.ResponseCerradoRFID;
-import com.crystal.colmenacedi.retrofit.response.empezarAuditoria.ResponseEmpezarAuditoria;
 import com.crystal.colmenacedi.retrofit.response.configuracion.ResponseConfiguracion;
-import com.crystal.colmenacedi.retrofit.response.empezarCerrado.ResponseEmpezarCerrado;
 import com.crystal.colmenacedi.retrofit.response.extraer.ResponseExtraerGet;
 import com.crystal.colmenacedi.retrofit.response.inicio.ResponseInicio;
 import com.crystal.colmenacedi.retrofit.response.lecturaEan.ResponseLecturaEan;
@@ -17,7 +12,6 @@ import com.crystal.colmenacedi.retrofit.response.loginGet.ResponseLoginGet;
 import com.crystal.colmenacedi.retrofit.response.logout.ResponseLogout;
 import com.crystal.colmenacedi.retrofit.response.ubicacion.ResponseUbicacion;
 import com.crystal.colmenacedi.retrofit.response.ubicacionGet.ResponseUbicacionGet;
-
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -25,7 +19,6 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Query;
-
 public interface ServiceRetrofit {
     @Headers({"entorno: "+ Constantes.ENTORNO_API})
     @GET("inicio")
@@ -60,7 +53,7 @@ public interface ServiceRetrofit {
     @Headers({"entorno: "+ Constantes.ENTORNO_API})
     @POST("lecturaean")
     Call<ResponseLecturaEan> doLecturaEan(@Body RequestLecturaEan requestLecturaEan);
-    @POST("empezarcerrado")
+/*    @POST("empezarcerrado")
     Call<ResponseEmpezarCerrado> doEmpezarCerrado(@Body RequestPinado requestPinado);
     @Headers({"entorno: "+ Constantes.ENTORNO_API})
     @POST("empezarauditoria")
@@ -69,5 +62,5 @@ public interface ServiceRetrofit {
     @POST("auditoria")
     Call<ResponseAuditoria> doAuditoria(@Body RequestLecturaEan requestLecturaEan);
     @POST("empezarcerradoRFID")
-    Call<ResponseCerradoRFID> doEmpezarCerrdaoRFID(@Body RequestPinado requestEmpezarCerradoRFID);
+    Call<ResponseCerradoRFID> doEmpezarCerrdaoRFID(@Body RequestPinado requestEmpezarCerradoRFID);*/
 }
