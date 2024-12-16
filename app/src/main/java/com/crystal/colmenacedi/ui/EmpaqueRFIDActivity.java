@@ -149,34 +149,7 @@ public class EmpaqueRFIDActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void apiCerradoRFID() {
-        RequestCerradoCarton requestCerradoRFID = new RequestCerradoCarton(cedula, estacion, ubicacion, generico);
-        Call<ResponseCerradoRFID> call = serviceRetrofit.doCerradoRFID(requestCerradoRFID);
-        call.enqueue(new Callback<ResponseCerradoRFID>() {
-            @Override
-            public void onResponse(Call<ResponseCerradoRFID> call, Response<ResponseCerradoRFID> response) {
-                if(response.isSuccessful()){
-                    assert response.body() != null;
-                    util.toSpeech(response.body().getRespuesta().getVoz());
-                    LogFile.adjuntarLog(response.body().getRespuesta().toString());
-                    if(response.body().getRespuesta().getError().getStatus()){
-                        Utilidades.mensajeDialog("Error", response.body().getRespuesta().getMensaje(), contexto);
-                    }else{
-                        mostrarConsulta();
 
-                    }
-                    etGenericoEmpaqueRFID.setText("");
-                    etGenericoEmpaqueRFID.requestFocus();
-                }else{
-                    Utilidades.mensajeDialog("Error", "Error de conexión con el servicio web base.", contexto);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseCerradoRFID> call, Throwable t) {
-                LogFile.adjuntarLog("ErrorResponseCerradoRFID",t);
-                Utilidades.mensajeDialog("Error", "Error de conexión: " + t.getMessage(), contexto);
-            }
-        });
     }
 
     private void mostrarConsulta() {
@@ -193,31 +166,7 @@ public class EmpaqueRFIDActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void apiTerminarRFID() {
-        RequestPinado requestTerminarRFID = new RequestPinado(cedula, estacion, ubicacion);
-        Call<ResponseFinAuditoria> call = serviceRetrofit.doTerminarRFID(requestTerminarRFID);
-        call.enqueue(new Callback<ResponseFinAuditoria>() {
-            @Override
-            public void onResponse(Call<ResponseFinAuditoria> call, Response<ResponseFinAuditoria> response) {
-                if(response.isSuccessful()){
-                    assert response.body() != null;
-                    util.toSpeech(response.body().getRespuesta().getVoz());
-                    LogFile.adjuntarLog(response.body().getRespuesta().toString());
-                    if(response.body().getRespuesta().getError().getStatus()){
-                        Utilidades.mensajeDialog("Error", response.body().getRespuesta().getMensaje(), contexto);
-                    }else{
-                        irPrincipal();
-                    }
-                }else{
-                    Utilidades.mensajeDialog("Error", "Error de conexión con el servicio web base.", contexto);
-                }
-            }
 
-            @Override
-            public void onFailure(Call<ResponseFinAuditoria> call, Throwable t) {
-                LogFile.adjuntarLog("ErrorResponseTerminarRFID",t);
-                Utilidades.mensajeDialog("Error", "Error de conexión: " + t.getMessage(), contexto);
-            }
-        });
     }
 
     private void irPrincipal() {

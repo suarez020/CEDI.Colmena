@@ -94,8 +94,7 @@ public class ConfirmarCerrarPosicionActivity extends AppCompatActivity implement
     }
 
     private void finalizarUbicacionInfo() {
-        //Consultar la Api de finalizarUbicaciónInfo
-        RequestPinado requestPinado = new RequestPinado(cedula, estacion, ubicacion);
+/*        RequestPinado requestPinado = new RequestPinado(cedula, estacion, ubicacion);
         Call<ResponseFinalizarUbicacionInfo> call = serviceRetrofit.doFinalizarUbicacionInfo(requestPinado);
         call.enqueue(new Callback<ResponseFinalizarUbicacionInfo>() {
             @Override
@@ -116,7 +115,7 @@ public class ConfirmarCerrarPosicionActivity extends AppCompatActivity implement
                 LogFile.adjuntarLog("ErrorResponseFinalizarUbicacionInfo",t);
                 mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
             }
-        });
+        });*/
     }
 
     //Alert Dialog para mostrar mensajes de error, alertas o información
