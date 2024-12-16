@@ -6,8 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.speech.tts.TextToSpeech;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -25,7 +23,6 @@ import com.crystal.colmenacedi.retrofit.ServiceRetrofit;
 import com.crystal.colmenacedi.retrofit.request.RequestLecturaEan;
 import com.crystal.colmenacedi.retrofit.response.lecturaEan.ResponseLecturaEan;
 
-import java.util.Locale;
 import java.util.Objects;
 
 import retrofit2.Call;
@@ -44,7 +41,7 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_zona);
+        setContentView(R.layout.activity_zona_empacar_fin);
         Utilidades.ocultarBarraEstado(getWindow());
         this.setTitle("Empacar Bol");
         Objects.requireNonNull(getSupportActionBar()).setSubtitle(SPM.getString(Constantes.NOMBRE_USUARIO));

@@ -45,7 +45,7 @@ public class UbicarActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recibir_cajas);
+        setContentView(R.layout.activity_ubicar);
         Utilidades.ocultarBarraEstado(getWindow());
 
         this.setTitle("Ubicar UND");

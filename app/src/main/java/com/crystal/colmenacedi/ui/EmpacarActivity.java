@@ -2,13 +2,12 @@ package com.crystal.colmenacedi.ui;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.speech.tts.TextToSpeech;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -19,39 +18,28 @@ import android.widget.TextView;
 
 import com.crystal.colmenacedi.R;
 import com.crystal.colmenacedi.common.Constantes;
-import com.crystal.colmenacedi.common.LogFile;
 import com.crystal.colmenacedi.common.SPM;
 import com.crystal.colmenacedi.common.Utilidades;
 import com.crystal.colmenacedi.retrofit.ClienteRetrofit;
 import com.crystal.colmenacedi.retrofit.ServiceRetrofit;
-import com.crystal.colmenacedi.retrofit.request.RequestPinado;
-import com.crystal.colmenacedi.retrofit.response.cerradoRFID.GenericosCerradoRFID;
-import com.crystal.colmenacedi.retrofit.response.cerradoRFID.ResponseCerradoRFID;
-import com.crystal.colmenacedi.retrofit.response.empezarCerrado.ResponseEmpezarCerrado;
 
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class EmpacarActivity extends AppCompatActivity implements View.OnClickListener {
+    RecyclerView rvDynamicItems;
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
     EditText etPosicionCP;
     Button btnEmpacar;
     String cedula, equipo, ubicacion, leidos, faltantes;
     ArrayList<String> nombresParametros;
-    List<List<String>> genericosCerradoRFID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cerrar_posicion);
+        setContentView(R.layout.activity_zona_empacar);
         Utilidades.ocultarBarraEstado(getWindow());
 
         this.setTitle("Empacar Bol");
@@ -67,6 +55,8 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void findViews() {
+        rvDynamicItems = findViewById(R.id.rvDynamicItems);
+
         cedula = SPM.getString(Constantes.CEDULA_USUARIO);
         equipo = SPM.getString(Constantes.EQUIPO_API);
         nombresParametros = new ArrayList<>();
