@@ -117,7 +117,7 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
             consumirServicio=false;
             ocultarTeclado();
             btnEmpacar.setEnabled(true);
-            Call<ResponseExtraerGet> responseExtraerGetCall = serviceRetrofit.doExtraerGet(ubicacion, "1");
+            Call<ResponseExtraerGet> responseExtraerGetCall = serviceRetrofit.doExtraerGet(ubicacion, proceso);
             responseExtraerGetCall.enqueue(new Callback<ResponseExtraerGet>() {
                 @Override
                 public void onResponse(Call<ResponseExtraerGet> call, Response<ResponseExtraerGet> response) {

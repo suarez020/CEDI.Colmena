@@ -128,39 +128,39 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
 
     private void lecturaEan() {
       if (consumirServicio){
-        ocultarTeclado();
-        consumirServicio = false;
-        RequestExtraerPost requestExtraerPost=new RequestExtraerPost(cedula,ean,"83429","43232");
-        Call<ResponseExtraerPost> call = serviceRetrofit.doExtraerPost(requestExtraerPost);
-        call.enqueue(new Callback<ResponseExtraerPost>() {
-            @Override
-            public void onResponse(Call<ResponseExtraerPost> call, Response<ResponseExtraerPost> response) {
-                if(response.isSuccessful()){
-                    assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getErrors().getSource());
-                    if(response.body().getErrors().getStatus()){
-                        Utilidades.mensajeDialog("Error", response.body().getErrors().getSource(), contexto);
-                        etEanLectura.setText("");
-                        etEanLectura.requestFocus();
+            ocultarTeclado();
+            consumirServicio = false;
+            RequestExtraerPost requestExtraerPost=new RequestExtraerPost(cedula,ean,ubicacion,proceso);
+            Call<ResponseExtraerPost> call = serviceRetrofit.doExtraerPost(requestExtraerPost);
+            call.enqueue(new Callback<ResponseExtraerPost>() {
+                @Override
+                public void onResponse(Call<ResponseExtraerPost> call, Response<ResponseExtraerPost> response) {
+                    if(response.isSuccessful()){
+                        assert response.body() != null;
+                        LogFile.adjuntarLog(response.body().getErrors().getSource());
+                        if(response.body().getErrors().getStatus()){
+                            Utilidades.mensajeDialog("Error", response.body().getErrors().getSource(), contexto);
+                            etEanLectura.setText("");
+                            etEanLectura.requestFocus();
+                        }else{
+                            etUnidades.setText(response.body().getData().getUnidadesLeidas().toString());
+                            etPaquetes.setText(response.body().getData().getPaquetesLeidos().toString());
+                            etEanLectura.setText("");
+                            etEanLectura.requestFocus();
+                        }
                     }else{
-                        etUnidades.setText(response.body().getData().getUnidadesLeidas().toString());
-                        etPaquetes.setText(response.body().getData().getPaquetesLeidos().toString());
-                        etEanLectura.setText("");
-                        etEanLectura.requestFocus();
+                        Utilidades.mensajeDialog("Error", "Error de conexión con el servicio web base", contexto);
                     }
-                }else{
-                    Utilidades.mensajeDialog("Error", "Error de conexión con el servicio web base", contexto);
+                    consumirServicio = true;
                 }
-                consumirServicio = true;
-            }
 
-            @Override
-            public void onFailure(Call<ResponseExtraerPost> call, Throwable t) {
-                LogFile.adjuntarLog("ErrorResponseLecturaEan",t);
-                Utilidades.mensajeDialog("Error", "Error de conexión: " + t.getMessage(), contexto);
-                consumirServicio = true;
-            }
-        });
+                @Override
+                public void onFailure(Call<ResponseExtraerPost> call, Throwable t) {
+                    LogFile.adjuntarLog("ErrorResponseLecturaEan",t);
+                    Utilidades.mensajeDialog("Error", "Error de conexión: " + t.getMessage(), contexto);
+                    consumirServicio = true;
+                }
+            });
       }
     }
 

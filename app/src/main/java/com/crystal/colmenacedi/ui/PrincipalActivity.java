@@ -167,7 +167,7 @@ public class PrincipalActivity extends AppCompatActivity implements View.OnClick
             consumirServicio = false;
             cedula = SPM.getString(Constantes.CEDULA_USUARIO);
             estacion = SPM.getString(Constantes.EQUIPO_API);
-            RequestLogin requestLogout = new RequestLogin(cedula, estacion);
+            RequestLogin requestLogout = new RequestLogin(cedula , estacion);
             Call<ResponseLogout> call = serviceRetrofit.doLogout(requestLogout);
             call.enqueue(new Callback<ResponseLogout>() {
                 @Override

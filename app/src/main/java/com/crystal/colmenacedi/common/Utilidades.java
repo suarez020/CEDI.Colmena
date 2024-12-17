@@ -60,7 +60,6 @@ public class Utilidades {
         return i==dato.length;
     }
 
-    //Alert Dialog para mostrar mensajes de error, alertas o información
     public static void mensajeDialog(String titulo, String msj, Context context){
 
         int icon = R.drawable.vector_alerta;
