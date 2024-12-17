@@ -44,6 +44,8 @@ public class UbicarActivity extends AppCompatActivity{
     EditText etEan, etUbicacion;
     ProgressBar pbRecibirCaja;
     String id, estacion, ean, ubicacion, mensaje;
+    boolean consumirServicio = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,38 +143,44 @@ public class UbicarActivity extends AppCompatActivity{
     }
 
     private void LLenarMenu() {
-        ocultarTeclado();
-        Call<ResponseUbicacionGet> ubicacionGet = serviceRetrofit.doUbicacionGET(ean);
-        ubicacionGet.enqueue(new Callback<ResponseUbicacionGet>() {
-            @Override
-            public void onResponse(Call<ResponseUbicacionGet> call, Response<ResponseUbicacionGet> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getErrors().getSource());
-                    if (response.body().getErrors().getStatus()) {
-                        mensajeDialog("Error", response.body().getErrors().getSource());
-                        etEan.setText("");
-                        etEan.requestFocus();
+        if (consumirServicio) {
+            consumirServicio = false;
+            ocultarTeclado();
+            Call<ResponseUbicacionGet> ubicacionGet = serviceRetrofit.doUbicacionGET(ean);
+            ubicacionGet.enqueue(new Callback<ResponseUbicacionGet>() {
+                @Override
+                public void onResponse(Call<ResponseUbicacionGet> call, Response<ResponseUbicacionGet> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        LogFile.adjuntarLog(response.body().getErrors().getSource());
+                        if (response.body().getErrors().getStatus()) {
+                            mensajeDialog("Error", response.body().getErrors().getSource());
+                            etEan.setText("");
+                            etEan.requestFocus();
+                        } else {
+                            mostrarCategorias();
+                            List<List<String>> lista = response.body().getData().getItems();
+                            ListaDeItemsRecyclerViewAdapter categoriasAdapter = new ListaDeItemsRecyclerViewAdapter(lista);
+                            rvDynamicItems.setAdapter(categoriasAdapter);
+                            etUbicacion.setEnabled(true);
+                            etUbicacion.requestFocus();
+                        }
                     } else {
-                        mostrarCategorias();
-                        List<List<String>> lista = response.body().getData().getItems();
-                        ListaDeItemsRecyclerViewAdapter categoriasAdapter = new ListaDeItemsRecyclerViewAdapter(lista);
-
-                        rvDynamicItems.setAdapter(categoriasAdapter);
-                        etUbicacion.setEnabled(true);
-                        etUbicacion.requestFocus();
+                        mensajeDialog("Error", "Error de conexión con el servicio web base.");
                     }
-                } else {
-                    mensajeDialog("Error", "Error de conexión con el servicio web base.");
+                    pbRecibirCaja.setVisibility(View.GONE);
+                    consumirServicio = true;
                 }
-                pbRecibirCaja.setVisibility(View.GONE);
-            }
 
-            @Override
-            public void onFailure(Call<ResponseUbicacionGet> call, Throwable t) {
-
-            }
-        });
+                @Override
+                public void onFailure(Call<ResponseUbicacionGet> call, Throwable t) {
+                    pbRecibirCaja.setVisibility(View.GONE);
+                    LogFile.adjuntarLog("ErrorResponseFinPinado", t);
+                    mensajeDialog("Error", "Error de conexión: " + t.getMessage());
+                    consumirServicio = true;
+                }
+            });
+        }
     }
 
     private void ocultarTeclado(){
@@ -188,49 +196,37 @@ public class UbicarActivity extends AppCompatActivity{
     }
 
     private void ubicacionPut() {
-        RequestUbicacion requestUbicacion=new RequestUbicacion(id,ean,estacion);
-        Call<ResponseUbicacion> call =serviceRetrofit.doUbicacion(requestUbicacion);
-        call.enqueue(new Callback<ResponseUbicacion>() {
-            @Override
-            public void onResponse(Call<ResponseUbicacion> call, Response<ResponseUbicacion> response) {
-                if(response.isSuccessful()){
-                    assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getErrors().getSource());
-                    if(response.body().getErrors().getStatus()){
-                        mensajeDialog("Error", response.body().getErrors().getSource());
-                    }else{
-                        Log.e("LOGCAT", "ReponseUbicacionPut: " +response.body());
-                        regresarPrincipal();
-                    }
-                }else{
-                    mensajeDialog("Error", "Error de conexión con el servicio web base.");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseUbicacion> call, Throwable t) {
-                pbRecibirCaja.setVisibility(View.GONE);
-                LogFile.adjuntarLog("ErrorResponseFinPinado",t);
-                mensajeDialog("Error", "Error de conexión: " + t.getMessage());
-            }
-        });
-    }
-
-    public void mensajeSimpleDialog(final String msj){
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(msj)
-                .setCancelable(false)
-                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if(msj.equals(mensaje)){
+        if (consumirServicio) {
+            consumirServicio = false;
+            RequestUbicacion requestUbicacion = new RequestUbicacion(id, ean, estacion);
+            Call<ResponseUbicacion> call = serviceRetrofit.doUbicacion(requestUbicacion);
+            call.enqueue(new Callback<ResponseUbicacion>() {
+                @Override
+                public void onResponse(Call<ResponseUbicacion> call, Response<ResponseUbicacion> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        LogFile.adjuntarLog(response.body().getErrors().getSource());
+                        if (response.body().getErrors().getStatus()) {
+                            mensajeDialog("Error", response.body().getErrors().getSource());
+                        } else {
+                            Log.e("LOGCAT", "ReponseUbicacionPut: " + response.body());
                             regresarPrincipal();
                         }
+                    } else {
+                        mensajeDialog("Error", "Error de conexión con el servicio web base.");
                     }
-                });
-        AlertDialog alerta = builder.create();
-        alerta.show();
+                    consumirServicio = true;
+                }
+
+                @Override
+                public void onFailure(Call<ResponseUbicacion> call, Throwable t) {
+                    pbRecibirCaja.setVisibility(View.GONE);
+                    LogFile.adjuntarLog("ErrorResponseFinPinado", t);
+                    mensajeDialog("Error", "Error de conexión: " + t.getMessage());
+                    consumirServicio = true;
+                }
+            });
+        }
     }
 
     public void mensajeDialog(final String titulo, final String msj){

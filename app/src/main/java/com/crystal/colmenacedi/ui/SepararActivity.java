@@ -143,37 +143,42 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void getExtraerLLenadoRV() {
-        ocultarTeclado();
-        Call<ResponseExtraerGet> responseExtraerGetCall = serviceRetrofit.doExtraerGet(ubicacion,proceso);
-        responseExtraerGetCall.enqueue(new Callback<ResponseExtraerGet>() {
-            @Override
-            public void onResponse(Call<ResponseExtraerGet> call, Response<ResponseExtraerGet> response) {
-                if (response.isSuccessful()) {
-                    assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getErrors().getSource());
-                    if (response.body().getErrors().getStatus()) {
-                        mensajeDialog("Error", response.body().getErrors().getSource());
-                        etUbicacionSp.setText("");
-                        etUbicacionSp.requestFocus();
+        if (consumirServicio) {
+            ocultarTeclado();
+            consumirServicio = false;
+            Call<ResponseExtraerGet> responseExtraerGetCall = serviceRetrofit.doExtraerGet(ubicacion, proceso);
+            responseExtraerGetCall.enqueue(new Callback<ResponseExtraerGet>() {
+                @Override
+                public void onResponse(Call<ResponseExtraerGet> call, Response<ResponseExtraerGet> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        LogFile.adjuntarLog(response.body().getErrors().getSource());
+                        if (response.body().getErrors().getStatus()) {
+                            mensajeDialog("Error", response.body().getErrors().getSource());
+                            etUbicacionSp.setText("");
+                            etUbicacionSp.requestFocus();
+                        } else {
+                            etUbicacionSp.setEnabled(false);
+                            etEanSp.requestFocus();
+                            mostrarCategorias();
+                            listaItems1 = response.body().getData().getItems();
+                            ListaDeItemsRecyclerViewAdapter categoriasAdapter = new ListaDeItemsRecyclerViewAdapter(listaItems1);
+                            rvDynamicItems.setAdapter(categoriasAdapter);
+                        }
                     } else {
-                        etUbicacionSp.setEnabled(false);
-                        etEanSp.requestFocus();
-                        mostrarCategorias();
-                        listaItems1= response.body().getData().getItems();
-                        ListaDeItemsRecyclerViewAdapter categoriasAdapter = new ListaDeItemsRecyclerViewAdapter(listaItems1);
-                        rvDynamicItems.setAdapter(categoriasAdapter);
+                        mensajeDialog("Error", "Error de conexión con el servicio web base.");
                     }
-                } else {
-                    mensajeDialog("Error", "Error de conexión con el servicio web base.");
+                    consumirServicio = true;
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ResponseExtraerGet> call, Throwable t) {
-                LogFile.adjuntarLog("Extraer_Get",t);
-                mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<ResponseExtraerGet> call, Throwable t) {
+                    LogFile.adjuntarLog("Extraer_Get", t);
+                    mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
+                    consumirServicio = true;
+                }
+            });
+        }
     }
 
     private void mostrarCategorias(){
@@ -267,31 +272,36 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void serviceTerminarPost() {
-        cedula=SPM.getString(Constantes.CEDULA_USUARIO);
-        RequestTerminar requestTerminar =new RequestTerminar(cedula,ubicacion,proceso);
-        Call<ResponseTerminar> call = serviceRetrofit.doTerminar(requestTerminar);
-        call.enqueue(new Callback<ResponseTerminar>() {
-            @Override
-            public void onResponse(Call<ResponseTerminar> call, Response<ResponseTerminar> response) {
-                if(response.isSuccessful()) {
-                    assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getErrors().getSource());
-                    if(response.body().getErrors().getStatus()){
-                      mensajeSimpleDialog("Error", response.body().getErrors().getSource());
-                    }else{
-                      regresarPrincipal();
+        if(consumirServicio) {
+            consumirServicio = false;
+            cedula = SPM.getString(Constantes.CEDULA_USUARIO);
+            RequestTerminar requestTerminar = new RequestTerminar(cedula, ubicacion, proceso);
+            Call<ResponseTerminar> call = serviceRetrofit.doTerminar(requestTerminar);
+            call.enqueue(new Callback<ResponseTerminar>() {
+                @Override
+                public void onResponse(Call<ResponseTerminar> call, Response<ResponseTerminar> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        LogFile.adjuntarLog(response.body().getErrors().getSource());
+                        if (response.body().getErrors().getStatus()) {
+                            mensajeSimpleDialog("Error", response.body().getErrors().getSource());
+                        } else {
+                            regresarPrincipal();
+                        }
+                    } else {
+                        mensajeSimpleDialog("Error", "Error de conexión con el servicio web base. " + response.message());
                     }
-                }else{
-                    mensajeSimpleDialog("Error", "Error de conexión con el servicio web base. "+ response.message());
+                    consumirServicio=true;
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ResponseTerminar> call, Throwable t) {
-                LogFile.adjuntarLog("ErrorResponse/terminar_Post",t);
-                mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<ResponseTerminar> call, Throwable t) {
+                    LogFile.adjuntarLog("ErrorResponse/terminar_Post", t);
+                    mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
+                    consumirServicio=true;
+                }
+            });
+        }
     }
 
     private void ocultarTeclado(){

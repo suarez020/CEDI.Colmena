@@ -37,6 +37,7 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
     EditText etUbicacionEmpacar;
     Button btnEmpacar;
     String cedula , equipo , ubicacion , proceso ;
+    boolean consumirServicio = true;
     List<List<String>> listaItems1;
     List<List<String>> listaItems2;
     @Override
@@ -112,12 +113,14 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void LLenarMenu() {
-        ocultarTeclado();
-        btnEmpacar.setEnabled(true);
-        Call<ResponseExtraerGet> responseExtraerGetCall = serviceRetrofit.doExtraerGet(ubicacion,"1");
-        responseExtraerGetCall.enqueue(new Callback<ResponseExtraerGet>() {
-            @Override
-            public void onResponse(Call<ResponseExtraerGet> call, Response<ResponseExtraerGet> response) {
+        if (consumirServicio) {
+            consumirServicio=false;
+            ocultarTeclado();
+            btnEmpacar.setEnabled(true);
+            Call<ResponseExtraerGet> responseExtraerGetCall = serviceRetrofit.doExtraerGet(ubicacion, "1");
+            responseExtraerGetCall.enqueue(new Callback<ResponseExtraerGet>() {
+                @Override
+                public void onResponse(Call<ResponseExtraerGet> call, Response<ResponseExtraerGet> response) {
                     if (response.isSuccessful()) {
                         assert response.body() != null;
                         LogFile.adjuntarLog(response.body().getErrors().getSource());
@@ -127,24 +130,27 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
                             etUbicacionEmpacar.requestFocus();
                         } else {
                             mostrarCategorias();
-                            listaItems1= response.body().getData().getItems();
-                            listaItems2= response.body().getData().getItems2();
+                            listaItems1 = response.body().getData().getItems();
+                            listaItems2 = response.body().getData().getItems2();
                             ListaDeItemsRecyclerViewAdapter categoriasAdapter = new ListaDeItemsRecyclerViewAdapter(listaItems1);
                             rvDynamicItems.setAdapter(categoriasAdapter);
                         }
                     } else {
                         mensajeDialog("Error", "Error de conexión con el servicio web base.");
                     }
-            }
+                    consumirServicio=true;
+                }
 
-            @Override
-            public void onFailure(Call<ResponseExtraerGet> call, Throwable t) {
-                etUbicacionEmpacar.setText("");
-                etUbicacionEmpacar.requestFocus();
-                LogFile.adjuntarLog("response_Extraer:Get",t);
-                mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<ResponseExtraerGet> call, Throwable t) {
+                    etUbicacionEmpacar.setText("");
+                    etUbicacionEmpacar.requestFocus();
+                    LogFile.adjuntarLog("response_Extraer:Get", t);
+                    mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
+                    consumirServicio=true;
+                }
+            });
+        }
     }
 
     private void ocultarTeclado(){

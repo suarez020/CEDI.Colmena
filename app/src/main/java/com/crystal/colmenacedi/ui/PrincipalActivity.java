@@ -45,6 +45,7 @@ public class PrincipalActivity extends AppCompatActivity implements View.OnClick
     String cedula, estacion;
     CardView cvPrincipalE;
     TextView tvEquipoPrincipal;
+    boolean consumirServicio = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,32 +163,37 @@ public class PrincipalActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void apiCerrarSesion() {
-        cedula = SPM.getString(Constantes.CEDULA_USUARIO);
-        estacion = SPM.getString(Constantes.EQUIPO_API);
-        RequestLogin requestLogout = new RequestLogin(cedula, estacion);
-        Call<ResponseLogout> call = serviceRetrofit.doLogout(requestLogout);
-        call.enqueue(new Callback<ResponseLogout>() {
-            @Override
-            public void onResponse(Call<ResponseLogout> call, Response<ResponseLogout> response) {
-                if(response.isSuccessful()) {
-                    assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getErrors().getSource());
-                    if(response.body().getErrors().getStatus()){
-                        mensajeSimpleDialog("Error", response.body().getErrors().getSource());
-                    }else{
+        if (consumirServicio) {
+            consumirServicio = false;
+            cedula = SPM.getString(Constantes.CEDULA_USUARIO);
+            estacion = SPM.getString(Constantes.EQUIPO_API);
+            RequestLogin requestLogout = new RequestLogin(cedula, estacion);
+            Call<ResponseLogout> call = serviceRetrofit.doLogout(requestLogout);
+            call.enqueue(new Callback<ResponseLogout>() {
+                @Override
+                public void onResponse(Call<ResponseLogout> call, Response<ResponseLogout> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        LogFile.adjuntarLog(response.body().getErrors().getSource());
+                        if (response.body().getErrors().getStatus()) {
+                            mensajeSimpleDialog("Error", response.body().getErrors().getSource());
+                        } else {
                             irLogin();
+                        }
+                    } else {
+                        mensajeSimpleDialog("Error", "Error de conexión con el servicio web base. " + response.message());
                     }
-                }else{
-                    mensajeSimpleDialog("Error", "Error de conexión con el servicio web base. "+ response.message());
+                    consumirServicio = true;
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ResponseLogout> call, Throwable t) {
-                LogFile.adjuntarLog("ErrorResponseLogout",t);
-                mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<ResponseLogout> call, Throwable t) {
+                    LogFile.adjuntarLog("ErrorResponseLogout", t);
+                    mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
+                    consumirServicio = true;
+                }
+            });
+        }
     }
 
     public void mensajeSimpleDialog(String titulo, String msj){

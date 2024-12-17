@@ -25,7 +25,7 @@ import retrofit2.http.Query;
 public interface ServiceRetrofit {
     @Headers({"entorno: "+ Constantes.ENTORNO_API})
     @GET("inicio")
-    Call<ResponseInicio> doInicio(@Query("id") String id, @Query("estacion") String estacion);
+    Call<ResponseInicio> doInicio(@Query("mac") String mac, @Query("estacion") String estacion);
     @Headers({"entorno: "+ Constantes.ENTORNO_API})
     @PUT("logout")
     Call<ResponseLogout> doLogout(@Body RequestLogin requestLogin);

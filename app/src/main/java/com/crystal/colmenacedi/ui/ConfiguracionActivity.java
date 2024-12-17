@@ -191,6 +191,7 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
                             Utilidades.mensajeDialog("Error", response.body().getErrors().getSource(), contexto);
                             pararProgressBar();
                             consumirServicio = true;
+
                         } else {
                             SPM.setString(Constantes.SERVIDOR_API, servidor);
                             SPM.setString(Constantes.PUERTO_API, puerto);

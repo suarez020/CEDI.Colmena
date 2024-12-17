@@ -172,37 +172,40 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void Terminar() {
-        proceso = SPM.getString(Constantes.PROCESO);
-        cedula=SPM.getString(Constantes.CEDULA_USUARIO);
+        if(consumirServicio){
+        consumirServicio=false;
+            proceso = SPM.getString(Constantes.PROCESO);
+            cedula=SPM.getString(Constantes.CEDULA_USUARIO);
 
-        RequestTerminar requestTerminar =new RequestTerminar(cedula,ubicacion,proceso);
-        Call<ResponseTerminar> call = serviceRetrofit.doTerminar(requestTerminar);
-        call.enqueue(new Callback<ResponseTerminar>() {
-            @Override
-            public void onResponse(Call<ResponseTerminar> call, Response<ResponseTerminar> response) {
-                if(response.isSuccessful()) {
-                    assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getErrors().getSource());
-                    if(response.body().getErrors().getStatus()){
-                        Utilidades.mensajeDialog("Error", response.body().getErrors().getSource(), contexto);
+            RequestTerminar requestTerminar =new RequestTerminar(cedula,ubicacion,proceso);
+            Call<ResponseTerminar> call = serviceRetrofit.doTerminar(requestTerminar);
+            call.enqueue(new Callback<ResponseTerminar>() {
+                @Override
+                public void onResponse(Call<ResponseTerminar> call, Response<ResponseTerminar> response) {
+                    if(response.isSuccessful()) {
+                        assert response.body() != null;
+                        LogFile.adjuntarLog(response.body().getErrors().getSource());
+                        if(response.body().getErrors().getStatus()){
+                            Utilidades.mensajeDialog("Error", response.body().getErrors().getSource(), contexto);
+                        }else{
+                            Intent i = new Intent(ZonaActivity.this,EmpacarActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
                     }else{
-                        //egresarPrincipal();
+                        Utilidades.mensajeDialog("Error", "Error de conexión con el servicio web base. "+ response.message(), contexto);
                     }
-                }else{
-                    Utilidades.mensajeDialog("Error", "Error de conexión con el servicio web base. "+ response.message(), contexto);
+                    consumirServicio=true;
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ResponseTerminar> call, Throwable t) {
-                LogFile.adjuntarLog("ErrorResponse/terminar_Post",t);
-                Utilidades.mensajeDialog("Error", "Error de conexión. "+ t.getMessage(), contexto);
-            }
-        });
-
-        Intent i = new Intent(this, EmpacarActivity.class);
-        startActivity(i);
-        finish();
+                @Override
+                public void onFailure(Call<ResponseTerminar> call, Throwable t) {
+                    LogFile.adjuntarLog("ErrorResponse/terminar_Post",t);
+                    Utilidades.mensajeDialog("Error", "Error de conexión. "+ t.getMessage(), contexto);
+                    consumirServicio=true;
+                }
+            });
+        }
     }
 
     private void ocultarTeclado(){

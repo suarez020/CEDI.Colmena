@@ -44,6 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     ProgressBar pbLogin;
     TextView tvEquipoLogin;
     String id, estacion, mac;
+    boolean consumirServicio = true;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -64,37 +65,43 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void inicio() {
-        pbLogin.setVisibility(View.VISIBLE);
-        mac = SPM.getString(Constantes.MAC_EQUIPO);
-        id = SPM.getString(Constantes.CEDULA_USUARIO);
-        estacion = SPM.getString(Constantes.EQUIPO_API);
+        if (consumirServicio) {
+            consumirServicio = false;
+            pbLogin.setVisibility(View.VISIBLE);
+            mac = SPM.getString(Constantes.MAC_EQUIPO);
+            id = SPM.getString(Constantes.CEDULA_USUARIO);
+            estacion = SPM.getString(Constantes.EQUIPO_API);
 
-        Call<ResponseInicio> inicio = serviceRetrofit.doInicio(id,estacion);
-        inicio.enqueue(new Callback<ResponseInicio>() {
-            @Override
-            public void onResponse(Call<ResponseInicio> call, Response<ResponseInicio> response) {
-                if(response.isSuccessful()){
-                    assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getErrors().getSource());
-                    if(response.body().getErrors().getStatus()){
-                        mensajeSimpleDialog("Error", response.body().getErrors().getSource());
-                    }else {
-                        if(response.body().getInicio().getLogin()){
-                            SPM.setString(Constantes.NOMBRE_USUARIO, response.body().getInicio().getNombre());
-                            SPM.setString(Constantes.CEDULA_USUARIO, response.body().getInicio().getId());
-                            irPrincipal();
+            Call<ResponseInicio> inicio = serviceRetrofit.doInicio(mac,estacion);
+            inicio.enqueue(new Callback<ResponseInicio>() {
+                @Override
+                public void onResponse(Call<ResponseInicio> call, Response<ResponseInicio> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        LogFile.adjuntarLog(response.body().getErrors().getSource());
+                        if (response.body().getErrors().getStatus()) {
+                            mensajeSimpleDialog("Error", response.body().getErrors().getSource());
+                        } else {
+                            if (response.body().getInicio().getLogin()) {
+                                SPM.setString(Constantes.NOMBRE_USUARIO, response.body().getInicio().getNombre());
+                                SPM.setString(Constantes.CEDULA_USUARIO, response.body().getInicio().getId());
+                                irPrincipal();
+                            }
                         }
+                        pbLogin.setVisibility(View.GONE);
                     }
-                    pbLogin.setVisibility(View.GONE);
+                    consumirServicio = true;
                 }
-            }
-            @Override
-            public void onFailure(Call<ResponseInicio> call, Throwable t) {
-                pbLogin.setVisibility(View.GONE);
-                LogFile.adjuntarLog("ErrorResponseGetInicio",t);
-                mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
-            }
-        });
+
+                @Override
+                public void onFailure(Call<ResponseInicio> call, Throwable t) {
+                    pbLogin.setVisibility(View.GONE);
+                    LogFile.adjuntarLog("ErrorResponseGetInicio", t);
+                    mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
+                    consumirServicio = true;
+                }
+            });
+        }
     }
 
     private void inicioRetrofit() {
@@ -169,67 +176,76 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void iniciarSesion() {
-        pbLogin.setVisibility(View.VISIBLE);
-        Call<ResponseLoginGet> loginGet = serviceRetrofit.doLoginGet(mac, estacion, id);
-        loginGet.enqueue(new Callback<ResponseLoginGet>() {
-            @Override
-            public void onResponse(Call<ResponseLoginGet> call, Response<ResponseLoginGet> response) {
-                if(response.isSuccessful()){
-                    assert response.body() != null;
-                    //LogFile.adjuntarLog(response.body().getRespuesta().toString());
-                    if(response.body().getErrors().getStatus()){
-                        mensajeSimpleDialog("Error", response.body().getErrors().getSource());
-                    }else{
+        if (consumirServicio) {
+            consumirServicio = false;
+            pbLogin.setVisibility(View.VISIBLE);
+            Call<ResponseLoginGet> loginGet = serviceRetrofit.doLoginGet(mac, estacion, id);
+            loginGet.enqueue(new Callback<ResponseLoginGet>() {
+                @Override
+                public void onResponse(Call<ResponseLoginGet> call, Response<ResponseLoginGet> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        LogFile.adjuntarLog(response.body().getErrors().getSource());
+                        if (response.body().getErrors().getStatus()) {
+                            mensajeSimpleDialog("Error", response.body().getErrors().getSource());
+                            consumirServicio=true;
+                        } else {
+                            consumirServicio=true;
                             consumirPostLogin();
+                        }
+                    } else {
+                        mensajeSimpleDialog("Error", "Error de conexión con el servicio web base.");
+                        SPM.setString(Constantes.CEDULA_USUARIO, "");
+                        etCedulaLogin.setText("");
+                        etCedulaLogin.requestFocus();
+                        pbLogin.setVisibility(View.GONE);
+                        consumirServicio=true;
                     }
-                }else{
-                    mensajeSimpleDialog("Error", "Error de conexión con el servicio web base.");
-                    SPM.setString(Constantes.CEDULA_USUARIO, "");
-                    etCedulaLogin.setText("");
-                    etCedulaLogin.requestFocus();
-                    pbLogin.setVisibility(View.GONE);
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ResponseLoginGet> call, Throwable t) {
-                pbLogin.setVisibility(View.GONE);
-                SPM.setString(Constantes.CEDULA_USUARIO, "");
-                LogFile.adjuntarLog("ErrorResponseLogin", t);
-                mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
-            }
-        });
-
+                @Override
+                public void onFailure(Call<ResponseLoginGet> call, Throwable t) {
+                    pbLogin.setVisibility(View.GONE);
+                    SPM.setString(Constantes.CEDULA_USUARIO, "");
+                    LogFile.adjuntarLog("ErrorResponseLogin", t);
+                    mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
+                    consumirServicio=true;
+                }
+            });
+        }
     }
 
     private void consumirPostLogin(){
+        if (consumirServicio) {
+            consumirServicio=false;
             SPM.setString(Constantes.CEDULA_USUARIO, id);
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(etCedulaLogin.getWindowToken(), 0);
             RequestLogin requestLogin = new RequestLogin(id, estacion);
             Call<ResponseLogin> call = serviceRetrofit.doLogin(requestLogin);
             call.enqueue(new Callback<ResponseLogin>() {
                 @Override
                 public void onResponse(Call<ResponseLogin> call, Response<ResponseLogin> response) {
-                    if(response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         assert response.body() != null;
                         LogFile.adjuntarLog(response.body().getErrors().getSource());
-                        if(response.body().getErrors().getStatus()){
+                        if (response.body().getErrors().getStatus()) {
                             mensajeSimpleDialog("Error", response.body().getErrors().getSource());
                             pbLogin.setVisibility(View.GONE);
                             etCedulaLogin.setText("");
                             etCedulaLogin.requestFocus();
-                        }else{
+                        } else {
                             SPM.setString(Constantes.NOMBRE_USUARIO, response.body().getLogin().getNombre());
                             irPrincipal();
                         }
-                    }else{
+                    } else {
                         mensajeSimpleDialog("Error", "Error de conexión con el servicio web base.");
                         SPM.setString(Constantes.CEDULA_USUARIO, "");
                         etCedulaLogin.setText("");
                         etCedulaLogin.requestFocus();
                         pbLogin.setVisibility(View.GONE);
                     }
+                    consumirServicio=true;
                 }
 
                 @Override
@@ -238,8 +254,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     SPM.setString(Constantes.CEDULA_USUARIO, "");
                     LogFile.adjuntarLog("ErrorResponseLogin", t);
                     mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
+                    consumirServicio=true;
                 }
             });
+        }
     }
 
 
