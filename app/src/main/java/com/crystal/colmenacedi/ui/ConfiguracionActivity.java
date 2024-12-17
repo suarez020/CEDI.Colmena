@@ -44,7 +44,6 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
     EditText etServidorConf, etPuertoConf, etEquipoConf;
     Button btnGuardarConf;
     ProgressBar pbConfiguracion;
-    Animation animacionArriba, animacionAbajo;
     Context contexto;
     String servidor, puerto, estacion, mac;
     String android_id;
@@ -62,14 +61,8 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
             Toast.makeText(this, "Configure el dispositivo", Toast.LENGTH_SHORT).show();
         }
         findViews();
-        animaciones();
         eventos();
         permisos();
-    }
-
-    private void animaciones() {
-        animacionArriba = AnimationUtils.loadAnimation(this, R.anim.desplazamiento_arriba);
-        animacionAbajo = AnimationUtils.loadAnimation(this, R.anim.desplazamiento_abajo);
     }
 
     private void findViews() {

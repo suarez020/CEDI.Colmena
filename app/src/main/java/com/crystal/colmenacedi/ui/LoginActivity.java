@@ -70,7 +70,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             pbLogin.setVisibility(View.VISIBLE);
             mac = SPM.getString(Constantes.MAC_EQUIPO);
             id = SPM.getString(Constantes.CEDULA_USUARIO);
-            estacion = SPM.getString(Constantes.EQUIPO_API);
 
             Call<ResponseInicio> inicio = serviceRetrofit.doInicio(mac,estacion);
             inicio.enqueue(new Callback<ResponseInicio>() {

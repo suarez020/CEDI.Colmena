@@ -34,9 +34,9 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
     RecyclerView rvDynamicItems;
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
-    EditText etUbicacionLectura, etEanLectura, etUnidades, etPaquetes;
+    EditText etUbicacionLectura, etEanLectura, etUnidadesEmpacar, etPaquetesEmpacar;
     Button btnTerminarCajaLectura;
-    String cedula, equipo, ubicacion, ean, actuales, faltantes,proceso;
+    String cedula, equipo, ubicacion, ean,  proceso;
     boolean consumirServicio = true;
     Context contexto;
     List<List<String>> listaItems2;
@@ -64,12 +64,11 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
         rvDynamicItems = findViewById(R.id.rvDynamicItemsZonaEmpacar);
         rvDynamicItems.setLayoutManager(new LinearLayoutManager(this));
 
-        cedula = SPM.getString(Constantes.CEDULA_USUARIO);
-        equipo = SPM.getString(Constantes.EQUIPO_API);
+        cedula =  SPM.getString(Constantes.CEDULA_USUARIO);
+        equipo =  SPM.getString(Constantes.EQUIPO_API);
+        proceso = SPM.getString(Constantes.PROCESO);
 
         listaItems2 = (List<List<String>>) getIntent().getSerializableExtra("listaItems2");
-        actuales = getIntent().getExtras().getString("leidos");
-        faltantes = getIntent().getExtras().getString("faltantes");
         ubicacion = getIntent().getExtras().getString("ubicacion");
 
         ListaDeItemsRecyclerViewAdapter categoriasAdapter = new ListaDeItemsRecyclerViewAdapter(listaItems2);
@@ -81,13 +80,11 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
 
         etEanLectura = findViewById(R.id.etEanLectura);
 
-        etUnidades = findViewById(R.id.etActualesLectura);
-        etUnidades.setTextColor(R.color.opaco);
-        etUnidades.setText(actuales);
+        etUnidadesEmpacar = findViewById(R.id.etUnidadesEmpacar);
+        etUnidadesEmpacar.setTextColor(R.color.opaco);
 
-        etPaquetes = findViewById(R.id.etUnidadesLeidasSp);
-        etPaquetes.setTextColor(R.color.opaco);
-        etPaquetes.setText(faltantes);
+        etPaquetesEmpacar = findViewById(R.id.etPaquetesEmpacar);
+        etPaquetesEmpacar.setTextColor(R.color.opaco);
 
         btnTerminarCajaLectura = findViewById(R.id.btnTerminarEmpaque);
 
@@ -143,8 +140,8 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
                             etEanLectura.setText("");
                             etEanLectura.requestFocus();
                         }else{
-                            etUnidades.setText(response.body().getData().getUnidadesLeidas().toString());
-                            etPaquetes.setText(response.body().getData().getPaquetesLeidos().toString());
+                            etUnidadesEmpacar.setText(response.body().getData().getUnidadesLeidas().toString());
+                            etPaquetesEmpacar.setText(response.body().getData().getPaquetesLeidos().toString());
                             etEanLectura.setText("");
                             etEanLectura.requestFocus();
                         }
