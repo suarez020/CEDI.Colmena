@@ -68,6 +68,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mac = SPM.getString(Constantes.MAC_EQUIPO);
         id = SPM.getString(Constantes.CEDULA_USUARIO);
         estacion = SPM.getString(Constantes.EQUIPO_API);
+
         Call<ResponseInicio> inicio = serviceRetrofit.doInicio(id,estacion);
         inicio.enqueue(new Callback<ResponseInicio>() {
             @Override
@@ -116,7 +117,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private void eventos() {
         btnIngresarLogin.setOnClickListener(this);
 
-        //Evento sobre el EditText cedula
         etCedulaLogin.setImeActionLabel("IR", KeyEvent.KEYCODE_ENTER);
         etCedulaLogin.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -170,11 +170,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void iniciarSesion() {
         pbLogin.setVisibility(View.VISIBLE);
-
-        mac = SPM.getString(Constantes.MAC_EQUIPO);
-        estacion = SPM.getString(Constantes.EQUIPO_API);
-        id = SPM.getString(Constantes.CEDULA_USUARIO);
-
         Call<ResponseLoginGet> loginGet = serviceRetrofit.doLoginGet(mac, estacion, id);
         loginGet.enqueue(new Callback<ResponseLoginGet>() {
             @Override

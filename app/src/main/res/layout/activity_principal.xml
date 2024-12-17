@@ -9,8 +9,8 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cvPrincipalE"
-        android:layout_width="280dp"
-        android:layout_height="480dp"
+        android:layout_width="271dp"
+        android:layout_height="366dp"
         android:layout_marginStart="40sp"
         android:layout_marginEnd="40sp"
         android:layout_marginBottom="2dp"
@@ -34,20 +34,20 @@
             <RelativeLayout
                 android:id="@+id/rlFondo"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="342dp"
                 android:orientation="horizontal"
                 android:padding="6dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
+                    android:layout_width="241dp"
+                    android:layout_height="333dp">
 
                     <Button
                         android:id="@+id/btnUbicarUnd"
                         android:layout_width="240dp"
-                        android:layout_height="50dp"
+                        android:layout_height="63dp"
                         android:layout_marginStart="10sp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="50dp"
                         android:layout_marginEnd="10sp"
                         android:backgroundTint="@color/naranja"
                         android:text="Ubicar UND"
@@ -59,13 +59,13 @@
                     <Button
                         android:id="@+id/btnEmpacarBol"
                         android:layout_width="240dp"
-                        android:layout_height="50dp"
+                        android:layout_height="63dp"
                         android:layout_marginStart="10sp"
-                        android:layout_marginTop="20dp"
                         android:layout_marginEnd="10sp"
                         android:backgroundTint="@color/naranja"
                         android:text="Empacar Bol"
                         android:textSize="18sp"
+                        app:layout_constraintBottom_toTopOf="@+id/btnSepararUnd"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/btnUbicarUnd" />
@@ -73,15 +73,15 @@
                     <Button
                         android:id="@+id/btnSepararUnd"
                         android:layout_width="240dp"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_height="63dp"
+                        android:layout_marginBottom="50dp"
                         android:backgroundTint="@color/naranja"
                         android:text="Separar UND"
                         android:textSize="18sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.538"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/btnEmpacarBol" />
+                        app:layout_constraintStart_toStartOf="parent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 

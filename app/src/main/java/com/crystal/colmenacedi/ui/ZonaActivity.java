@@ -1,5 +1,4 @@
 package com.crystal.colmenacedi.ui;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -96,6 +95,7 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void eventos() {
+        btnTerminarCajaLectura.setOnClickListener(this);
         etEanLectura.setImeActionLabel("IR", KeyEvent.KEYCODE_ENTER);
         etEanLectura.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -124,8 +124,6 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
                 return handled;
             }
         });
-
-        btnTerminarCajaLectura.setOnClickListener(this);
     }
 
     private void lecturaEan() {
