@@ -62,12 +62,15 @@ public class PrincipalActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btnUbicarUnd:
+                SPM.setString(Constantes.PROCESO,"ubicar");
                 irUbicar(v);
                 break;
             case R.id.btnEmpacarBol:
+                SPM.setString(Constantes.PROCESO,"empacar");
                 irEmpacar();
                 break;
             case R.id.btnSepararUnd:
+                SPM.setString(Constantes.PROCESO,"separar");
                 irSeparar();
                 break;
         }
@@ -93,7 +96,6 @@ public class PrincipalActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onBackPressed(){
-        //Regresar al login
         cerrarSesion();
     }
 

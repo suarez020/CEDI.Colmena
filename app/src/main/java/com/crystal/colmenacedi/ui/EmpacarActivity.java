@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import com.crystal.colmenacedi.R;
 import com.crystal.colmenacedi.common.Constantes;
+import com.crystal.colmenacedi.common.LogFile;
 import com.crystal.colmenacedi.common.SPM;
 import com.crystal.colmenacedi.common.Utilidades;
 import com.crystal.colmenacedi.retrofit.ClienteRetrofit;
@@ -33,7 +34,7 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
     ClienteRetrofit appCliente;
     EditText etUbicacionEmpacar;
     Button btnEmpacar;
-    String cedula, equipo, ubicacion, leidos, faltantes;
+    String cedula , equipo , ubicacion , proceso ;
     List<List<String>> listaItems1;
     List<List<String>> listaItems2;
     @Override
@@ -55,6 +56,8 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void findViews() {
+        proceso = SPM.getString(Constantes.PROCESO);
+
         rvDynamicItems = findViewById(R.id.rvDynamicItemsEmpacar);
         rvDynamicItems.setLayoutManager(new LinearLayoutManager(this));
 
@@ -133,7 +136,10 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onFailure(Call<ResponseExtraerGet> call, Throwable t) {
-
+                //etEanAuditoria.setText("");
+                //etEanAuditoria.requestFocus();
+                LogFile.adjuntarLog("response_Extraer:Get",t);
+                mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
             }
         });
     }
@@ -207,7 +213,7 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
                 .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(titulo.equals("Mensaje") && msj.equals("Pinado finalizado")){
+                        if(titulo.equals("Mensaje") && msj.equals("Empacado")){
                             regresarPrincipal();
                         }
                     }

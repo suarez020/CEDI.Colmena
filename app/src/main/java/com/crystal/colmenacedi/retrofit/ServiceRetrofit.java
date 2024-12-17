@@ -1,7 +1,6 @@
 package com.crystal.colmenacedi.retrofit;
 import com.crystal.colmenacedi.common.Constantes;
 import com.crystal.colmenacedi.retrofit.request.RequestExtraerPost;
-import com.crystal.colmenacedi.retrofit.request.RequestLecturaEan;
 import com.crystal.colmenacedi.retrofit.request.RequestLogin;
 import com.crystal.colmenacedi.retrofit.request.RequestTerminar;
 import com.crystal.colmenacedi.retrofit.request.RequestUbicacion;
@@ -9,7 +8,6 @@ import com.crystal.colmenacedi.retrofit.response.configuracion.ResponseConfigura
 import com.crystal.colmenacedi.retrofit.response.extraer.ResponseExtraerGet;
 import com.crystal.colmenacedi.retrofit.response.extraer.ResponseExtraerPost;
 import com.crystal.colmenacedi.retrofit.response.inicio.ResponseInicio;
-import com.crystal.colmenacedi.retrofit.response.lecturaEan.ResponseLecturaEan;
 import com.crystal.colmenacedi.retrofit.response.login.ResponseLogin;
 import com.crystal.colmenacedi.retrofit.response.loginGet.ResponseLoginGet;
 import com.crystal.colmenacedi.retrofit.response.logout.ResponseLogout;
@@ -51,7 +49,7 @@ public interface ServiceRetrofit {
 //4-------------------------------------------------------------------------------------------------
     @Headers({"entorno: "+ Constantes.ENTORNO_API})
     @GET("extraer")
-    Call<ResponseExtraerGet> doExtraerGet(@Query("ubicacion") String ubicacion, @Query("proceso") String procesoBoton);
+    Call<ResponseExtraerGet> doExtraerGet(@Query("ubicacion") String ubicacion, @Query("proceso") String proceso);
 //5-------------------------------------------------------------------------------------------------
     @Headers({"entorno: "+ Constantes.ENTORNO_API})
     @POST("extraer")

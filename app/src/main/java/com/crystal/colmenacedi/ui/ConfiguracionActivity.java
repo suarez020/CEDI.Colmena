@@ -1,11 +1,9 @@
 package com.crystal.colmenacedi.ui;
-
 import static com.crystal.colmenacedi.common.MyApp.getContext;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -25,7 +23,6 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.crystal.colmenacedi.R;
 import com.crystal.colmenacedi.common.Constantes;
 import com.crystal.colmenacedi.common.LogFile;
@@ -36,11 +33,9 @@ import com.crystal.colmenacedi.retrofit.ServiceRetrofit;
 import com.crystal.colmenacedi.retrofit.response.configuracion.ResponseConfiguracion;
 import com.google.android.material.snackbar.Snackbar;
 import java.util.Objects;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 public class ConfiguracionActivity extends AppCompatActivity implements View.OnClickListener {
     Utilidades util = new Utilidades();
     ServiceRetrofit serviceRetrofit;

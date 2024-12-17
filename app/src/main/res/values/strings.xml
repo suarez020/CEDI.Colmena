@@ -10,7 +10,6 @@
     <string name="menu_empaqueRFID">Empaque RFID</string>
     <string name="menu_cierreCarton">Cierre cartón</string>
     <string name="menu_confirmarCerrarPosicion">Confirmar cerrar posición</string>
-    <string name="menu_auditoria">Separar UND</string>
     <string name="cerrar_sesion">Cerrar sesión</string>
     <string name="title_MenuPrincipal">Más</string>
     <string name="cerrar_configuracion">Salir de configuración</string>

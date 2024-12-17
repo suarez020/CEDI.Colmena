@@ -76,7 +76,7 @@
                             android:layout_marginBottom="8dp"
                             android:backgroundTint="@color/white"
                             android:ems="10"
-                            android:enabled="false"
+                            android:enabled="true"
                             android:inputType="text"
                             android:textColor="@color/black"
                             android:textColorHint="@color/white"
@@ -142,7 +142,7 @@
                         app:hintTextColor="@color/black"
                         app:layout_constraintEnd_toStartOf="@+id/guidelineLA"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/rvDynamicItemsZonaEmpacar">
+                        app:layout_constraintTop_toBottomOf="@+id/rvDynamicItemsSeparar">
 
                         <TextView
                             android:id="@+id/tvUnidadesLeidas"
@@ -181,7 +181,7 @@
                         app:hintTextColor="@color/black"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="@+id/guidelineLA"
-                        app:layout_constraintTop_toBottomOf="@+id/rvDynamicItemsZonaEmpacar">
+                        app:layout_constraintTop_toBottomOf="@+id/rvDynamicItemsSeparar">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etUnidadesLeidasSp"
@@ -203,7 +203,7 @@
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvDynamicItemsZonaEmpacar"
+                        android:id="@+id/rvDynamicItemsSeparar"
                         android:layout_width="380dp"
                         android:layout_height="142dp"
                         android:padding="8dp"
@@ -216,7 +216,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <Button
-                    android:id="@+id/btnTerminarEmpaque"
+                    android:id="@+id/btnTerminarSp"
                     android:layout_width="2dp"
                     android:layout_height="56dp"
                     android:layout_below="@+id/constraintLayout"

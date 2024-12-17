@@ -1,10 +1,8 @@
 package com.crystal.colmenacedi.ui;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,38 +11,43 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.crystal.colmenacedi.R;
 import com.crystal.colmenacedi.common.Constantes;
+import com.crystal.colmenacedi.common.LogFile;
 import com.crystal.colmenacedi.common.SPM;
 import com.crystal.colmenacedi.common.Utilidades;
 import com.crystal.colmenacedi.retrofit.ClienteRetrofit;
 import com.crystal.colmenacedi.retrofit.ServiceRetrofit;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.io.Serializable;
+import com.crystal.colmenacedi.retrofit.response.extraer.ResponseExtraerGet;
+import com.crystal.colmenacedi.ui.adapter.ListaDeItemsRecyclerViewAdapter;
+import java.util.List;
 import java.util.Objects;
-
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 public class SepararActivity extends AppCompatActivity implements View.OnClickListener{
+    RecyclerView rvDynamicItems;
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
-    EditText etUnidadesLeidasSp , etPosicionAuditoria , etEanAuditoria;
+    Button btnTerminarSp;
+    EditText etUnidadesLeidasSp , etUbicacionSp, etEanAuditoria;
     TextView etUnidadesLeidas;
-    String cedula, equipo, ubicacion, faltantes, ean, sobrantes;
-    FloatingActionButton fabFinUbicacion;
+    String cedula, equipo, ubicacion, proceso, ean , faltantes, sobrantes;
+    List<List<String>> listaItems1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_separar);
         Utilidades.ocultarBarraEstado(getWindow());
 
-        this.setTitle(R.string.menu_auditoria);
+        this.setTitle("Separar UND");
         Objects.requireNonNull(getSupportActionBar()).setSubtitle(SPM.getString(Constantes.NOMBRE_USUARIO));
         inicioRetrofit();
         findViews();
-        //eventos();
+        eventos();
     }
 
     private void inicioRetrofit() {
@@ -53,8 +56,14 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void findViews() {
+        proceso = SPM.getString(Constantes.PROCESO);
 
-        etPosicionAuditoria = findViewById(R.id.etUbicacionSp);
+        rvDynamicItems = findViewById(R.id.rvDynamicItemsSeparar);
+        rvDynamicItems.setLayoutManager(new LinearLayoutManager(this));
+
+        btnTerminarSp=findViewById(R.id.btnTerminarSp);
+
+        etUbicacionSp = findViewById(R.id.etUbicacionSp);
 
         etEanAuditoria = findViewById(R.id.etEanSp);
         etUnidadesLeidas = findViewById(R.id.tvUnidadesLeidas);
@@ -63,45 +72,39 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
         cedula = SPM.getString(Constantes.CEDULA_USUARIO);
         equipo = SPM.getString(Constantes.EQUIPO_API);
 
-        etPosicionAuditoria.requestFocus(0);
+        etUbicacionSp.requestFocus(0);
         ocultarTeclado();
     }
 
     private void eventos() {
-        //Eventos sobre el EditText Posicion
-        etPosicionAuditoria.setImeActionLabel("IR", KeyEvent.KEYCODE_ENTER);
-        etPosicionAuditoria.setOnKeyListener(new View.OnKeyListener() {
+        btnTerminarSp.setOnClickListener(this);
+        etUbicacionSp.setImeActionLabel("IR", KeyEvent.KEYCODE_ENTER);
+        etUbicacionSp.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    ubicacion = etPosicionAuditoria.getText().toString().replaceAll("\\s","");
+                    ubicacion = etUbicacionSp.getText().toString().replaceAll("\\s","");
                     if (!ubicacion.isEmpty()) {
-                        //Consultar Api
-                        fabFinUbicacion.setEnabled(true);
-                        empezarAuditoria();
+                        getExtraerLLenadoRV();
                     }
                     return true;
                 }
                 return false;
             }
         });
-
-        etPosicionAuditoria.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        etUbicacionSp.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    ubicacion = etPosicionAuditoria.getText().toString().replaceAll("\\s","");
+                    ubicacion = etUbicacionSp.getText().toString().replaceAll("\\s","");
                     if(!ubicacion.isEmpty()){
-                        //Consultar Api
-                        fabFinUbicacion.setEnabled(true);
-                        empezarAuditoria();
+                        getExtraerLLenadoRV();
                     }
                 }
                 return handled;
             }
         });
-
         etEanAuditoria.setImeActionLabel("IR", KeyEvent.KEYCODE_ENTER);
         etEanAuditoria.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -109,7 +112,6 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     ean = etEanAuditoria.getText().toString().replaceAll("\\s","");
                     if (!ean.isEmpty()) {
-                        //Consultar Api
                         auditoria();
                     }
                     return true;
@@ -117,7 +119,6 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
                 return false;
             }
         });
-
         etEanAuditoria.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -131,59 +132,52 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
                 return handled;
             }
         });
-
-        fabFinUbicacion.setOnClickListener(this);
     }
 
-    private void empezarAuditoria() {
-        //Ocultar el teclado de pantalla
+    private void getExtraerLLenadoRV() {
         ocultarTeclado();
-/*        RequestPinado requestPinado = new RequestPinado(cedula, equipo, ubicacion);
-        Call<ResponseEmpezarAuditoria> call = serviceRetrofit.doEmpezarAuditoria(requestPinado);
-        call.enqueue(new Callback<ResponseEmpezarAuditoria>() {
+        Call<ResponseExtraerGet> responseExtraerGetCall = serviceRetrofit.doExtraerGet(ubicacion,proceso);
+        responseExtraerGetCall.enqueue(new Callback<ResponseExtraerGet>() {
             @Override
-            public void onResponse(Call<ResponseEmpezarAuditoria> call, Response<ResponseEmpezarAuditoria> response) {
-                if(response.isSuccessful()){
+            public void onResponse(Call<ResponseExtraerGet> call, Response<ResponseExtraerGet> response) {
+                if (response.isSuccessful()) {
                     assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getRespuesta().toString());
-                    if(response.body().getRespuesta().getError().getStatus()){
-                        mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
-                        etPosicionAuditoria.setText("");
-                        etPosicionAuditoria.requestFocus();
-                    }else{
-                        respuestaEmpezarAuditoria = response.body().getRespuesta();
-                        if(respuestaEmpezarAuditoria.isQr()){
-                            pasarAuditoriaDoble();
-                        }else{
-                            faltantes = respuestaEmpezarAuditoria.getFaltantes();
-                            sobrantes = respuestaEmpezarAuditoria.getSobrantes();
-                            if(faltantes.equals("0")){
-                                regresarPrincipal();
-                            }
-                        }
+                    //LogFile.adjuntarLog(response.body().getRespuesta().toString());
+                    if (response.body().getErrors().getStatus()) {
+                        mensajeDialog("Error", response.body().getErrors().getSource());
+                        etUbicacionSp.setText("");
+                        etUbicacionSp.requestFocus();
+                    } else {
+                        mostrarCategorias();
+                        listaItems1= response.body().getData().getItems();
+                        ListaDeItemsRecyclerViewAdapter categoriasAdapter = new ListaDeItemsRecyclerViewAdapter(listaItems1);
+                        rvDynamicItems.setAdapter(categoriasAdapter);
                     }
-                }else{
-                    etPosicionAuditoria.setText("");
-                    etPosicionAuditoria.requestFocus();
-                    mensajeSimpleDialog("Error", "Error de conexión con el servicio web base.");
+                } else {
+                    mensajeDialog("Error", "Error de conexión con el servicio web base.");
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseEmpezarAuditoria> call, Throwable t) {
-                etPosicionAuditoria.setText("");
-                etPosicionAuditoria.requestFocus();
-                LogFile.adjuntarLog("ErrorResponseLecturaEan",t);
+            public void onFailure(Call<ResponseExtraerGet> call, Throwable t) {
+                 //etEanAuditoria.setText("");
+                //etEanAuditoria.requestFocus();
+                LogFile.adjuntarLog("Extraer_Get",t);
                 mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
             }
-        });*/
+        });
+    }
+
+    private void mostrarCategorias(){
+        rvDynamicItems.setVisibility(View.VISIBLE);
     }
 
     private void auditoria() {
         //Ocultar el teclado de pantalla
         ocultarTeclado();
 
-/*        RequestLecturaEan requestLecturaEan = new RequestLecturaEan(cedula, equipo, ean, ubicacion);
+        /*
+        RequestLecturaEan requestLecturaEan = new RequestLecturaEan(cedula, equipo, ean, ubicacion);
         Call<ResponseAuditoria> call = serviceRetrofit.doAuditoria(requestLecturaEan);
         call.enqueue(new Callback<ResponseAuditoria>() {
             @Override
@@ -222,13 +216,77 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void pasarAuditoriaDoble() {
+        /*
         Intent i = new Intent(this, AuditoriaDobleActivity.class);
         i.putExtra("ubicacion", (Serializable) ubicacion);
         startActivity(i);
         finish();
+        */
     }
 
     //Alert Dialog para mostrar mensajes de error, alertas o información
+    public void mensajeDialog(final String titulo, final String msj){
+
+        int icon = R.drawable.vector_alerta;
+        if (titulo.equals(getResources().getString(R.string.error))) {
+            icon = R.drawable.vector_error;
+        } else if(titulo.equals(getResources().getString(R.string.exito))){
+            icon = R.drawable.vector_exito;
+        } else if(titulo.equals(getResources().getString(R.string.mensaje))){
+            icon = R.drawable.vector_mensaje;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(titulo)
+                .setCancelable(false)
+                .setMessage(msj)
+                .setIcon(icon)
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(titulo.equals("Mensaje") && msj.equals("Separar")){
+                            regresarPrincipal();
+                        }
+                    }
+                });
+        AlertDialog alerta = builder.create();
+        if(!(SepararActivity.this.isFinishing())){
+            alerta.show();
+        }
+    }
+
+    @Override
+    public void onBackPressed(){
+        regresarPrincipal();
+    }
+
+    private void regresarPrincipal() {
+        Intent i = new Intent(this, PrincipalActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v.getId() == R.id.btnTerminarSp)
+        {
+            serviceTerminarPost();
+        }
+    }
+
+    private void serviceTerminarPost() {
+
+    }
+
+    private void ocultarTeclado(){
+        //Ocultar el teclado de pantalla
+        View view = this.getCurrentFocus();
+        if(view != null){
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
     public void mensajeSimpleDialog(String titulo, String msj){
 
         int icon = R.drawable.vector_alerta;
@@ -254,31 +312,6 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
         AlertDialog alerta = builder.create();
         if(!(SepararActivity.this.isFinishing())){
             alerta.show();
-        }
-    }
-
-    @Override
-    public void onBackPressed(){
-        regresarPrincipal();
-    }
-
-    private void regresarPrincipal() {
-        Intent i = new Intent(this, PrincipalActivity.class);
-        startActivity(i);
-        finish();
-    }
-
-    @Override
-    public void onClick(View v) {
-       // if(v.getId() == R.id.fabFinUbicacion){introducirClave();}
-    }
-
-    private void ocultarTeclado(){
-        //Ocultar el teclado de pantalla
-        View view = this.getCurrentFocus();
-        if(view != null){
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 }
