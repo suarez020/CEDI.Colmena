@@ -162,6 +162,7 @@ public class UbicarActivity extends AppCompatActivity{
                             List<List<String>> lista = response.body().getData().getItems();
                             ListaDeItemsRecyclerViewAdapter categoriasAdapter = new ListaDeItemsRecyclerViewAdapter(lista);
                             rvDynamicItems.setAdapter(categoriasAdapter);
+                            etEan.setEnabled(false);
                             etUbicacion.setEnabled(true);
                             etUbicacion.requestFocus();
                         }
@@ -207,6 +208,9 @@ public class UbicarActivity extends AppCompatActivity{
                         assert response.body() != null;
                         LogFile.adjuntarLog(response.body().getErrors().getSource());
                         if (response.body().getErrors().getStatus()) {
+                            etUbicacion.setText("");
+                            etUbicacion.requestFocus();
+                            pbRecibirCaja.setVisibility(View.GONE);
                             mensajeDialog("Error", response.body().getErrors().getSource());
                         } else {
                             Log.e("LOGCAT", "ReponseUbicacionPut: " + response.body());
