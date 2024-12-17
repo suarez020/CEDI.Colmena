@@ -150,7 +150,7 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
             public void onResponse(Call<ResponseExtraerGet> call, Response<ResponseExtraerGet> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                    //LogFile.adjuntarLog(response.body().getRespuesta().toString());
+                    LogFile.adjuntarLog(response.body().getErrors().getSource());
                     if (response.body().getErrors().getStatus()) {
                         mensajeDialog("Error", response.body().getErrors().getSource());
                         etUbicacionSp.setText("");
@@ -170,8 +170,6 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onFailure(Call<ResponseExtraerGet> call, Throwable t) {
-                 //etEanAuditoria.setText("");
-                //etEanAuditoria.requestFocus();
                 LogFile.adjuntarLog("Extraer_Get",t);
                 mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
             }

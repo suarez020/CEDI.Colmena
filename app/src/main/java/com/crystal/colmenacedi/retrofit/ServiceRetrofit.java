@@ -1,5 +1,6 @@
 package com.crystal.colmenacedi.retrofit;
 import com.crystal.colmenacedi.common.Constantes;
+import com.crystal.colmenacedi.retrofit.request.RequestConfiguracionPut;
 import com.crystal.colmenacedi.retrofit.request.RequestExtraerPost;
 import com.crystal.colmenacedi.retrofit.request.RequestLogin;
 import com.crystal.colmenacedi.retrofit.request.RequestTerminar;
@@ -32,6 +33,9 @@ public interface ServiceRetrofit {
     @Headers({"entorno: " + Constantes.ENTORNO_API})
     @GET("configuracion")
     Call<ResponseConfiguracion> doConfiguracion(@Query("mac") String mac, @Query("estacion") String estacion);
+    @Headers({"entorno: "+ Constantes.ENTORNO_API})
+    @PUT("configuracion")
+    Call<ResponseConfiguracion> doConfiguracionPut(@Body RequestConfiguracionPut requestConfiguracionPut);
 //--------------------------------------------------------------------------------------------------
     @Headers({"entorno: "+ Constantes.ENTORNO_API})
     @GET("login")

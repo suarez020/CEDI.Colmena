@@ -139,29 +139,25 @@ public class UbicarActivity extends AppCompatActivity{
     }
 
     private void LLenarMenu() {
-        //ean = SPM.getString(Constantes.EQUIPO_API);
         Call<ResponseUbicacionGet> ubicacionGet = serviceRetrofit.doUbicacionGET(ean);
         ubicacionGet.enqueue(new Callback<ResponseUbicacionGet>() {
             @Override
             public void onResponse(Call<ResponseUbicacionGet> call, Response<ResponseUbicacionGet> response) {
                 if (response.isSuccessful()) {
                     assert response.body() != null;
-                    //LogFile.adjuntarLog(response.body().getRespuesta().toString());
-                    if (response.body().getErrors().getStatus()) {//            .getRespuesta().getError().getStatus()){
-                        mensajeDialog("Error", response.body().getErrors().getSource());//.getRespuesta().getMensaje());
+                    LogFile.adjuntarLog(response.body().getErrors().getSource());
+                    if (response.body().getErrors().getStatus()) {
+                        mensajeDialog("Error", response.body().getErrors().getSource());
                         etEan.setText("");
                         etEan.requestFocus();
                     } else {
                         mostrarCategorias();
-                        List<List<String>> lista = response.body().getData().getItems();//getRespuesta().getSku().getItems();
+                        List<List<String>> lista = response.body().getData().getItems();
                         ListaDeItemsRecyclerViewAdapter categoriasAdapter = new ListaDeItemsRecyclerViewAdapter(lista);
 
                         rvDynamicItems.setAdapter(categoriasAdapter);
                         etUbicacion.setEnabled(true);
                         etUbicacion.requestFocus();
-//                        UnidadesFaltantes=response.body().getRespuesta().getCampos().getUnidadesFaltantes();
-//                        UnidadesLeidas=response.body().getRespuesta().getCampos().getUnidadesLeidas();
-//                        isConteo = response.body().getRespuesta().getCampos().getContar();
                     }
                 } else {
                     mensajeDialog("Error", "Error de conexión con el servicio web base.");
@@ -188,13 +184,11 @@ public class UbicarActivity extends AppCompatActivity{
             public void onResponse(Call<ResponseUbicacion> call, Response<ResponseUbicacion> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    //LogFile.adjuntarLog(response.body().getRespuesta().toString());
+                    LogFile.adjuntarLog(response.body().getErrors().getSource());
                     if(response.body().getErrors().getStatus()){
                         mensajeDialog("Error", response.body().getErrors().getSource());
                     }else{
                         Log.e("LOGCAT", "ReponseUbicacionPut: " +response.body());
-                        //mensaje = response.body().getErrors().getSource();
-                        //mensajeSimpleDialog(response.body().getErrors().getSource());
                         regresarPrincipal();
                     }
                 }else{

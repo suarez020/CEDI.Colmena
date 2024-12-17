@@ -209,7 +209,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void consumirPostLogin(){
             SPM.setString(Constantes.CEDULA_USUARIO, id);
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);//Ocultar el teclado de pantalla
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(etCedulaLogin.getWindowToken(), 0);
             RequestLogin requestLogin = new RequestLogin(id, estacion);
             Call<ResponseLogin> call = serviceRetrofit.doLogin(requestLogin);
@@ -218,14 +218,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 public void onResponse(Call<ResponseLogin> call, Response<ResponseLogin> response) {
                     if(response.isSuccessful()){
                         assert response.body() != null;
-                        //LogFile.adjuntarLog(response.body().getRespuesta().toString());
-                        if(response.body().getErrors().getStatus()){          //.getRespuesta().getError().getStatus()){
-                            mensajeSimpleDialog("Error", response.body().getErrors().getSource());          //.getRespuesta().getMensaje());
+                        LogFile.adjuntarLog(response.body().getErrors().getSource());
+                        if(response.body().getErrors().getStatus()){
+                            mensajeSimpleDialog("Error", response.body().getErrors().getSource());
                             pbLogin.setVisibility(View.GONE);
                             etCedulaLogin.setText("");
                             etCedulaLogin.requestFocus();
                         }else{
-                            SPM.setString(Constantes.NOMBRE_USUARIO, response.body().getLogin().getNombre());//getRespuesta().getLogin().getMatriculado());
+                            SPM.setString(Constantes.NOMBRE_USUARIO, response.body().getLogin().getNombre());
                             irPrincipal();
                         }
                     }else{

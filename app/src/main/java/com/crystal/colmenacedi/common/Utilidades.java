@@ -18,9 +18,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class Utilidades {
-    private Context contexto;
-    private TextToSpeech speech;
-
     public Utilidades(){
     }
 
@@ -51,18 +48,6 @@ public class Utilidades {
         return "02:00:00:00:00:00";
     }
 
-    public Utilidades(Context context) {
-        this.contexto = context;
-        speech =  new TextToSpeech(context, new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                if(status != TextToSpeech.ERROR){
-                    speech.setLanguage(new Locale("spa", "ESP"));
-                }
-            }
-        });
-    }
-
     public boolean valConstVaciasConf(){
         return SPM.getString(Constantes.SERVIDOR_API) != null && SPM.getString(Constantes.PUERTO_API) != null && SPM.getString(Constantes.EQUIPO_API) !=null;
     }
@@ -73,10 +58,6 @@ public class Utilidades {
             i++;
         }
         return i==dato.length;
-    }
-
-    public static boolean validarLength(String dato, Integer min, Integer max){
-        return dato.length() >= min && dato.length() <= max;
     }
 
     //Alert Dialog para mostrar mensajes de error, alertas o información
@@ -106,17 +87,5 @@ public class Utilidades {
     public static void ocultarBarraEstado(Window window){
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
-
-    public void toSpeech(final String msj) {
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(speech != null){
-                    speech.speak(msj, TextToSpeech.QUEUE_FLUSH, null);
-                }
-            }
-        }, 100);
     }
 }

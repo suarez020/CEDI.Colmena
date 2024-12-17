@@ -30,6 +30,7 @@ import com.crystal.colmenacedi.common.SPM;
 import com.crystal.colmenacedi.common.Utilidades;
 import com.crystal.colmenacedi.retrofit.ClienteRetrofit;
 import com.crystal.colmenacedi.retrofit.ServiceRetrofit;
+import com.crystal.colmenacedi.retrofit.request.RequestConfiguracionPut;
 import com.crystal.colmenacedi.retrofit.response.configuracion.ResponseConfiguracion;
 import com.google.android.material.snackbar.Snackbar;
 import java.util.Objects;
@@ -89,7 +90,6 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
     private void eventos() {
         btnGuardarConf.setOnClickListener(this);
 
-        //Eventos sobre el EditText Equipo
         etEquipoConf.setImeActionLabel("IR", KeyEvent.KEYCODE_ENTER);
         etEquipoConf.setOnKeyListener(new View.OnKeyListener() {
             @SuppressLint("ResourceAsColor")
@@ -190,17 +190,16 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
                         Utilidades.mensajeDialog("Error", response.body().getErrors().getSource(), contexto);
                         pararProgressBar();
                     }else{
-                        Log.i("LOGCAT", "RespuestaServicioConfiguracion: "+ response.body());
-//                        if(response.body(). getRespuesta().getConfiguracion().getCambioEstacion()){
-                            msjToast("Configuración realizada satisfactoriamente");
-                            SPM.setString(Constantes.SERVIDOR_API, servidor);
-                            SPM.setString(Constantes.PUERTO_API, puerto);
-                            SPM.setString(Constantes.EQUIPO_API, estacion);
-                            irLogin();
-//                        }else{
-//                            Utilidades.mensajeDialog("Error", response.body().getRespuesta().getMensaje(), contexto);
-//                            pararProgressBar();
-//                        }
+                            if(response.body().getConfiguracion().getStatus()){
+                                Log.i("LOGCAT", "RespuestaServicioConfiguracion: "+ response.body());
+                                msjToast("Configuración realizada satisfactoriamente");
+                                SPM.setString(Constantes.SERVIDOR_API, servidor);
+                                SPM.setString(Constantes.PUERTO_API, puerto);
+                                SPM.setString(Constantes.EQUIPO_API, estacion);
+                                irLogin();
+                            }else{
+                                servicioPutConfiguracion();
+                            }
                     }
                 }else{
                     Utilidades.mensajeDialog("Error", "Error de conexión con el servicio web base.", contexto);
@@ -215,6 +214,61 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
                 pararProgressBar();
             }
         });
+    }
+
+    private void servicioPutConfiguracion() {
+        RequestConfiguracionPut requestConfiguracionPut=new RequestConfiguracionPut(mac,estacion);
+        Call<ResponseConfiguracion> call = serviceRetrofit.doConfiguracionPut(requestConfiguracionPut);
+        call.enqueue(new Callback<ResponseConfiguracion>() {
+            @Override
+            public void onResponse(Call<ResponseConfiguracion> call, Response<ResponseConfiguracion> response) {
+                if(response.isSuccessful()){
+                    assert response.body() != null;
+                    LogFile.adjuntarLog(response.body().getErrors().getSource());
+                    if(response.body().getErrors().getStatus()){
+                        mensajeSimpleDialog("Error", response.body().getErrors().getSource());
+                    }else{
+                        Log.e("LOGCAT", "Reponse_doConfiguracionPut: " +response.body());
+                        msjToast("Configuración realizada satisfactoriamente");
+                        irLogin();
+                    }
+                }else{
+                    mensajeSimpleDialog("Error", "Error de conexión con el servicio web base.");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseConfiguracion> call, Throwable t) {
+                LogFile.adjuntarLog("ErrorResponseFinPinado",t);
+                mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
+            }
+        });
+    }
+
+    public void mensajeSimpleDialog(String titulo, String msj){
+
+        int icon = R.drawable.vector_alerta;
+        if (titulo.equals(getResources().getString(R.string.error))) {
+            icon = R.drawable.vector_error;
+        } else if(titulo.equals(getResources().getString(R.string.exito))){
+            icon = R.drawable.vector_exito;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(titulo)
+                .setCancelable(false)
+                .setMessage(msj)
+                .setIcon(icon)
+                .setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        irLogin();
+                    }
+                });
+        AlertDialog alerta = builder.create();
+        if(!(ConfiguracionActivity.this.isFinishing())){
+            alerta.show();
+        }
     }
 
     private void iniciarProgressBar() {

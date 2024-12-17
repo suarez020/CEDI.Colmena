@@ -4,12 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -110,6 +112,7 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void LLenarMenu() {
+        ocultarTeclado();
         btnEmpacar.setEnabled(true);
         Call<ResponseExtraerGet> responseExtraerGetCall = serviceRetrofit.doExtraerGet(ubicacion,"1");
         responseExtraerGetCall.enqueue(new Callback<ResponseExtraerGet>() {
@@ -117,7 +120,7 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
             public void onResponse(Call<ResponseExtraerGet> call, Response<ResponseExtraerGet> response) {
                     if (response.isSuccessful()) {
                         assert response.body() != null;
-                        //LogFile.adjuntarLog(response.body().getRespuesta().toString());
+                        LogFile.adjuntarLog(response.body().getErrors().getSource());
                         if (response.body().getErrors().getStatus()) {
                             mensajeDialog("Error", response.body().getErrors().getSource());
                             etUbicacionEmpacar.setText("");
@@ -136,12 +139,20 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
 
             @Override
             public void onFailure(Call<ResponseExtraerGet> call, Throwable t) {
-                //etEanAuditoria.setText("");
-                //etEanAuditoria.requestFocus();
+                etUbicacionEmpacar.setText("");
+                etUbicacionEmpacar.requestFocus();
                 LogFile.adjuntarLog("response_Extraer:Get",t);
                 mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
             }
         });
+    }
+
+    private void ocultarTeclado(){
+        View view = this.getCurrentFocus();
+        if(view != null){
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     private void mostrarCategorias(){

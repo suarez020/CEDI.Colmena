@@ -3,7 +3,6 @@ package com.crystal.colmenacedi.ui;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -11,10 +10,10 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.crystal.colmenacedi.R;
 import com.crystal.colmenacedi.common.Constantes;
 import com.crystal.colmenacedi.common.LogFile;
@@ -23,23 +22,22 @@ import com.crystal.colmenacedi.common.Utilidades;
 import com.crystal.colmenacedi.retrofit.ClienteRetrofit;
 import com.crystal.colmenacedi.retrofit.ServiceRetrofit;
 import com.crystal.colmenacedi.retrofit.request.RequestExtraerPost;
+import com.crystal.colmenacedi.retrofit.request.RequestTerminar;
 import com.crystal.colmenacedi.retrofit.response.extraer.ResponseExtraerPost;
+import com.crystal.colmenacedi.retrofit.response.terminar.ResponseTerminar;
 import com.crystal.colmenacedi.ui.adapter.ListaDeItemsRecyclerViewAdapter;
-
 import java.util.List;
 import java.util.Objects;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 public class ZonaActivity extends AppCompatActivity implements View.OnClickListener {
     RecyclerView rvDynamicItems;
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
     EditText etUbicacionLectura, etEanLectura, etUnidades, etPaquetes;
     Button btnTerminarCajaLectura;
-    String cedula, equipo, ubicacion, ean, actuales, faltantes;
+    String cedula, equipo, ubicacion, ean, actuales, faltantes,proceso;
     boolean consumirServicio = true;
     Context contexto;
     List<List<String>> listaItems2;
@@ -132,7 +130,8 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
 
     private void lecturaEan() {
       if (consumirServicio){
-          consumirServicio = false;
+        ocultarTeclado();
+        consumirServicio = false;
         RequestExtraerPost requestExtraerPost=new RequestExtraerPost(cedula,ean,"83429","43232");
         Call<ResponseExtraerPost> call = serviceRetrofit.doExtraerPost(requestExtraerPost);
         call.enqueue(new Callback<ResponseExtraerPost>() {
@@ -175,9 +174,45 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void Terminar() {
+        proceso = SPM.getString(Constantes.PROCESO);
+        cedula=SPM.getString(Constantes.CEDULA_USUARIO);
+
+        RequestTerminar requestTerminar =new RequestTerminar(cedula,ubicacion,proceso);
+        Call<ResponseTerminar> call = serviceRetrofit.doTerminar(requestTerminar);
+        call.enqueue(new Callback<ResponseTerminar>() {
+            @Override
+            public void onResponse(Call<ResponseTerminar> call, Response<ResponseTerminar> response) {
+                if(response.isSuccessful()) {
+                    assert response.body() != null;
+                    LogFile.adjuntarLog(response.body().getErrors().getSource());
+                    if(response.body().getErrors().getStatus()){
+                        Utilidades.mensajeDialog("Error", response.body().getErrors().getSource(), contexto);
+                    }else{
+                        //egresarPrincipal();
+                    }
+                }else{
+                    Utilidades.mensajeDialog("Error", "Error de conexión con el servicio web base. "+ response.message(), contexto);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseTerminar> call, Throwable t) {
+                LogFile.adjuntarLog("ErrorResponse/terminar_Post",t);
+                Utilidades.mensajeDialog("Error", "Error de conexión. "+ t.getMessage(), contexto);
+            }
+        });
+
         Intent i = new Intent(this, EmpacarActivity.class);
         startActivity(i);
         finish();
+    }
+
+    private void ocultarTeclado(){
+        View view = this.getCurrentFocus();
+        if(view != null){
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     public void onBackPressed(){}
