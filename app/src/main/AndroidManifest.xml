@@ -24,46 +24,7 @@
         android:usesCleartextTraffic="true">
 
         <activity
-            android:name=".ui.TamanoEmpaqueActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-
-        <activity
-            android:name=".ui.EmpaqueRFIDActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.AuditoriaDobleActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
             android:name=".ui.SepararActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.ZonaActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.SplashScreenActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.ConfirmarCerrarPosicionActivity"
-            android:screenOrientation="portrait"
-            android:exported="false" />
-
-        <activity
-            android:name=".ui.CierreCartonActivity"
             android:screenOrientation="portrait"
             android:exported="false" />
 

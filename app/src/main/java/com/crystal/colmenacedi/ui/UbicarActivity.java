@@ -43,7 +43,7 @@ public class UbicarActivity extends AppCompatActivity{
     ClienteRetrofit appCliente;
     EditText etEan, etUbicacion;
     ProgressBar pbRecibirCaja;
-    String id, estacion, ean, ubicacion, mensaje;
+    String id, estacion, ean, ubicacion;
     boolean consumirServicio = true;
 
     @Override
@@ -109,7 +109,6 @@ public class UbicarActivity extends AppCompatActivity{
             }
         });
 
-        //Evento sobre el EditText cartón genérico
         etEan.setImeActionLabel("IR", KeyEvent.KEYCODE_ENTER);
         etEan.setOnKeyListener(new View.OnKeyListener() {
             @Override

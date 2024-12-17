@@ -9,7 +9,7 @@ public class Constantes {
     public static final String API_POSSERVICE_URL= "API_POSSERVICE_URL";
     public static final String CEDULA_USUARIO= "CEDULA_USUARIO";
     public static final String NOMBRE_USUARIO= "NOMBRE_USUARIO";
-    public static final String NOMBRE_CARPETA = "EntregaAmigable";
+    public static final String NOMBRE_CARPETA = "Colmena";
     public static final String FORMATO_FECHA_LARGO = "yyyy/MM/dd HH:mm:ss.SS";
     public static final String FORMATO_FECHA_SIMPLE = "yyyyMMdd";
     public static final String SERVIDOR_API= "SERVIDOR_API";
