@@ -48,8 +48,7 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
     Context contexto;
     String servidor, puerto, estacion, mac;
     String android_id;
-
-
+    boolean consumirServicio = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -179,70 +178,84 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
                 Settings.Secure.ANDROID_ID);
     }
     private void apiConfiguracion(){
-        Call<ResponseConfiguracion> call = serviceRetrofit.doConfiguracion(mac,estacion);
-        call.enqueue(new Callback<ResponseConfiguracion>() {
-            @Override
-            public void onResponse(Call<ResponseConfiguracion> call, Response<ResponseConfiguracion> response) {
-                if(response.isSuccessful()){
-                    assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getErrors().getSource().toString());
-                    if(response.body().getErrors().getStatus()){
-                        Utilidades.mensajeDialog("Error", response.body().getErrors().getSource(), contexto);
-                        pararProgressBar();
-                    }else{
-                            if(response.body().getConfiguracion().getStatus()){
-                                Log.i("LOGCAT", "RespuestaServicioConfiguracion: "+ response.body());
-                                msjToast("Configuración realizada satisfactoriamente");
-                                SPM.setString(Constantes.SERVIDOR_API, servidor);
-                                SPM.setString(Constantes.PUERTO_API, puerto);
-                                SPM.setString(Constantes.EQUIPO_API, estacion);
+        if (consumirServicio) {
+            consumirServicio = false;
+            Call<ResponseConfiguracion> call = serviceRetrofit.doConfiguracion(mac, estacion);
+            call.enqueue(new Callback<ResponseConfiguracion>() {
+                @Override
+                public void onResponse(Call<ResponseConfiguracion> call, Response<ResponseConfiguracion> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        LogFile.adjuntarLog(response.body().getErrors().getSource().toString());
+                        if (response.body().getErrors().getStatus()) {
+                            Utilidades.mensajeDialog("Error", response.body().getErrors().getSource(), contexto);
+                            pararProgressBar();
+                            consumirServicio = true;
+                        } else {
+                            SPM.setString(Constantes.SERVIDOR_API, servidor);
+                            SPM.setString(Constantes.PUERTO_API, puerto);
+                            SPM.setString(Constantes.EQUIPO_API, estacion);
+                            Log.i("LOGCAT", "RespuestaServicioConfiguracion: " + response.body());
+                            msjToast("Configuración realizada satisfactoriamente");
+
+                            if (response.body().getConfiguracion().getStatus()) {
                                 irLogin();
-                            }else{
+                            } else {
+                                consumirServicio = true;
                                 servicioPutConfiguracion();
                             }
+                        }
+                    } else {
+                        Utilidades.mensajeDialog("Error", "Error de conexión con el servicio web base.", contexto);
+                        pararProgressBar();
+                        consumirServicio = true;
                     }
-                }else{
-                    Utilidades.mensajeDialog("Error", "Error de conexión con el servicio web base.", contexto);
-                    pararProgressBar();
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ResponseConfiguracion> call, Throwable t) {
-                LogFile.adjuntarLog("ErrorResponseConfiguracion", t);
-                Utilidades.mensajeDialog("Error", "Error de conexión: " + t.getMessage(), contexto);
-                pararProgressBar();
-            }
-        });
+                @Override
+                public void onFailure(Call<ResponseConfiguracion> call, Throwable t) {
+                    LogFile.adjuntarLog("ErrorResponseConfiguracion", t);
+                    Utilidades.mensajeDialog("Error", "Error de conexión: " + t.getMessage(), contexto);
+                    pararProgressBar();
+                    consumirServicio = true;
+                }
+            });
+        }
     }
 
     private void servicioPutConfiguracion() {
-        RequestConfiguracionPut requestConfiguracionPut=new RequestConfiguracionPut(mac,estacion);
-        Call<ResponseConfiguracion> call = serviceRetrofit.doConfiguracionPut(requestConfiguracionPut);
-        call.enqueue(new Callback<ResponseConfiguracion>() {
-            @Override
-            public void onResponse(Call<ResponseConfiguracion> call, Response<ResponseConfiguracion> response) {
-                if(response.isSuccessful()){
-                    assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getErrors().getSource());
-                    if(response.body().getErrors().getStatus()){
-                        mensajeSimpleDialog("Error", response.body().getErrors().getSource());
-                    }else{
-                        Log.e("LOGCAT", "Reponse_doConfiguracionPut: " +response.body());
-                        msjToast("Configuración realizada satisfactoriamente");
-                        irLogin();
+        if (consumirServicio) {
+            consumirServicio = false;
+            RequestConfiguracionPut requestConfiguracionPut = new RequestConfiguracionPut(mac, estacion);
+            Call<ResponseConfiguracion> call = serviceRetrofit.doConfiguracionPut(requestConfiguracionPut);
+            call.enqueue(new Callback<ResponseConfiguracion>() {
+                @Override
+                public void onResponse(Call<ResponseConfiguracion> call, Response<ResponseConfiguracion> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        LogFile.adjuntarLog(response.body().getErrors().getSource());
+                        if (response.body().getErrors().getStatus()) {
+                            mensajeSimpleDialog("Error", response.body().getErrors().getSource());
+                        } else {
+                            Log.e("LOGCAT", "Reponse_doConfiguracionPut: " + response.body());
+                            msjToast("Configuración realizada satisfactoriamente se inserto el metodo PUT");
+                            irLogin();
+                        }
+                    } else {
+                        mensajeSimpleDialog("Error", "Error de conexión con el servicio web base.");
                     }
-                }else{
-                    mensajeSimpleDialog("Error", "Error de conexión con el servicio web base.");
+                    consumirServicio = true;
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ResponseConfiguracion> call, Throwable t) {
-                LogFile.adjuntarLog("ErrorResponseFinPinado",t);
-                mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
-            }
-        });
+                @Override
+                public void onFailure(Call<ResponseConfiguracion> call, Throwable t) {
+                    LogFile.adjuntarLog("ErrorResponseFinPinado", t);
+                    mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
+                    consumirServicio = true;
+
+                }
+            });
+        }
     }
 
     public void mensajeSimpleDialog(String titulo, String msj){
