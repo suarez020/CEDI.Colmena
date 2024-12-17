@@ -2,8 +2,6 @@ package com.crystal.colmenacedi.common;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Handler;
-import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -15,7 +13,6 @@ import com.crystal.colmenacedi.R;
 import java.net.NetworkInterface;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 public class Utilidades {
     public Utilidades(){

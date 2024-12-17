@@ -1,18 +1,13 @@
 package com.crystal.colmenacedi.ui.adapter;
-
-import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.crystal.colmenacedi.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,8 +30,8 @@ public class ListaDeItemsRecyclerViewAdapter extends RecyclerView.Adapter<ListaD
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         List<String> item = itemsList.get(position);
-        holder.tvItemKey.setText(item.get(0)); // Primera parte del par clave-valor
-        holder.tvItemValue.setText(item.get(1)); // Segunda parte del par clave-valor
+        holder.tvItemKey.setText(item.get(0));
+        holder.tvItemValue.setText(item.get(1));
 
         // Actualizar el color del fondo basado en la selección
         if (selectedItems.contains(position)) {
