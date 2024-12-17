@@ -1,29 +1,43 @@
 package com.crystal.colmenacedi.retrofit.response.logout;
 
+import com.crystal.colmenacedi.models.Errors;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class ResponseLogout {
-    @SerializedName("Respuesta")
+    @SerializedName("logout")
     @Expose
-    private RespuestaLogout respuesta;
+    private Logout logout;
+    @SerializedName("errors")
+    @Expose
+    private Errors errors;
 
-    public ResponseLogout(RespuestaLogout respuesta) {
-        this.respuesta = respuesta;
+    public ResponseLogout(Logout logout, Errors errors) {
+        this.logout = logout;
+        this.errors = errors;
     }
 
-    public RespuestaLogout getRespuesta() {
-        return respuesta;
+    public Logout getLogout() {
+        return logout;
     }
 
-    public void setRespuesta(RespuestaLogout respuesta) {
-        this.respuesta = respuesta;
+    public void setLogout(Logout logout) {
+        this.logout = logout;
+    }
+
+    public Errors getErrors() {
+        return errors;
+    }
+
+    public void setErrors(Errors errors) {
+        this.errors = errors;
     }
 
     @Override
     public String toString() {
         return "ResponseLogout{" +
-                "respuesta=" + respuesta +
+                "logout=" + logout +
+                ", errors=" + errors +
                 '}';
     }
 }

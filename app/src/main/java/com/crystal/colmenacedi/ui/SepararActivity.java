@@ -21,7 +21,11 @@ import com.crystal.colmenacedi.common.SPM;
 import com.crystal.colmenacedi.common.Utilidades;
 import com.crystal.colmenacedi.retrofit.ClienteRetrofit;
 import com.crystal.colmenacedi.retrofit.ServiceRetrofit;
+import com.crystal.colmenacedi.retrofit.request.RequestExtraerPost;
+import com.crystal.colmenacedi.retrofit.request.RequestTerminar;
 import com.crystal.colmenacedi.retrofit.response.extraer.ResponseExtraerGet;
+import com.crystal.colmenacedi.retrofit.response.extraer.ResponseExtraerPost;
+import com.crystal.colmenacedi.retrofit.response.terminar.ResponseTerminar;
 import com.crystal.colmenacedi.ui.adapter.ListaDeItemsRecyclerViewAdapter;
 import java.util.List;
 import java.util.Objects;
@@ -33,10 +37,12 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
     ServiceRetrofit serviceRetrofit;
     ClienteRetrofit appCliente;
     Button btnTerminarSp;
-    EditText etUnidadesLeidasSp , etUbicacionSp, etEanAuditoria;
+    EditText etUnidadesLeidasSp , etUbicacionSp, etEanSp;
     TextView etUnidadesLeidas;
-    String cedula, equipo, ubicacion, proceso, ean , faltantes, sobrantes;
+    String cedula, equipo, ubicacion, proceso, ean ;
+    boolean consumirServicio = true;
     List<List<String>> listaItems1;
+    Context contexto;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +62,8 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void findViews() {
+        contexto = SepararActivity.this;
+
         proceso = SPM.getString(Constantes.PROCESO);
 
         rvDynamicItems = findViewById(R.id.rvDynamicItemsSeparar);
@@ -65,7 +73,7 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
 
         etUbicacionSp = findViewById(R.id.etUbicacionSp);
 
-        etEanAuditoria = findViewById(R.id.etEanSp);
+        etEanSp = findViewById(R.id.etEanSp);
         etUnidadesLeidas = findViewById(R.id.tvUnidadesLeidas);
         etUnidadesLeidasSp = findViewById(R.id.etUnidadesLeidasSp);
 
@@ -105,28 +113,28 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
                 return handled;
             }
         });
-        etEanAuditoria.setImeActionLabel("IR", KeyEvent.KEYCODE_ENTER);
-        etEanAuditoria.setOnKeyListener(new View.OnKeyListener() {
+        etEanSp.setImeActionLabel("IR", KeyEvent.KEYCODE_ENTER);
+        etEanSp.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
-                    ean = etEanAuditoria.getText().toString().replaceAll("\\s","");
+                    ean = etEanSp.getText().toString().replaceAll("\\s","");
                     if (!ean.isEmpty()) {
-                        auditoria();
+                        servicioExtraerPostConteo();
                     }
                     return true;
                 }
                 return false;
             }
         });
-        etEanAuditoria.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        etEanSp.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 boolean handled = false;
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    ean = etEanAuditoria.getText().toString().replaceAll("\\s","");
+                    ean = etEanSp.getText().toString().replaceAll("\\s","");
                     if(!ean.isEmpty()){
-                        auditoria();
+                        servicioExtraerPostConteo();
                     }
                 }
                 return handled;
@@ -148,6 +156,8 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
                         etUbicacionSp.setText("");
                         etUbicacionSp.requestFocus();
                     } else {
+                        etUbicacionSp.setEnabled(false);
+                        etEanSp.requestFocus();
                         mostrarCategorias();
                         listaItems1= response.body().getData().getItems();
                         ListaDeItemsRecyclerViewAdapter categoriasAdapter = new ListaDeItemsRecyclerViewAdapter(listaItems1);
@@ -172,59 +182,43 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
         rvDynamicItems.setVisibility(View.VISIBLE);
     }
 
-    private void auditoria() {
-        //Ocultar el teclado de pantalla
-        ocultarTeclado();
-
-        /*
-        RequestLecturaEan requestLecturaEan = new RequestLecturaEan(cedula, equipo, ean, ubicacion);
-        Call<ResponseAuditoria> call = serviceRetrofit.doAuditoria(requestLecturaEan);
-        call.enqueue(new Callback<ResponseAuditoria>() {
-            @Override
-            public void onResponse(Call<ResponseAuditoria> call, Response<ResponseAuditoria> response) {
-                if(response.isSuccessful()){
-                    assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getRespuesta().toString());
-                    if(response.body().getRespuesta().getError().getStatus()){
-                        mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
-                        etEanAuditoria.setText("");
-                        etEanAuditoria.requestFocus();
-                    }else{
-                        respuestaAuditoria = response.body().getRespuesta();
-                        faltantes = respuestaAuditoria.getFaltantes();
-                        sobrantes = respuestaAuditoria.getSobrantes();
-
-                        if(faltantes.equals("0")){
-                            regresarPrincipal();
+    private void servicioExtraerPostConteo(){
+            if (consumirServicio){
+                ocultarTeclado();
+                consumirServicio = false;
+                RequestExtraerPost requestExtraerPost=new RequestExtraerPost(cedula,ean,ubicacion,proceso);
+                Call<ResponseExtraerPost> call = serviceRetrofit.doExtraerPost(requestExtraerPost);
+                call.enqueue(new Callback<ResponseExtraerPost>() {
+                    @Override
+                    public void onResponse(Call<ResponseExtraerPost> call, Response<ResponseExtraerPost> response) {
+                        if(response.isSuccessful()){
+                            assert response.body() != null;
+                            LogFile.adjuntarLog(response.body().getErrors().getSource());
+                            if(response.body().getErrors().getStatus()){
+                                Utilidades.mensajeDialog("Error", response.body().getErrors().getSource(), contexto);
+                                etEanSp.setText("");
+                                etEanSp.requestFocus();
+                            }else{
+                                etUnidadesLeidasSp.setText(response.body().getData().getUnidadesLeidas().toString());
+                                etEanSp.setText("");
+                                etEanSp.requestFocus();
+                            }
+                        }else{
+                            Utilidades.mensajeDialog("Error", "Error de conexión con el servicio web base", contexto);
                         }
+                        consumirServicio = true;
                     }
-                }else{
-                    etEanAuditoria.setText("");
-                    etEanAuditoria.requestFocus();
-                    mensajeSimpleDialog("Error", "Error de conexión con el servicio web base.");
-                }
-            }
 
-            @Override
-            public void onFailure(Call<ResponseAuditoria> call, Throwable t) {
-                etEanAuditoria.setText("");
-                etEanAuditoria.requestFocus();
-                LogFile.adjuntarLog("ErrorResponseLecturaEan",t);
-                mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
+                    @Override
+                    public void onFailure(Call<ResponseExtraerPost> call, Throwable t) {
+                        LogFile.adjuntarLog("ErrorResponseLecturaEan",t);
+                        Utilidades.mensajeDialog("Error", "Error de conexión: " + t.getMessage(), contexto);
+                        consumirServicio = true;
+                    }
+                });
             }
-        });*/
     }
 
-    private void pasarAuditoriaDoble() {
-        /*
-        Intent i = new Intent(this, AuditoriaDobleActivity.class);
-        i.putExtra("ubicacion", (Serializable) ubicacion);
-        startActivity(i);
-        finish();
-        */
-    }
-
-    //Alert Dialog para mostrar mensajes de error, alertas o información
     public void mensajeDialog(final String titulo, final String msj){
 
         int icon = R.drawable.vector_alerta;
@@ -275,11 +269,34 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void serviceTerminarPost() {
+        cedula=SPM.getString(Constantes.CEDULA_USUARIO);
+        RequestTerminar requestTerminar =new RequestTerminar(cedula,ubicacion,proceso);
+        Call<ResponseTerminar> call = serviceRetrofit.doTerminar(requestTerminar);
+        call.enqueue(new Callback<ResponseTerminar>() {
+            @Override
+            public void onResponse(Call<ResponseTerminar> call, Response<ResponseTerminar> response) {
+                if(response.isSuccessful()) {
+                    assert response.body() != null;
+                    LogFile.adjuntarLog(response.body().getErrors().getSource());
+                    if(response.body().getErrors().getStatus()){
+                      mensajeSimpleDialog("Error", response.body().getErrors().getSource());
+                    }else{
+                      regresarPrincipal();
+                    }
+                }else{
+                    mensajeSimpleDialog("Error", "Error de conexión con el servicio web base. "+ response.message());
+                }
+            }
 
+            @Override
+            public void onFailure(Call<ResponseTerminar> call, Throwable t) {
+                LogFile.adjuntarLog("ErrorResponse/terminar_Post",t);
+                mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
+            }
+        });
     }
 
     private void ocultarTeclado(){
-        //Ocultar el teclado de pantalla
         View view = this.getCurrentFocus();
         if(view != null){
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

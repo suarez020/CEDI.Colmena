@@ -1,28 +1,29 @@
 package com.crystal.colmenacedi.retrofit.response.logout;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Logout {
+    @SerializedName("status")
+    @Expose
+    private Boolean status;
 
-    @SerializedName("Desmatriculado")
-    private boolean isDesmatriculado;
-
-    public Logout(boolean isDesmatriculado) {
-        this.isDesmatriculado = isDesmatriculado;
+    public Boolean getStatus() {
+        return status;
     }
 
-    public boolean isDesmatriculado() {
-        return isDesmatriculado;
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
-    public void setDesmatriculado(boolean desmatriculado) {
-        isDesmatriculado = desmatriculado;
+    public Logout(Boolean status) {
+        this.status = status;
     }
 
     @Override
     public String toString() {
         return "Logout{" +
-                "isDesmatriculado=" + isDesmatriculado +
+                "status=" + status +
                 '}';
     }
 }

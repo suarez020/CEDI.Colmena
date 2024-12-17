@@ -164,7 +164,6 @@ public class PrincipalActivity extends AppCompatActivity implements View.OnClick
     private void apiCerrarSesion() {
         cedula = SPM.getString(Constantes.CEDULA_USUARIO);
         estacion = SPM.getString(Constantes.EQUIPO_API);
-        //Consumir servicio para cerrar sesion
         RequestLogin requestLogout = new RequestLogin(cedula, estacion);
         Call<ResponseLogout> call = serviceRetrofit.doLogout(requestLogout);
         call.enqueue(new Callback<ResponseLogout>() {
@@ -172,15 +171,11 @@ public class PrincipalActivity extends AppCompatActivity implements View.OnClick
             public void onResponse(Call<ResponseLogout> call, Response<ResponseLogout> response) {
                 if(response.isSuccessful()) {
                     assert response.body() != null;
-                    LogFile.adjuntarLog(response.body().getRespuesta().toString());
-                    if(response.body().getRespuesta().getError().getStatus()){
-                        mensajeSimpleDialog("Error", response.body().getRespuesta().getMensaje());
+                    LogFile.adjuntarLog(response.body().getErrors().getSource());
+                    if(response.body().getErrors().getStatus()){
+                        mensajeSimpleDialog("Error", response.body().getErrors().getSource());
                     }else{
-                        if(response.body().getRespuesta().getLogout().isDesmatriculado()){
                             irLogin();
-                        }else{
-                            mensajeSimpleDialog("Alerta", "No puede cerrar sesión, el dispositivo esta sin desmatricular");
-                        }
                     }
                 }else{
                     mensajeSimpleDialog("Error", "Error de conexión con el servicio web base. "+ response.message());

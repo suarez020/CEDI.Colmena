@@ -62,6 +62,8 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
 
     @SuppressLint("ResourceAsColor")
     private void findViews() {
+        contexto = ZonaActivity.this;
+
         rvDynamicItems = findViewById(R.id.rvDynamicItemsZonaEmpacar);
         rvDynamicItems.setLayoutManager(new LinearLayoutManager(this));
 
@@ -138,7 +140,7 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
             public void onResponse(Call<ResponseExtraerPost> call, Response<ResponseExtraerPost> response) {
                 if(response.isSuccessful()){
                     assert response.body() != null;
-                    //LogFile.adjuntarLog(response.body().getRespuesta().toString());
+                    LogFile.adjuntarLog(response.body().getErrors().getSource());
                     if(response.body().getErrors().getStatus()){
                         Utilidades.mensajeDialog("Error", response.body().getErrors().getSource(), contexto);
                         etEanLectura.setText("");
@@ -146,13 +148,8 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
                     }else{
                         etUnidades.setText(response.body().getData().getUnidadesLeidas().toString());
                         etPaquetes.setText(response.body().getData().getPaquetesLeidos().toString());
-                        /*
-                        if(response.body().getRespuesta().getEan().getFaltantes().equals("0")){
-                            Terminar();
-                        }else{
-                            etEanLectura.setText("");
-                            etEanLectura.requestFocus();
-                        }*/
+                        etEanLectura.setText("");
+                        etEanLectura.requestFocus();
                     }
                 }else{
                     Utilidades.mensajeDialog("Error", "Error de conexión con el servicio web base", contexto);
