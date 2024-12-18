@@ -59,6 +59,9 @@ public interface ServiceRetrofit {
     @POST("extraer")
     Call<ResponseExtraerPost> doExtraerPost(@Body RequestExtraerPost requestExtraerPost);
     @Headers({"entorno: "+ Constantes.ENTORNO_API})
+    @GET("terminar")
+    Call<ResponseTerminar> doTerminarGet(@Query("ubicacion") String ubicacion, @Query("proceso") String proceso);
+    @Headers({"entorno: "+ Constantes.ENTORNO_API})
     @POST("terminar")
     Call<ResponseTerminar> doTerminar(@Body RequestTerminar requestTerminar);
 }

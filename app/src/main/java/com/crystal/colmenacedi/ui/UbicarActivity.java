@@ -198,7 +198,7 @@ public class UbicarActivity extends AppCompatActivity{
     private void ubicacionPut() {
         if (consumirServicio) {
             consumirServicio = false;
-            RequestUbicacion requestUbicacion = new RequestUbicacion(id, ean, estacion);
+            RequestUbicacion requestUbicacion = new RequestUbicacion(id, ean, ubicacion);
             Call<ResponseUbicacion> call = serviceRetrofit.doUbicacion(requestUbicacion);
             call.enqueue(new Callback<ResponseUbicacion>() {
                 @Override

@@ -7,9 +7,13 @@ public class Terminar {
     @SerializedName("status")
     @Expose
     private Boolean status;
+    @SerializedName("mensaje")
+    @Expose
+    private String mensaje;
 
-    public Terminar(Boolean status) {
+    public Terminar(Boolean status, String mensaje) {
         this.status = status;
+        this.mensaje = mensaje;
     }
 
     public Boolean getStatus() {
@@ -20,10 +24,19 @@ public class Terminar {
         this.status = status;
     }
 
+    public String getMensaje() {
+        return mensaje;
+    }
+
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
+    }
+
     @Override
     public String toString() {
         return "Terminar{" +
                 "status=" + status +
+                ", mensaje='" + mensaje + '\'' +
                 '}';
     }
 }

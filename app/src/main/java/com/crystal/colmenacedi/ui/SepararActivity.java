@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -23,8 +24,10 @@ import com.crystal.colmenacedi.retrofit.ClienteRetrofit;
 import com.crystal.colmenacedi.retrofit.ServiceRetrofit;
 import com.crystal.colmenacedi.retrofit.request.RequestExtraerPost;
 import com.crystal.colmenacedi.retrofit.request.RequestTerminar;
+import com.crystal.colmenacedi.retrofit.response.configuracion.ResponseConfiguracion;
 import com.crystal.colmenacedi.retrofit.response.extraer.ResponseExtraerGet;
 import com.crystal.colmenacedi.retrofit.response.extraer.ResponseExtraerPost;
+import com.crystal.colmenacedi.retrofit.response.inicio.ResponseInicio;
 import com.crystal.colmenacedi.retrofit.response.terminar.ResponseTerminar;
 import com.crystal.colmenacedi.ui.adapter.ListaDeItemsRecyclerViewAdapter;
 import java.util.List;
@@ -155,6 +158,7 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
                         LogFile.adjuntarLog(response.body().getErrors().getSource());
                         if (response.body().getErrors().getStatus()) {
                             mensajeDialog("Error", response.body().getErrors().getSource());
+                            etEanSp.setEnabled(false);
                             etUbicacionSp.setText("");
                             etUbicacionSp.requestFocus();
                         } else {
@@ -267,14 +271,61 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         if(v.getId() == R.id.btnTerminarSp)
         {
-            serviceTerminarPost();
+            validarGetTerminar();
+        }
+    }
+
+    private void validarGetTerminar() {
+        if(consumirServicio) {
+            consumirServicio = false;
+            Call<ResponseTerminar> responseTerminarGet = serviceRetrofit.doTerminarGet(ubicacion,proceso);
+            responseTerminarGet.enqueue(new Callback<ResponseTerminar>() {
+                @Override
+                public void onResponse(Call<ResponseTerminar> call, Response<ResponseTerminar> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        LogFile.adjuntarLog(response.body().getErrors().getSource());
+                        if (response.body().getErrors().getStatus()) {
+                            consumirServicio=true;
+                            mensajeSimpleDialog("Error", response.body().getErrors().getSource());
+                        }else{
+                            consumirServicio=true;
+                                    if (response.body().getTerminar().getStatus()){
+                                            Utilidades.mensajeDialog(
+                                                    "Confirmación",
+                                                    response.body().getTerminar().getMensaje(),
+                                                    SepararActivity.this,
+                                                    (dialog, which) -> {
+                                                        serviceTerminarPost();       // Acción para "Aceptar"
+                                                        Log.d("Dialog", "Usuario aceptó la acción.");
+                                                    },
+                                                    (dialog, which) -> {
+                                                        Log.d("Dialog", "Usuario canceló la acción.");
+                                                    }
+                                            );
+                                    }else {
+                                        serviceTerminarPost();
+                                    }
+                        }
+                    } else {
+                        consumirServicio=true;
+                        mensajeSimpleDialog("Error", "Error de conexión con el servicio web base. " + response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseTerminar> call, Throwable t) {
+                    LogFile.adjuntarLog("ErrorResponse/terminar_GET", t);
+                    mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
+                    consumirServicio=true;
+                }
+            });
         }
     }
 
     private void serviceTerminarPost() {
         if(consumirServicio) {
             consumirServicio = false;
-            cedula = SPM.getString(Constantes.CEDULA_USUARIO);
             RequestTerminar requestTerminar = new RequestTerminar(cedula, ubicacion, proceso);
             Call<ResponseTerminar> call = serviceRetrofit.doTerminar(requestTerminar);
             call.enqueue(new Callback<ResponseTerminar>() {

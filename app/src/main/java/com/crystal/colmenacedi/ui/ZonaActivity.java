@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -164,7 +165,54 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.btnTerminarEmpaque){
-            Terminar();
+            validarGetTerminar();
+        }
+    }
+
+    private void validarGetTerminar() {
+        if(consumirServicio) {
+            consumirServicio = false;
+            Call<ResponseTerminar> responseTerminarGet = serviceRetrofit.doTerminarGet(ubicacion,proceso);
+            responseTerminarGet.enqueue(new Callback<ResponseTerminar>() {
+                @Override
+                public void onResponse(Call<ResponseTerminar> call, Response<ResponseTerminar> response) {
+                    if (response.isSuccessful()) {
+                        assert response.body() != null;
+                        LogFile.adjuntarLog(response.body().getErrors().getSource());
+                        if (response.body().getErrors().getStatus()) {
+                            consumirServicio=true;
+                            Utilidades.mensajeDialog("Error", response.body().getErrors().getSource(), contexto);
+                        }else{
+                            consumirServicio=true;
+                            if (response.body().getTerminar().getStatus()){
+                                Utilidades.mensajeDialog(
+                                        "Confirmación",
+                                        response.body().getTerminar().getMensaje(),
+                                        ZonaActivity.this,
+                                        (dialog, which) -> {
+                                            Terminar();
+                                            Log.d("Dialog", "Usuario aceptó la acción.");
+                                        },
+                                        (dialog, which) -> {
+                                            Log.d("Dialog", "Usuario canceló la acción.");
+                                        }
+                                );
+                            }else {
+                                Terminar();
+                            }
+                        }
+                    } else {
+                        consumirServicio=true;
+                        Utilidades.mensajeDialog("Error", response.message(), contexto);
+                    }
+                }
+                @Override
+                public void onFailure(Call<ResponseTerminar> call, Throwable t) {
+                    LogFile.adjuntarLog("ErrorResponse/terminar_GET", t);
+                    Utilidades.mensajeDialog("Error", t.getMessage(), contexto);
+                    consumirServicio=true;
+                }
+            });
         }
     }
 

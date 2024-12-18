@@ -122,12 +122,12 @@ public class PrincipalActivity extends AppCompatActivity implements View.OnClick
     }
 
 
-    public boolean onCreateOptionsMenu(Menu menu){//mostrar y ocultar el menú
+    public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.menuprincipal, menu);
         return true;
     }
 
-    public boolean onOptionsItemSelected(MenuItem item){//funciones correspondientes a las opciones
+    public boolean onOptionsItemSelected(MenuItem item){
         if (item.getItemId() == R.id.mItemCerrarSesion) {
             cerrarSesion();
         }

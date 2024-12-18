@@ -80,6 +80,29 @@ public class Utilidades {
         alerta.show();
     }
 
+    public static void mensajeDialog(String titulo, String msj, Context context,
+                                     DialogInterface.OnClickListener aceptarListener,
+                                     DialogInterface.OnClickListener cancelarListener) {
+
+        int icon = R.drawable.vector_alerta;
+        if (titulo.equals("Error")) {
+            icon = R.drawable.vector_error;
+        } else if (titulo.equals("Éxito")) {
+            icon = R.drawable.vector_exito;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(titulo)
+                .setCancelable(false)
+                .setMessage(msj)
+                .setIcon(icon)
+                .setPositiveButton("SI", aceptarListener)
+                .setNegativeButton("NO", cancelarListener);
+
+        AlertDialog alerta = builder.create();
+        alerta.show();
+    }
+
     public static void ocultarBarraEstado(Window window){
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
