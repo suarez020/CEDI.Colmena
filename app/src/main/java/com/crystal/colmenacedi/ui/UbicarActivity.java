@@ -175,7 +175,7 @@ public class UbicarActivity extends AppCompatActivity{
                 @Override
                 public void onFailure(Call<ResponseUbicacionGet> call, Throwable t) {
                     pbRecibirCaja.setVisibility(View.GONE);
-                    LogFile.adjuntarLog("ErrorResponseFinPinado", t);
+                    LogFile.adjuntarLog("@GET ubicacion _ ean=XXX;", t);
                     mensajeDialog("Error", "Error de conexión: " + t.getMessage());
                     consumirServicio = true;
                 }
@@ -224,7 +224,7 @@ public class UbicarActivity extends AppCompatActivity{
                 @Override
                 public void onFailure(Call<ResponseUbicacion> call, Throwable t) {
                     pbRecibirCaja.setVisibility(View.GONE);
-                    LogFile.adjuntarLog("ErrorResponseFinPinado", t);
+                    LogFile.adjuntarLog("@PUT ubicacion _ id=XXX , ean=XXX , ubicacion=XXX;", t);
                     mensajeDialog("Error", "Error de conexión: " + t.getMessage());
                     consumirServicio = true;
                 }

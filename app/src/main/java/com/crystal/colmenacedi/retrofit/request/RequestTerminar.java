@@ -4,6 +4,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class RequestTerminar {
+    @SerializedName("respuesta")
+    @Expose
+    private boolean respuesta;
     @SerializedName("id")
     @Expose
     private String id;
@@ -14,10 +17,19 @@ public class RequestTerminar {
     @Expose
     private String proceso;
 
-    public RequestTerminar(String id, String ubicacion, String proceso) {
+    public RequestTerminar(boolean respuesta, String id, String ubicacion, String proceso) {
+        this.respuesta = respuesta;
         this.id = id;
         this.ubicacion = ubicacion;
         this.proceso = proceso;
+    }
+
+    public boolean isRespuesta() {
+        return respuesta;
+    }
+
+    public void setRespuesta(boolean respuesta) {
+        this.respuesta = respuesta;
     }
 
     public String getId() {
@@ -47,7 +59,8 @@ public class RequestTerminar {
     @Override
     public String toString() {
         return "RequestTerminar{" +
-                "id='" + id + '\'' +
+                "respuesta=" + respuesta +
+                ", id='" + id + '\'' +
                 ", ubicacion='" + ubicacion + '\'' +
                 ", proceso='" + proceso + '\'' +
                 '}';

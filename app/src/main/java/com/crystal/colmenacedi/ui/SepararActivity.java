@@ -44,6 +44,7 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
     TextView etUnidadesLeidas;
     String cedula, equipo, ubicacion, proceso, ean ;
     boolean consumirServicio = true;
+    boolean respuestaTerminarConUnidadesFaltantes = false;
     List<List<String>> listaItems1;
     Context contexto;
     @Override
@@ -177,7 +178,7 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
 
                 @Override
                 public void onFailure(Call<ResponseExtraerGet> call, Throwable t) {
-                    LogFile.adjuntarLog("Extraer_Get", t);
+                    LogFile.adjuntarLog("@GET extraer _ ubicacion=XXX , proceso=XXX;", t);
                     mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
                     consumirServicio = true;
                 }
@@ -218,7 +219,7 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
 
                     @Override
                     public void onFailure(Call<ResponseExtraerPost> call, Throwable t) {
-                        LogFile.adjuntarLog("ErrorResponseLecturaEan",t);
+                        LogFile.adjuntarLog("@POST extraer _ cedula=XXX , ean=XXX , ubicacion=XXX , proceso=XXX;",t);
                         Utilidades.mensajeDialog("Error", "Error de conexión: " + t.getMessage(), contexto);
                         consumirServicio = true;
                     }
@@ -296,6 +297,7 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
                                                     response.body().getTerminar().getMensaje(),
                                                     SepararActivity.this,
                                                     (dialog, which) -> {
+                                                        respuestaTerminarConUnidadesFaltantes=true;
                                                         serviceTerminarPost();       // Acción para "Aceptar"
                                                         Log.d("Dialog", "Usuario aceptó la acción.");
                                                     },
@@ -315,7 +317,7 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
 
                 @Override
                 public void onFailure(Call<ResponseTerminar> call, Throwable t) {
-                    LogFile.adjuntarLog("ErrorResponse/terminar_GET", t);
+                    LogFile.adjuntarLog("@GET terminar _ id=XXX , ubicacion=XXX , proceso=XXX;", t);
                     mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
                     consumirServicio=true;
                 }
@@ -326,7 +328,7 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
     private void serviceTerminarPost() {
         if(consumirServicio) {
             consumirServicio = false;
-            RequestTerminar requestTerminar = new RequestTerminar(cedula, ubicacion, proceso);
+            RequestTerminar requestTerminar = new RequestTerminar(respuestaTerminarConUnidadesFaltantes,cedula,ubicacion,proceso);
             Call<ResponseTerminar> call = serviceRetrofit.doTerminar(requestTerminar);
             call.enqueue(new Callback<ResponseTerminar>() {
                 @Override
@@ -347,7 +349,7 @@ public class SepararActivity extends AppCompatActivity implements View.OnClickLi
 
                 @Override
                 public void onFailure(Call<ResponseTerminar> call, Throwable t) {
-                    LogFile.adjuntarLog("ErrorResponse/terminar_Post", t);
+                    LogFile.adjuntarLog("@POST terminar _ id=XXX , ubicacion=XXX , proceso=XXX;", t);
                     mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
                     consumirServicio=true;
                 }

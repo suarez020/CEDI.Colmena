@@ -188,7 +188,7 @@ public class PrincipalActivity extends AppCompatActivity implements View.OnClick
 
                 @Override
                 public void onFailure(Call<ResponseLogout> call, Throwable t) {
-                    LogFile.adjuntarLog("ErrorResponseLogout", t);
+                    LogFile.adjuntarLog("@PUT logout _ id=XXX , estacion=XXX;", t);
                     mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
                     consumirServicio = true;
                 }

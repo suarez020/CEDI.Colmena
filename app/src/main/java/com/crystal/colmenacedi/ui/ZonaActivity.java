@@ -39,6 +39,7 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
     Button btnTerminarCajaLectura;
     String cedula, equipo, ubicacion, ean,  proceso;
     boolean consumirServicio = true;
+    boolean respuestaTerminarConUnidadesFaltantes = false;
     Context contexto;
     List<List<String>> listaItems2;
     @Override
@@ -154,7 +155,7 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
 
                 @Override
                 public void onFailure(Call<ResponseExtraerPost> call, Throwable t) {
-                    LogFile.adjuntarLog("ErrorResponseLecturaEan",t);
+                    LogFile.adjuntarLog("@POST extraer _ cedula=XXX , ean=XXX , ubicacion=XXX , proceso=XXX;",t);
                     Utilidades.mensajeDialog("Error", "Error de conexión: " + t.getMessage(), contexto);
                     consumirServicio = true;
                 }
@@ -190,6 +191,7 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
                                         response.body().getTerminar().getMensaje(),
                                         ZonaActivity.this,
                                         (dialog, which) -> {
+                                            respuestaTerminarConUnidadesFaltantes=true;
                                             Terminar();
                                             Log.d("Dialog", "Usuario aceptó la acción.");
                                         },
@@ -208,7 +210,7 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 @Override
                 public void onFailure(Call<ResponseTerminar> call, Throwable t) {
-                    LogFile.adjuntarLog("ErrorResponse/terminar_GET", t);
+                    LogFile.adjuntarLog("@GET terminar _ id=XXX , ubicacion=XXX , proceso=XXX;", t);
                     Utilidades.mensajeDialog("Error", t.getMessage(), contexto);
                     consumirServicio=true;
                 }
@@ -222,7 +224,7 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
             proceso = SPM.getString(Constantes.PROCESO);
             cedula=SPM.getString(Constantes.CEDULA_USUARIO);
 
-            RequestTerminar requestTerminar =new RequestTerminar(cedula,ubicacion,proceso);
+            RequestTerminar requestTerminar =new RequestTerminar(respuestaTerminarConUnidadesFaltantes,cedula,ubicacion,proceso);
             Call<ResponseTerminar> call = serviceRetrofit.doTerminar(requestTerminar);
             call.enqueue(new Callback<ResponseTerminar>() {
                 @Override
@@ -245,7 +247,7 @@ public class ZonaActivity extends AppCompatActivity implements View.OnClickListe
 
                 @Override
                 public void onFailure(Call<ResponseTerminar> call, Throwable t) {
-                    LogFile.adjuntarLog("ErrorResponse/terminar_Post",t);
+                    LogFile.adjuntarLog("@POST terminar _ id=XXX , ubicacion=XXX , proceso=XXX;",t);
                     Utilidades.mensajeDialog("Error", "Error de conexión. "+ t.getMessage(), contexto);
                     consumirServicio=true;
                 }

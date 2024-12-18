@@ -145,7 +145,7 @@ public class EmpacarActivity extends AppCompatActivity implements View.OnClickLi
                 public void onFailure(Call<ResponseExtraerGet> call, Throwable t) {
                     etUbicacionEmpacar.setText("");
                     etUbicacionEmpacar.requestFocus();
-                    LogFile.adjuntarLog("response_Extraer:Get", t);
+                    LogFile.adjuntarLog("@POST extraer _ cedula=XXX , ean=XXX , ubicacion=XXX , proceso=XXX;", t);
                     mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
                     consumirServicio=true;
                 }

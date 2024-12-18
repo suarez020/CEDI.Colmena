@@ -208,7 +208,7 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
 
                 @Override
                 public void onFailure(Call<ResponseConfiguracion> call, Throwable t) {
-                    LogFile.adjuntarLog("ErrorResponseConfiguracion", t);
+                    LogFile.adjuntarLog("@GET configuracion _ mac=XXX , estacion=XXX;", t);
                     Utilidades.mensajeDialog("Error", "Error de conexión: " + t.getMessage(), contexto);
                     pararProgressBar();
                     consumirServicio = true;
@@ -243,7 +243,7 @@ public class ConfiguracionActivity extends AppCompatActivity implements View.OnC
 
                 @Override
                 public void onFailure(Call<ResponseConfiguracion> call, Throwable t) {
-                    LogFile.adjuntarLog("ErrorResponseFinPinado", t);
+                    LogFile.adjuntarLog("@PUT configuracion _ mac=XXX , estacion=XXX;", t);
                     mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
                     consumirServicio = true;
 

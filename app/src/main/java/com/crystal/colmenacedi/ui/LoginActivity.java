@@ -68,8 +68,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (consumirServicio) {
             consumirServicio = false;
             pbLogin.setVisibility(View.VISIBLE);
-            mac = SPM.getString(Constantes.MAC_EQUIPO);
-            id = SPM.getString(Constantes.CEDULA_USUARIO);
 
             Call<ResponseInicio> inicio = serviceRetrofit.doInicio(mac,estacion);
             inicio.enqueue(new Callback<ResponseInicio>() {
@@ -95,7 +93,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void onFailure(Call<ResponseInicio> call, Throwable t) {
                     pbLogin.setVisibility(View.GONE);
-                    LogFile.adjuntarLog("ErrorResponseGetInicio", t);
+                    LogFile.adjuntarLog("@GET inicio _ mac=XXX , estacion=XXX;", t);
                     mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
                     consumirServicio = true;
                 }
@@ -110,6 +108,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void findViews() {
         estacion = SPM.getString(Constantes.EQUIPO_API);
+        mac = SPM.getString(Constantes.MAC_EQUIPO);
+        id = SPM.getString(Constantes.CEDULA_USUARIO);
+
         etCedulaLogin = findViewById(R.id.etCedulaLogin);
         etCedulaLogin.requestFocus();
         btnIngresarLogin = findViewById(R.id.btnIngresarLogin);
@@ -206,7 +207,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 public void onFailure(Call<ResponseLoginGet> call, Throwable t) {
                     pbLogin.setVisibility(View.GONE);
                     SPM.setString(Constantes.CEDULA_USUARIO, "");
-                    LogFile.adjuntarLog("ErrorResponseLogin", t);
+                    LogFile.adjuntarLog("@GET login _ mac=XXX , estacion=XXX , id=XXX;", t);
                     mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
                     consumirServicio=true;
                 }
@@ -251,7 +252,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 public void onFailure(Call<ResponseLogin> call, Throwable t) {
                     pbLogin.setVisibility(View.GONE);
                     SPM.setString(Constantes.CEDULA_USUARIO, "");
-                    LogFile.adjuntarLog("ErrorResponseLogin", t);
+                    LogFile.adjuntarLog("@POST login _id=XXX , estacion=XXX;", t);
                     mensajeSimpleDialog("Error", "Error de conexión: " + t.getMessage());
                     consumirServicio=true;
                 }
